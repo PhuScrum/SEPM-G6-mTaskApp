@@ -73,9 +73,7 @@ const TabNavigator = () => (
 export default class BottomNavBar extends Component {
     render() {
         return (
-            <NavigationContainer>
                 <TabNavigator />
-            </NavigationContainer>
         )
     }
 }

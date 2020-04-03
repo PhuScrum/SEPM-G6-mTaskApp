@@ -45,7 +45,7 @@ export default class TopNavigationBar extends Component {
 
     render() {
       const renderRightControls = () => [
-        <CalendarAction onPress={this.props.openCalendar}/>,
+        <CalendarAction onPress={this.props.navigation.navigate('CalendarOverview')}/>,
         <CheckMarkAction/>,
       ];  
         return (
