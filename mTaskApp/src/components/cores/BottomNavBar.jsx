@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomNavigation, BottomNavigationTab, Layout, Text, Icon } from '@ui-kitten/components';
-import FiveDayScreen from '../five_date_screen/FiveDayScreen'
+import HomeScreen from '../../screens/home_screen/HomeScreen'
 const BottomTab = createBottomTabNavigator();
 const PersonIcon = (style) => (
     <Icon {...style} name='person-outline'/>
@@ -62,7 +62,7 @@ const BottomTabBar = ({ navigation, state }) => {
 const TabNavigator = () => (
     <BottomTab.Navigator tabBar={props => <BottomTabBar {...props} />}>
         <BottomTab.Screen name='List' component={ListScreen} />
-        <BottomTab.Screen name='Home' component={FiveDayScreen} />
+        <BottomTab.Screen name='Home' component={HomeScreen} />
 
         <BottomTab.Screen name='Notifications' component={NotificationScreen} />
         <BottomTab.Screen name='Users' component={UsersScreen} />
