@@ -4,8 +4,8 @@ import {
     TopNavigation,
     TopNavigationAction,
   } from '@ui-kitten/components';
-import CalendarOverviewScreen from '../calendar_overview/CalendarOverviewScreen'
-  
+import { withNavigation } from 'react-navigation';
+
   const BackIcon = (style) => (
     <Icon {...style} name='arrow-back'/>
   );
@@ -33,27 +33,24 @@ import CalendarOverviewScreen from '../calendar_overview/CalendarOverviewScreen'
   
 
 
-export default class TopNavigationBar extends Component {
-    constructor(props){
-      super(props)
-      this.state={
-        openCalendar: false,
-        openCheckMark: false,
-      }
-    }
-
-
+ class TopNavigationBar extends Component {
+  constructor(props, navigation){
+    super(props, navigation)
+  }
+  navigateCalendar(){
+    // this.props.navigation.navigate('CalendarOverview')
+  }
     render() {
       const renderRightControls = () => [
-        <CalendarAction onPress={this.props.navigation.navigate('CalendarOverview')}/>,
+        <CalendarAction onPress={() => { this.props.navigation.navigate('CalendarOverview') }}/>,
         <CheckMarkAction/>,
       ];  
         return (
             <TopNavigation
                 title='mTask'
-                // leftControl={renderLeftControl()}
                 rightControls={renderRightControls()}
             />
         )
     }
 }
+export default withNavigation(TopNavigationBar)
