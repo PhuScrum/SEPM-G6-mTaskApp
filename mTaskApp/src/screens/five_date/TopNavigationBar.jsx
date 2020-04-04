@@ -40,10 +40,14 @@ import { withNavigation } from 'react-navigation';
   navigateCalendar(){
     // this.props.navigation.navigate('CalendarOverview')
   }
+  navigateDoneList(){
+     // this.props.navigation.navigate('DoneList')
+  }
+
     render() {
       const renderRightControls = () => [
         <CalendarAction onPress={() => { this.props.navigation.navigate('CalendarOverview') }}/>,
-        <CheckMarkAction/>,
+        <CheckMarkAction onPress={() => {this.props.navigation.navigate('DoneListOverview')}}/>,
       ];  
         return (
             <TopNavigation
