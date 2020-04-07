@@ -9,3 +9,12 @@ const postTask = (req, res)=>{
 }
 
 module.exports = postTask
+
+// const taskObj ={
+//     name: 'testing a task',
+//     description: 'test',
+//     type: 'task',
+//     priority: 'C',
+//     color: 'green',
+//     dateTime: new Date('2020-06-07')
+// }
