@@ -9,12 +9,12 @@ export default function App() {
   return (
     <React.Fragment>
     
-    <IconRegistry icons={EvaIconsPack} />
-    <ApplicationProvider mapping={mapping} theme={lightTheme}>
-    <NavigationContainer>
-    <MTaskApp/>
-    </NavigationContainer>
-    </ApplicationProvider>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider mapping={mapping} theme={lightTheme}>
+        <NavigationContainer>
+          <MTaskApp/>
+        </NavigationContainer>
+      </ApplicationProvider>
     </React.Fragment>
 
   );
