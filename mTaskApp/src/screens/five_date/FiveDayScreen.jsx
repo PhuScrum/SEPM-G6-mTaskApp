@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import { Layout, Text } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
 import { FlatList } from 'react-native-gesture-handler';
 import TaskItem from '../../components/tasks/TaskItem';
+import AddTask from '../../components/tasks/AddTask';
 
 
 const FiveDayScreen = (props) => {
@@ -15,27 +16,51 @@ const FiveDayScreen = (props) => {
     ])
 
     const pressHandler = (key) => {
-        setTodos((prevTodo)=> {
+        setTodos((prevTodo) => {
             return prevTodo.filter(todo => todo.key != key)
         })
     }
 
-    console.log(props)
-    return (
-        <Layout style={styles.container}>
-            <TopNavigationBar {...props} />
-            <Text>Five Days List</Text>
-            <View style={styles.list}>
-                <FlatList
-                    data={todos}
-                    renderItem={({ item }) => (
-                        <TaskItem item={item} pressHandler={pressHandler}/>
-                    )
+    const submitHandler = (text) => {
 
-                    }
-                />
-            </View>
-        </Layout>
+        if (text.length > 3) {
+            setTodos((prevTodos) => {
+                return [
+                    { text: text, key: Math.random().toString() },
+                    ...prevTodos
+                ]
+            })
+        } else {
+            Alert.alert('oops!!', 'Todos must be over 3 characters long', [
+                { text: 'Understood', onPress: () => console.log('alert closed') }
+            ])
+        }
+    }
+
+
+    return (
+        <TouchableWithoutFeedback 
+            onPress={()=>{
+                Keyboard.dismiss()
+                console.log('dismiss keyboard')
+            }}
+        >
+            <Layout style={styles.container}>
+                <TopNavigationBar {...props} />
+                <Text>Five Days List</Text>
+                <AddTask submitHandler={submitHandler} />
+                <View style={styles.list}>
+                    <FlatList
+                        data={todos}
+                        renderItem={({ item }) => (
+                            <TaskItem item={item} pressHandler={pressHandler} />
+                        )
+
+                        }
+                    />
+                </View>
+            </Layout>
+        </TouchableWithoutFeedback>
     )
 
 }
