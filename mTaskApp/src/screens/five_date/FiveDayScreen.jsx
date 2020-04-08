@@ -37,7 +37,6 @@ const FiveDayScreen = (props) => {
         }
     }
 
-
     return (
         <TouchableWithoutFeedback 
             onPress={()=>{
@@ -49,14 +48,14 @@ const FiveDayScreen = (props) => {
                 <TopNavigationBar {...props} />
                 <Text>Five Days List</Text>
                 <AddTask submitHandler={submitHandler} />
-                <View style={styles.list}>
+                <View style={styles.list} >
                     <FlatList
                         data={todos}
                         renderItem={({ item }) => (
                             <TaskItem item={item} pressHandler={pressHandler} />
                         )
-
                         }
+                        
                     />
                 </View>
             </Layout>
@@ -73,6 +72,7 @@ const styles = StyleSheet.create({
         paddingBottom: 0
     },
     list: {
+        flex:1,
         padding: 16
     }
 })
