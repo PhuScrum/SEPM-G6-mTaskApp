@@ -1,8 +1,10 @@
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Layout, Text } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
 import { FlatList } from 'react-native-gesture-handler';
+import TaskItem from '../../components/tasks/TaskItem';
+
 
 const FiveDayScreen = (props) => {
 
@@ -11,6 +13,12 @@ const FiveDayScreen = (props) => {
         { text: 'create an app', key: '2' },
         { text: 'play game', key: '3' }
     ])
+
+    const pressHandler = (key) => {
+        setTodos((prevTodo)=> {
+            return prevTodo.filter(todo => todo.key != key)
+        })
+    }
 
     console.log(props)
     return (
@@ -21,7 +29,7 @@ const FiveDayScreen = (props) => {
                 <FlatList
                     data={todos}
                     renderItem={({ item }) => (
-                        <Text>{item.text}</Text>
+                        <TaskItem item={item} pressHandler={pressHandler}/>
                     )
 
                     }
