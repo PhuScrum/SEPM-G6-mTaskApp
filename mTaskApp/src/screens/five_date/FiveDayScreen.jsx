@@ -55,7 +55,6 @@ const FiveDayScreen = (props) => {
                             <TaskItem item={item} pressHandler={pressHandler} />
                         )
                         }
-                        
                     />
                 </View>
             </Layout>

@@ -16,13 +16,11 @@ const TaskItem = ({ item, pressHandler }) => {
             <Layout style={styles.item} level='1'>
                 <Button 
                     style={styles.button} 
-                    
+                    accessoryLeft={TrashIcon}
                     status='primary' 
                     onPress={() => pressHandler(item.key)} 
-                >
-                    Delete
-                </Button>
-
+                />
+               
                 <Text style={styles.itemText}>
                     {item.text}
                 </Text>
