@@ -7,8 +7,12 @@ const path = require('path')
 
 app.use(bodyParser.json({ limit: '10mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
-app.use(cors())
+// app.use(cors())
 
+//Test Server
+app.get('/', (req, res) => {
+    res.status(200).send('Hello, world!').end();
+  });
 
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://admin:123@cluster0-ym27l.mongodb.net/mtask-app?retryWrites=true";
@@ -31,7 +35,8 @@ app.route('/task/:id')
 
 app.route('/user')
     .post(user_API.crud.createUser)
-var port = 19000
+
+const PORT = process.env.PORT || 5000;
 app.listen(port, ()=>{
     console.log('server running at port: ' + port)
 })

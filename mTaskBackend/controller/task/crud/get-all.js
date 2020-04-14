@@ -1,11 +1,8 @@
 const itemModel = require('../../../model/item')
 const getAll = (req, res)=>{
-    itemModel.find({type: 'task'}, (err, doc)=>{
-        if(!err)
-            res.json(doc)
-        else
-            console.log(err)
-    })
+    itemModel.find({type: 'task'})
+        .then(tasks => res.json(tasks))
+        .catch(err=> res.status(500).json(err))
 }
 
 module.exports = getAll

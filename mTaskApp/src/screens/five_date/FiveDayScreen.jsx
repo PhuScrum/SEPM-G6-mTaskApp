@@ -1,25 +1,38 @@
-import React, { useState } from 'react'
-import { View, StyleSheet, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native'
+import React, { useState, useEffect, useReducer } from 'react';
+import { View, StyleSheet, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import axios from 'axios';
 import { Layout, Text } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
 import { FlatList } from 'react-native-gesture-handler';
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
+// import axiosConfig from '../../api/axiosConfig';
 
 
 const FiveDayScreen = (props) => {
 
     const [todos, setTodos] = useState([
-        { text: 'buy coffee', key: '1' },
-        { text: 'create an app', key: '2' },
-        { text: 'play game', key: '3' }
+        // { text: 'buy coffee', key: '1' },
+        // { text: 'create an app', key: '2' },
+        // { text: 'play game', key: '3' }
     ])
 
-    const pressHandler = (key) => {
+    const deleteHandler = (key) => {
         setTodos((prevTodo) => {
             return prevTodo.filter(todo => todo.key != key)
         })
     }
+
+    async function getTasks () {
+        axios.get('http://localhost:5000/api/employee/')
+        .then(res=>console.log(res.data))
+        .catch(err=>console.log(err))
+        // fetch('localhost:5000/api/employee/')
+    }
+
+    useEffect(()=>{
+        getTasks()
+    },[])
 
     const submitHandler = (text) => {
 
@@ -37,6 +50,7 @@ const FiveDayScreen = (props) => {
         }
     }
 
+    console.log(todos)
     return (
         <TouchableWithoutFeedback 
             onPress={()=>{
@@ -52,7 +66,7 @@ const FiveDayScreen = (props) => {
                     <FlatList
                         data={todos}
                         renderItem={({ item }) => (
-                            <TaskItem item={item} pressHandler={pressHandler} />
+                            <TaskItem item={item} deleteHandler={deleteHandler} />
                         )
                         }
                     />

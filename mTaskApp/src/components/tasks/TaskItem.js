@@ -10,7 +10,7 @@ const TrashIcon = (props) => (
     />
 );
 
-const TaskItem = ({ item, pressHandler }) => {
+const TaskItem = ({ item, deleteHandler }) => {
     return (
         <TouchableOpacity >
             <Layout style={styles.item} level='1'>
@@ -18,7 +18,7 @@ const TaskItem = ({ item, pressHandler }) => {
                     style={styles.button} 
                     accessoryLeft={TrashIcon}
                     status='primary' 
-                    onPress={() => pressHandler(item.key)} 
+                    onPress={() => deleteHandler(item.key)} 
                 />
                
                 <Text style={styles.itemText}>
