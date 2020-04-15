@@ -5,7 +5,7 @@ const itemSchema = new Schema({
   type: {type: String, default: 'task'},
   name: {type: String},
   description: {type: String},
-  date: {type: Date},
+  dateTime: {type: Date},
   completed: {type: Boolean},
 
   repeat: {type: Object},
