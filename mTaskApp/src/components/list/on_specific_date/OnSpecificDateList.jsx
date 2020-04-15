@@ -26,7 +26,7 @@ export default function ListCompositeItemShowcase (){
   );
 
   const renderItemIcon = (style) => (
-    <Icon {...style} name='checkmark'/>
+    <Icon {...style} name='people-outline'/>
   );
 
   const renderItem = ({ item, index }) => (

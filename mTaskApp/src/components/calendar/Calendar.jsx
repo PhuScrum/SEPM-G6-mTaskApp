@@ -65,14 +65,14 @@ export default function CalendarCustomDayShowcase  () {
   return (
       <React.Fragment>
            <Calendar
-      style={{width: '100%'}}
-      
-      date={selectedDate}
-      onSelect={setSelectedDate}
-      renderDay={DayCell}
-      min={minDate}
-      max={maxDate}
-    />
+            style={{width: '100%'}}
+            
+            date={selectedDate}
+            onSelect={setSelectedDate}
+            renderDay={DayCell}
+            min={minDate}
+            max={maxDate}
+          />
     {/* <OnSpecificDateList/> */}
       </React.Fragment>
    
