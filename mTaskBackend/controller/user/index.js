@@ -1,4 +1,4 @@
-const crud = require('./CRUD')
+const crud = require('./crud')
 const user_API ={
     crud
 }

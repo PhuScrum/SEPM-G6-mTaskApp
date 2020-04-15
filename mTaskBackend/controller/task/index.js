@@ -1,6 +1,6 @@
-const CRUD = require('./CRUD')
+const crud = require('./crud')
 const task_API = {
-    CRUD
+    crud
 }
 
 module.exports = task_API
