@@ -7,24 +7,60 @@ import {
   Calendar,
   Text,
 } from '@ui-kitten/components';
+import tasks from '../../constants/fake_data/tasks'
+var hashMap = {}
+const getDateFromDateTime = ()=>{
+  //set up hashmap
+  for(let i=0; i < tasks.length; i++){
+    var date = new Date(tasks[i].dateTime).getDate()
+    if(hashMap[date]){
+      hashMap[date].push(tasks[i])
+    }else{
+      var arr = 
+      hashMap[date] = [tasks[i]]
+    }
+  }
+}
+getDateFromDateTime()
+console.log('tasks list: ', tasks)
+console.log('hashmap: ', hashMap)
 const now = new Date();
 const minDate = new Date(100, now.getMonth(), 15);
 const maxDate = new Date(99999, now.getMonth() + 1, 15);
-
 const DayCell = ({ date }, style) => (
   <View
     style={[styles.dayContainer, style.container]}>
     <Text style={style.text}>{`${date.getDate()}`}</Text>
     <Text style={[style.text, styles.value]}>
-      {`${100 * date.getDate() + Math.pow(date.getDate(), 2)}$`}
+      {hashMap[date.getDate()] ? <Text>x</Text>: null}
+
     </Text>
   </View>
 );
 
+
 export default function CalendarCustomDayShowcase  () {
 
   const [selectedDate, setSelectedDate] = React.useState(null);
-//   useEffect(() => alert(selectedDate));
+  const [itemsOnSpecificDate, setItemOnSpecificDate] = React.useState([])
+  
+  const fetchItemSpecificDate = (selectedDate) =>{
+    // nếu chọn ngày
+    if(selectedDate){
+      selectedDate = selectedDate.getDate()
+      setItemOnSpecificDate(hashMap[selectedDate])
+      console.log(hashMap[selectedDate])
+    }
+    else{ // nếu ngày là null. khi users chuyển trang qua. 
+      var dateToday = new Date().getDate()
+      setItemOnSpecificDate(hashMap[dateToday])
+    }
+    console.log('itemOSD', itemsOnSpecificDate)
+    
+  }
+  useEffect(() => {
+    fetchItemSpecificDate(selectedDate)
+  });
   return (
       <React.Fragment>
            <Calendar
