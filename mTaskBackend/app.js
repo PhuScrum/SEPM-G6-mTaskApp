@@ -26,12 +26,12 @@ const ObjectId = Schema.ObjectId;
 const task_API = require('./controller/task')
 const user_API = require('./controller/user')
 app.route('/task')
-    .get(task_API.CRUD.getAll)
-    .post(task_API.CRUD.postTask)
+    .get(task_API.crud.getAll)
+    .post(task_API.crud.postTask)
 
 app.route('/task/:id')
-    .put(task_API.CRUD.editTask)
-    .delete(task_API.CRUD.deleteTask)
+    .put(task_API.crud.editTask)
+    .delete(task_API.crud.deleteTask)
 
 app.route('/user')
     .post(user_API.crud.createUser)
