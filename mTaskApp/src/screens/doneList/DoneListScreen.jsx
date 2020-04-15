@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import {Layout, Text, Button } from '@ui-kitten/components';
-import TopNavigationBarBackButton from '../../components/cores/TopNavigationBarBackButton'
+import TopNavigationBarBackButton from '../../components/cores/TopNavigationBarBackButton';
 import {Modal, FlatList, StyleSheet, View, ActivityIndicator, TouchableOpacity} from 'react-native';
-
+import Timeago from './TimeAgo';
+import Timeformat from './TimeFormat';
 
 export default class DoneListScreen extends Component {
 
@@ -24,7 +25,7 @@ export default class DoneListScreen extends Component {
 
 
    componentDidMount () {
-       return fetch('http://192.168.100.28:19000/task')
+       return fetch('https://bigquery-project-medium.df.r.appspot.com/task')
         .then((response) => response.json())
        // .then((responseJson) => {
      //       this.setState({
@@ -88,7 +89,8 @@ export default class DoneListScreen extends Component {
                 <View style={{marginBottom:20}}>
                 
                  <Text style={{fontSize:20, textAlign:"center"}}>Completed Time</Text>
-                 <Text style={{fontSize:15, textAlign:"center"}}>{this.state.selectedCompletedDate}</Text>
+                 <Timeformat time={this.state.selectedCompletedDate}/>
+                
                 </View>
 
                  <View style={{marginLeft:'50%', marginBottom:36, position: 'absolute', bottom:0}}>
@@ -104,7 +106,7 @@ export default class DoneListScreen extends Component {
 
         <View style={styles.item}> 
             <Text style={{fontSize:18, fontWeight:"bold", }}>{item.name}</Text> 
-            <Text style={{fontSize:15}}>{item.description}</Text>
+            <Text style={{fontSize:15}}><Timeago time={item.dateTime}/></Text>
         </View>
     </TouchableOpacity>
     
