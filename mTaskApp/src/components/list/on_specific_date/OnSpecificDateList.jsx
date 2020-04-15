@@ -14,19 +14,19 @@ import {
   ListItem,
 } from '@ui-kitten/components';
 
-const data = new Array(8).fill({
+const data = new Array(20).fill({
   title: 'Title for Item',
   description: 'Description for Item',
 });
 
-export const ListCompositeItemShowcase = () => {
+export default function ListCompositeItemShowcase (){
 
   const renderItemAccessory = (style) => (
-    <Button style={style}>FOLLOW</Button>
+    <Button style={style}>COMPLETE</Button>
   );
 
   const renderItemIcon = (style) => (
-    <Icon {...style} name='person'/>
+    <Icon {...style} name='checkmark'/>
   );
 
   const renderItem = ({ item, index }) => (

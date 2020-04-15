@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {Layout, Text } from '@ui-kitten/components';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
-
+import OnSpecificDateList from '../../components/list/on_specific_date/OnSpecificDateList'
 import {
     StyleSheet,
     View,
@@ -15,8 +15,8 @@ export default class CalendarOverviewScreen extends Component {
                 <TopNavigationBarBackButton {...this.props} title='Calendar Overview'/>
                 <Layout style={styles.calendar}>
                 <CalendarOverview style={{height: 100}}/>
-                <Text>{}</Text>
                 </Layout>
+                <OnSpecificDateList style={{bottom: 50}}/>
 
               
             </Layout>

@@ -8,6 +8,7 @@ import {
   Text,
 } from '@ui-kitten/components';
 import tasks from '../../constants/fake_data/tasks'
+import OnSpecificDateList from '../../components/list/on_specific_date/OnSpecificDateList'
 var hashMap = {}
 const getDateFromDateTime = ()=>{
   //set up hashmap
@@ -72,7 +73,7 @@ export default function CalendarCustomDayShowcase  () {
       min={minDate}
       max={maxDate}
     />
-    <Text>{selectedDate !== null? typeof(selectedDate) : null}</Text>
+    {/* <OnSpecificDateList/> */}
       </React.Fragment>
    
   );
