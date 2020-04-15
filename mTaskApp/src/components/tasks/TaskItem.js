@@ -19,7 +19,7 @@ const TaskItem = ({ item, deleteHandler }) => {
                     accessoryLeft={TrashIcon}
                     status='primary' 
                     onPress={() => deleteHandler(item._id)} 
-                />
+                >X</Button>
                
                 <Text style={styles.itemText}>
                     {item.name}
@@ -48,6 +48,9 @@ const styles = StyleSheet.create({
     itemText: {
         marginLeft: 10,
         alignSelf:'center'
+    },
+    button: {
+        margin: 0
     }
 })
 

@@ -22,12 +22,16 @@ const AddTask = ({submitHandler}) =>{
 const styles = StyleSheet.create({
     containter: {
         
+        justifyContent: "center",
+        alignItems: "center"
     },
     input:{
-        
+        width: '100%',
         margin: 8
     },
     button:{
+        justifyContent: 'center',
+        
         margin: 8
     }
 })

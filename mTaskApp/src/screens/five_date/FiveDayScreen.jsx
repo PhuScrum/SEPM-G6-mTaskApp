@@ -1,36 +1,66 @@
-import React, { useState, useEffect, useReducer } from 'react';
-import { View, StyleSheet, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useState, useEffect, useReducer, useCallback } from 'react';
+import {
+    View,
+    StyleSheet,
+    Alert,
+    TouchableWithoutFeedback,
+    Keyboard,
+    SafeAreaView,
+    RefreshControl,
+    Modal,
+    TouchableHighlight
+} from 'react-native';
+
 import axios from 'axios';
 import { Layout, Text } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, ScrollView, } from 'react-native-gesture-handler';
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
 // import axiosConfig from '../../api/axiosConfig';
 
+function wait(timeout) {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+    });
+}
 
 const FiveDayScreen = (props) => {
 
-    const [todos, setTodos] = useState([
-        // { text: 'buy coffee', key: '1' },
-        // { text: 'create an app', key: '2' },
-        // { text: 'play game', key: '3' }
-    ])
+    const [todos, setTodos] = useState([])
+    const [modalVisible, setModalVisible] = useState(false);
+    const [refreshing, setRefreshing] = useState(false)
 
-    const deleteHandler = (key) => {
-        console.log(key)
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+
+        wait(1500).then(() => setRefreshing(false));
+    }, [refreshing]);
+
+
+    const deleteHandler = (id) => {
+        async function deleteTask(key) {
+            axios.delete(`https://bigquery-project-medium.df.r.appspot.com/task/${key}`)
+                .then(res => {
+                    console.log(`Deleted id: ${key}`)
+                    getTasks()
+                })
+                .catch(err => console.log(err))
+        }
+        deleteTask(id)
+
     }
 
-    async function getTasks () {
+    async function getTasks() {
         axios.get('https://bigquery-project-medium.df.r.appspot.com/task')
-        .then(res=>setTodos(res.data))
-        .catch(err=>console.log(err))
+            .then(res => setTodos(res.data))
+            .catch(err => console.log(err))
         // fetch('localhost:5000/api/employee/')
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getTasks()
-    },[])
+    }, [])
 
     const submitHandler = (text) => {
 
@@ -48,19 +78,58 @@ const FiveDayScreen = (props) => {
         }
     }
 
-    console.log(todos)
+    console.log(modalVisible)
+
     return (
-        <TouchableWithoutFeedback 
-            onPress={()=>{
+
+        <TouchableWithoutFeedback
+            onPress={() => {
                 Keyboard.dismiss()
                 console.log('dismiss keyboard')
             }}
         >
-            <Layout style={styles.container}>
+            <Layout style={styles.container} >
                 <TopNavigationBar {...props} />
-                <Text>Five Days List</Text>
-                <AddTask submitHandler={submitHandler} />
-                <View style={styles.list} >
+                <Text style={{ alignSelf: "center" }}>Five Days List</Text>
+
+                <View style={{ justifyContent: "center", alignItems: "center" }}>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            Alert.alert("Modal has been closed.");
+                        }}
+                    >
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <Text style={styles.modalText}>Add Task</Text>
+
+                                <AddTask submitHandler={submitHandler} />
+
+                                <TouchableHighlight
+                                    style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                    onPress={() => {
+                                        setModalVisible(!modalVisible);
+                                    }}
+                                >
+                                    <Text style={styles.textStyle}>Hide Modal</Text>
+                                </TouchableHighlight>
+                            </View>
+                        </View>
+                    </Modal>
+
+                    <TouchableHighlight
+                        style={styles.openButton}
+                        onPress={() => {
+                            setModalVisible(true);
+                        }}
+                    >
+                        <Text style={styles.textStyle}>Show Modal</Text>
+                    </TouchableHighlight>
+                </View>
+                {/* <AddTask submitHandler={submitHandler} /> */}
+                <SafeAreaView style={styles.list} >
                     <FlatList
                         data={todos}
                         keyExtractor={item => item._id}
@@ -68,10 +137,15 @@ const FiveDayScreen = (props) => {
                             <TaskItem item={item} deleteHandler={deleteHandler} />
                         )
                         }
+                        refreshControl={
+                            <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+                        }
                     />
-                </View>
+                </SafeAreaView>
             </Layout>
+
         </TouchableWithoutFeedback>
+
     )
 
 }
@@ -79,13 +153,52 @@ const FiveDayScreen = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        // alignItems: "center",
+        justifyContent: 'center',
         backgroundColor: '#fff',
         paddingTop: 16,
         paddingBottom: 0
     },
     list: {
-        flex:1,
+        flex: 1,
         padding: 16
+    },
+    centerView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    openButton: {
+        backgroundColor: "#F194FF",
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
     }
 })
 
