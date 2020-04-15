@@ -18,11 +18,11 @@ const TaskItem = ({ item, deleteHandler }) => {
                     style={styles.button} 
                     accessoryLeft={TrashIcon}
                     status='primary' 
-                    onPress={() => deleteHandler(item.key)} 
+                    onPress={() => deleteHandler(item._id)} 
                 />
                
                 <Text style={styles.itemText}>
-                    {item.text}
+                    {item.name}
                 </Text>
             </Layout>
         </TouchableOpacity>

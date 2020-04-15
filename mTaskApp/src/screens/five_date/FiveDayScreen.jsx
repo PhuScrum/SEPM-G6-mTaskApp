@@ -18,14 +18,12 @@ const FiveDayScreen = (props) => {
     ])
 
     const deleteHandler = (key) => {
-        setTodos((prevTodo) => {
-            return prevTodo.filter(todo => todo.key != key)
-        })
+        console.log(key)
     }
 
     async function getTasks () {
-        axios.get('http://localhost:5000/api/employee/')
-        .then(res=>console.log(res.data))
+        axios.get('https://bigquery-project-medium.df.r.appspot.com/task')
+        .then(res=>setTodos(res.data))
         .catch(err=>console.log(err))
         // fetch('localhost:5000/api/employee/')
     }
@@ -65,6 +63,7 @@ const FiveDayScreen = (props) => {
                 <View style={styles.list} >
                     <FlatList
                         data={todos}
+                        keyExtractor={item => item._id}
                         renderItem={({ item }) => (
                             <TaskItem item={item} deleteHandler={deleteHandler} />
                         )
