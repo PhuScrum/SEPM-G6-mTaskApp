@@ -38,6 +38,6 @@ app.route('/user')
 
 
 const PORT = process.env.PORT || 5000;
-app.listen(port, ()=>{
-    console.log('server running at port: ' + port)
+app.listen(PORT, ()=>{
+    console.log('server running at PORT: ' + PORT)
 })
