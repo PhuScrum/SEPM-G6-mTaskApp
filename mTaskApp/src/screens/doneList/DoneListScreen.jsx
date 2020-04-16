@@ -107,6 +107,7 @@ export default class DoneListScreen extends Component {
             return new Date(second.dateTime).getTime() - new Date(first.dateTime).getTime();
           });
         
+          console.log(sortByDate)
 
         return (
             
