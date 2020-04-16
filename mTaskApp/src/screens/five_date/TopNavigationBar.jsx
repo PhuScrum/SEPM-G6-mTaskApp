@@ -37,17 +37,21 @@ class TopNavigationBar extends Component {
   navigateCalendar() {
     // this.props.navigation.navigate('CalendarOverview')
   }
-  render() {
-    const renderRightControls = () => [
-      <CalendarAction onPress={() => { this.props.navigation.navigate('CalendarOverview') }} />,
-      <CheckMarkAction />,
-    ];
-    return (
-      <TopNavigation
-        title='mTask'
-        rightControls={renderRightControls()}
-      />
-    )
+  navigateDoneList(){
+     // this.props.navigation.navigate('DoneList')
   }
+
+    render() {
+      const renderRightControls = () => [
+        <CalendarAction onPress={() => { this.props.navigation.navigate('CalendarOverview') }}/>,
+        <CheckMarkAction onPress={() => {this.props.navigation.navigate('DoneListOverview')}}/>,
+      ];  
+        return (
+            <TopNavigation
+                title='mTask'
+                rightControls={renderRightControls()}
+            />
+        )
+    }
 }
 export default withNavigation(TopNavigationBar)
