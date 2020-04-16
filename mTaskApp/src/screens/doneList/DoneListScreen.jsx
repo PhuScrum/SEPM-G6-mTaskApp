@@ -107,6 +107,7 @@ export default class DoneListScreen extends Component {
             return new Date(second.dateTime).getTime() - new Date(first.dateTime).getTime();
           });
         
+          console.log(sortByDate)
 
         return (
             
@@ -123,7 +124,7 @@ export default class DoneListScreen extends Component {
                 //Try to sort the data by date
                     data={sortByDate}
                     renderItem={this._renderItem}
-                    keyExtractor={(item, i) => i}
+                    keyExtractor={i => i._id}
                     />
                 </View>
             </View>
