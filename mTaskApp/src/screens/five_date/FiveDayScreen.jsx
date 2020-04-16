@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer, useCallback } from 'react';
-import {useSelector, useDispatch} from 'react-redux'
-import {GET_TASKS} from '../../actions/types'
+import { useSelector, useDispatch } from 'react-redux'
+import { GET_TASKS } from '../../actions/types'
 import {
     View,
     StyleSheet,
@@ -12,6 +12,7 @@ import {
     Modal,
     TouchableHighlight
 } from 'react-native';
+import { BottomSheet } from 'react-native-btr';
 
 import axios from 'axios';
 import { Layout, Text } from '@ui-kitten/components';
@@ -20,7 +21,9 @@ import { FlatList, ScrollView, } from 'react-native-gesture-handler';
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
 
-import {getTasksAction} from '../../actions/TaskAction'
+import { getTasksAction } from '../../actions/TaskAction'
+
+import AddToDoButton from '../../components/tasks/AddTaskButton';
 // import axiosConfig from '../../api/axiosConfig';
 
 // const initialState = {
@@ -36,13 +39,11 @@ import {getTasksAction} from '../../actions/TaskAction'
 //     }
 // }
 
-
 function wait(timeout) {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
     });
 }
-
 
 const FiveDayScreen = (props) => {
     // const [todos, setTodos] = useState([])
@@ -53,12 +54,11 @@ const FiveDayScreen = (props) => {
     }
     console.log(tasks)
 
-    const [modalVisible, setModalVisible] = useState(false);
+    const [bottomSheetShow, setBottomSheetShow] = useState(false);
     const [refreshing, setRefreshing] = useState(false)
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-
         wait(1500).then(() => setRefreshing(false));
     }, [refreshing]);
 
@@ -100,48 +100,13 @@ const FiveDayScreen = (props) => {
             onPress={() => {
                 Keyboard.dismiss()
                 console.log('dismiss keyboard')
+
             }}
         >
             <Layout style={styles.container} >
                 <TopNavigationBar {...props} />
                 <Text style={{ alignSelf: "center" }}>Five Days List</Text>
 
-                <View style={{ justifyContent: "center", alignItems: "center" }}>
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            Alert.alert("Modal has been closed.");
-                        }}
-                    >
-                        <View style={styles.centeredView}>
-                            <View style={styles.modalView}>
-                                <Text style={styles.modalText}>Add Task</Text>
-
-                                <AddTask submitHandler={submitHandler} />
-
-                                <TouchableHighlight
-                                    style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                                    onPress={() => {
-                                        setModalVisible(!modalVisible);
-                                    }}
-                                >
-                                    <Text style={styles.textStyle}>Hide Modal</Text>
-                                </TouchableHighlight>
-                            </View>
-                        </View>
-                    </Modal>
-
-                    <TouchableHighlight
-                        style={styles.openButton}
-                        onPress={() => {
-                            setModalVisible(true);
-                        }}
-                    >
-                        <Text style={styles.textStyle}>Show Modal</Text>
-                    </TouchableHighlight>
-                </View>
                 {/* <AddTask submitHandler={submitHandler} /> */}
                 <SafeAreaView style={styles.list} >
                     <FlatList
@@ -156,7 +121,26 @@ const FiveDayScreen = (props) => {
                         }
                     />
                 </SafeAreaView>
+                {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => setBottomSheetShow(true)} />)}
+                <BottomSheet
+                    visible={bottomSheetShow}
+                    onBackButtonPress={() => setBottomSheetShow(!bottomSheetShow)}
+                    onBackdropPress={() => setBottomSheetShow(!bottomSheetShow)}
+                >
+                    <View style={styles.bottomNavigationView}>
+                        <View style={{
+                            flex: 1,
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                        }}>
+                            <Text style={{ textAlign: 'center', padding: 20, fontSize: 20 }}>
+                                Add Task
+                            </Text>
+                        </View>
+                    </View>
+                </BottomSheet>
             </Layout>
+
         </TouchableWithoutFeedback>
     )
 }
@@ -181,36 +165,14 @@ const styles = StyleSheet.create({
         marginTop: 22
 
     },
-    modalView: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5
+
+    bottomNavigationView: {
+        backgroundColor: '#fff',
+        width: '100%',
+        height: '30%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    textStyle: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center"
-    },
-    openButton: {
-        backgroundColor: "#F194FF",
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: "center"
-    }
 })
 
 export default FiveDayScreen
