@@ -72,7 +72,6 @@ const FiveDayScreen = (props) => {
                 .catch(err => console.log(err))
         }
         deleteTask(id)
-
     }
 
     useEffect(() => {
@@ -81,12 +80,7 @@ const FiveDayScreen = (props) => {
 
     const submitHandler = (text) => {
         if (text.length > 3) {
-            setTodos((prevTodos) => {
-                return [
-                    { text: text, key: Math.random().toString() },
-                    ...prevTodos
-                ]
-            })
+            console.log(text)
         } else {
             Alert.alert('oops!!', 'Todos must be over 3 characters long', [
                 { text: 'Understood', onPress: () => console.log('alert closed') }
@@ -129,14 +123,14 @@ const FiveDayScreen = (props) => {
                 >
                     <View style={styles.bottomNavigationView}>
                         <View style={{
+                            width: '100%',
                             flex: 1,
                             flexDirection: 'column',
                             justifyContent: 'space-between',
                         }}>
-                            <Text style={{ textAlign: 'center', padding: 20, fontSize: 20 }}>
-                                Add Task
-                            </Text>
+                            <AddTask submitHandler={submitHandler}/>
                         </View>
+                        
                     </View>
                 </BottomSheet>
             </Layout>
@@ -172,6 +166,7 @@ const styles = StyleSheet.create({
         height: '30%',
         justifyContent: 'center',
         alignItems: 'center',
+        // marginVertical: 10
     },
 })
 
