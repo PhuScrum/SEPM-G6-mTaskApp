@@ -22,7 +22,7 @@ export default class DoneListScreen extends Component {
        }
    }
    
-
+  
 
    componentDidMount () {
        return fetch('https://bigquery-project-medium.df.r.appspot.com/task')
@@ -37,7 +37,8 @@ export default class DoneListScreen extends Component {
         .then(dataSource => {
             this.setState({dataSource: dataSource.filter(d => d.completed === true)})
         })
-   }
+        
+    }
 
     //fetchData = async () => {
     //    const response = await fetch("http://localhost:19000/task");
@@ -47,24 +48,10 @@ export default class DoneListScreen extends Component {
 
    // }
 
+ 
    _renderItem = ({ item }) => (
     
-    <View>
    
-    <TouchableOpacity onPress={() => alert(item.completed)}>
-        <View style={styles.item}> 
-            <Text style={{fontSize:18, fontWeight:"bold", }}>{item.name}</Text> 
-            <Text style={{fontSize:15}}>{item.description}</Text>
-        </View>
-    </TouchableOpacity>
-    
-    </View>
-    
-   );
-
-
-   _renderItem2 = ({ item }) => (
-    
     
     <View>
     
@@ -113,11 +100,14 @@ export default class DoneListScreen extends Component {
     </View>
     
    );
-
+    
     render() {
-       
 
+        const sortByDate = this.state.dataSource.sort((first, second) => {
+            return new Date(second.dateTime).getTime() - new Date(first.dateTime).getTime();
+          });
         
+
         return (
             
             <View  style={{paddingTop: 20, paddingBottom: 0,  }}>
@@ -127,9 +117,12 @@ export default class DoneListScreen extends Component {
                 </View>
                 <Text style={{textAlign:"center"}}category='h1'>Done List</Text>
                 <View style={{paddingBottom:260}}>
+
+                
                 <FlatList 
-                    data={this.state.dataSource}
-                    renderItem={this._renderItem2}
+                //Try to sort the data by date
+                    data={sortByDate}
+                    renderItem={this._renderItem}
                     keyExtractor={(item, i) => i}
                     />
                 </View>
