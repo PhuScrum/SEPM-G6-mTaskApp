@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useReducer, useCallback } from 'react';
+import {GET_TASKS} from '../../actions/types'
 import {
     View,
     StyleSheet,
@@ -19,15 +20,33 @@ import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
 // import axiosConfig from '../../api/axiosConfig';
 
+const initialState = {
+    todos:[]
+}
+
+const reducer = (state, action) => {
+    switch(action.type){
+        case GET_TASKS:
+            return {...state, todos: action.payload}
+        default:
+            return state
+    }
+}
+
+
 function wait(timeout) {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
     });
 }
 
-const FiveDayScreen = (props) => {
 
-    const [todos, setTodos] = useState([])
+const FiveDayScreen = (props) => {
+    // const [todos, setTodos] = useState([])
+    
+    const [state, dispatch] = useReducer(reducer, initialState)
+    const {todos} = state
+
     const [modalVisible, setModalVisible] = useState(false);
     const [refreshing, setRefreshing] = useState(false)
 
@@ -36,6 +55,14 @@ const FiveDayScreen = (props) => {
 
         wait(1500).then(() => setRefreshing(false));
     }, [refreshing]);
+
+    const getTasks = async ()  =>{
+        const res = await axios.get('https://bigquery-project-medium.df.r.appspot.com/task/') 
+        dispatch({
+            type: GET_TASKS,
+            payload: res.data
+        })
+    }
 
 
     const deleteHandler = (id) => {
@@ -51,19 +78,18 @@ const FiveDayScreen = (props) => {
 
     }
 
-    async function getTasks() {
-        axios.get('https://bigquery-project-medium.df.r.appspot.com/task')
-            .then(res => setTodos(res.data))
-            .catch(err => console.log(err))
-        // fetch('localhost:5000/api/employee/')
-    }
+    // async function getTasks() {
+    //     axios.get('https://bigquery-project-medium.df.r.appspot.com/task')
+    //         .then(res => setTodos(res.data))
+    //         .catch(err => console.log(err))
+    //     // fetch('localhost:5000/api/employee/')
+    // }
 
     useEffect(() => {
         getTasks()
     }, [])
 
     const submitHandler = (text) => {
-
         if (text.length > 3) {
             setTodos((prevTodos) => {
                 return [
@@ -77,8 +103,6 @@ const FiveDayScreen = (props) => {
             ])
         }
     }
-
-    console.log(modalVisible)
 
     return (
 
