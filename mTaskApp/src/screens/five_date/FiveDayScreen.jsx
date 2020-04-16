@@ -14,30 +14,15 @@ import {
 } from 'react-native';
 import { BottomSheet } from 'react-native-btr';
 
-import axios from 'axios';
 import { Layout, Text } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
 import { FlatList, ScrollView, } from 'react-native-gesture-handler';
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
 
-import { getTasksAction } from '../../actions/TaskAction'
+import { getTasksAction, deleteTaskAction } from '../../actions/TaskAction'
 
 import AddToDoButton from '../../components/tasks/AddTaskButton';
-// import axiosConfig from '../../api/axiosConfig';
-
-// const initialState = {
-//     todos:[]
-// }
-
-// const reducer = (state, action) => {
-//     switch(action.type){
-//         case GET_TASKS:
-//             return {...state, todos: action.payload}
-//         default:
-//             return state
-//     }
-// }
 
 function wait(timeout) {
     return new Promise(resolve => {
@@ -49,29 +34,24 @@ const FiveDayScreen = (props) => {
     // const [todos, setTodos] = useState([])
     const tasks = useSelector(state => state.taskReducer.tasks);
     const dispatch = useDispatch();
-    const getTasks = () => {
-        dispatch(getTasksAction())
-    }
-    console.log(tasks)
-
     const [bottomSheetShow, setBottomSheetShow] = useState(false);
     const [refreshing, setRefreshing] = useState(false)
 
+    const getTasks = () => {
+        dispatch(getTasksAction())
+    }
+    // console.log(tasks)
+
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        wait(1500).then(() => setRefreshing(false));
+        wait(1500).then(() => {
+            setRefreshing(false)
+            getTasks()
+        });
     }, [refreshing]);
 
     const deleteHandler = (id) => {
-        async function deleteTask(key) {
-            axios.delete(`https://bigquery-project-medium.df.r.appspot.com/task/${key}`)
-                .then(res => {
-                    console.log(`Deleted id: ${key}`)
-                    getTasks()
-                })
-                .catch(err => console.log(err))
-        }
-        deleteTask(id)
+        dispatch(deleteTaskAction(id))
     }
 
     useEffect(() => {
@@ -93,15 +73,12 @@ const FiveDayScreen = (props) => {
         <TouchableWithoutFeedback
             onPress={() => {
                 Keyboard.dismiss()
-                console.log('dismiss keyboard')
-
             }}
         >
             <Layout style={styles.container} >
                 <TopNavigationBar {...props} />
                 <Text style={{ alignSelf: "center" }}>Five Days List</Text>
-
-                {/* <AddTask submitHandler={submitHandler} /> */}
+                
                 <SafeAreaView style={styles.list} >
                     <FlatList
                         data={tasks}

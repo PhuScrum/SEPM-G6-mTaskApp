@@ -9,7 +9,7 @@ import {
 } from '@ui-kitten/components';
 import tasks from '../../constants/fake_data/tasks'
 import OnSpecificDateList from '../../components/list/on_specific_date/OnSpecificDateList'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 var hashMap = {}
 const getDateFromDateTime = ()=>{
@@ -64,6 +64,7 @@ export default function CalendarCustomDayShowcase  () {
   const [selectedDate, setSelectedDate] = React.useState(null);
   const [itemsOnSpecificDate, setItemOnSpecificDate] = React.useState([])
   const dispatch = useDispatch();
+  
 
   
   const fetchItemSpecificDate = (selectedDate) =>{
@@ -97,7 +98,7 @@ export default function CalendarCustomDayShowcase  () {
       var yearToday = new Date().getFullYear()
       setItemOnSpecificDate(hashMap[yearToday][monthToday][dateToday])
       var tasksOnSpecificDate = hashMap[yearToday][monthToday][dateToday]
-      console.log('tasks when opening calendar overview', tasksOnSpecificDate)
+      // console.log('tasks when opening calendar overview', tasksOnSpecificDate)
       dispatch({
         type: "getTasksOnSpecificDate",
         tasksOnSpecificDate
