@@ -13,35 +13,57 @@ import {
   List,
   ListItem,
 } from '@ui-kitten/components';
+import {useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
+import {Image} from 'react-native'
 
-const data = new Array(20).fill({
-  title: 'Title for Item',
-  description: 'Description for Item',
-});
 
+const renderItemAccessory = (style) => (
+  <Button style={style}>COMPLETE</Button>
+);
+
+const renderItemIcon = (style) => (
+  <Icon {...style} name='people-outline'/>
+);
 export default function ListCompositeItemShowcase (){
 
-  const renderItemAccessory = (style) => (
-    <Button style={style}>COMPLETE</Button>
-  );
+  const tasks = useSelector(state=> state)
+  console.log('redux tasks  use selector: ', tasks.calendarOverViewReducer.tasksOnSpecificDate)
+  //calendarOverViewReducer, tasksOnSpecificDate
+  var tasksData = tasks.calendarOverViewReducer.tasksOnSpecificDate
+  const data = tasksData
 
-  const renderItemIcon = (style) => (
-    <Icon {...style} name='people-outline'/>
-  );
-
-  const renderItem = ({ item, index }) => (
-    <ListItem
-      title={`${item.title} ${index + 1}`}
-      description={`${item.description} ${index + 1}`}
-      icon={renderItemIcon}
-      accessory={renderItemAccessory}
-    />
-  );
-
-  return (
-    <List
-      data={data}
-      renderItem={renderItem}
-    />
-  );
+  const renderItem = ({ item, index }) => {
+    var ampm ='am'
+    if(item.dateTime.getHours()> 12){
+      ampm ='pm'
+    }
+    return (
+      <ListItem
+        title={`${item.name}`}
+        description={`${item.description} \n${item.dateTime.getHours()}.${item.dateTime.getMinutes()} ${ampm} `}
+        icon={renderItemIcon}
+        accessory={renderItemAccessory}
+      />
+    );
+  }
+    if(data){
+      return (
+        <List
+          data={data}
+          renderItem={renderItem}
+        />
+        );
+    }else{
+      return(
+        <Image
+        source={{
+          uri: 'https://reactnative.dev/img/tiny_logo.png',
+        }}
+      />
+      )
+    }
+  
+  
 };
+
