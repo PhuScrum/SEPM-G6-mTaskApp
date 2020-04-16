@@ -123,7 +123,7 @@ export default class DoneListScreen extends Component {
                 //Try to sort the data by date
                     data={sortByDate}
                     renderItem={this._renderItem}
-                    keyExtractor={(item, i) => i}
+                    keyExtractor={i => i._id}
                     />
                 </View>
             </View>
