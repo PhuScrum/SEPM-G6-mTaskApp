@@ -52,11 +52,11 @@ const BottomTabBar = ({ navigation, state }) => {
     return (
         <SafeAreaView>
             <BottomNavigation selectedIndex={state.index} onSelect={onSelect}>
-                <BottomNavigationTab title='LISTS' icon={ListIcon} />
-                <BottomNavigationTab title='HOME' icon={HomeIcon} />
+                <BottomNavigationTab  icon={ListIcon} />
+                <BottomNavigationTab  icon={HomeIcon} />
 
-                <BottomNavigationTab title='NOTIFICATIONS' icon={BellIcon} />
-                <BottomNavigationTab title='USERS' icon={PersonIcon} />
+                <BottomNavigationTab  icon={BellIcon} />
+                <BottomNavigationTab  icon={PersonIcon} />
             </BottomNavigation>
         </SafeAreaView>
     );
