@@ -9,35 +9,10 @@ import {
 } from '@ui-kitten/components';
 import tasks from '../../constants/fake_data/tasks'
 import OnSpecificDateList from '../../components/list/on_specific_date/OnSpecificDateList'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {getTasksAction} from '../../actions/TaskAction'
+import overviewCalendar_API from './API'
 
-var hashMap = {}
-const getDateFromDateTime = ()=>{
-  //set up hashmap
-  for(let i=0; i < tasks.length; i++){
-    var dateTime = new Date(tasks[i].dateTime)
-    var date = dateTime.getDate()
-    var month = dateTime.getMonth()
-    var year = dateTime.getFullYear()
-    // console.log(year)
-    // set up hashmap {year: {month: {date: [tasks]}}}
-    if(hashMap[year]){
-      if(hashMap[year][month]){
-        if(hashMap[year][month][date]){
-          hashMap[year][month][date].push(tasks[i])
-        }else{
-          hashMap[year][month][date] = [tasks[i]]
-        }
-      }else{
-        hashMap[year][month] = {[date]: [tasks[i]]}
-      }
-    }else{
-      hashMap[year] = {[month]: {[date]: [tasks[i]]}}
-    }
-    
-  }
-}
-getDateFromDateTime()
 // console.log('tasks list: ', tasks)
 // console.log('hashmap: ', hashMap)
 const now = new Date();
@@ -57,58 +32,36 @@ const DayCell = ({ date }, style) => (
     </Text>
   </View>
 );
-
+var hashMap = {}
+  const setUpDateHashmap = (todo)=>{
+    hashMap = overviewCalendar_API.setUpDateHashmap(hashMap, tasks)
+  }
+setUpDateHashmap()
 
 export default function CalendarCustomDayShowcase  () {
-
+  
   const [selectedDate, setSelectedDate] = React.useState(null);
   const [itemsOnSpecificDate, setItemOnSpecificDate] = React.useState([])
   const dispatch = useDispatch();
+  // const todos = useSelector(state => state.taskReducer.tasks);
+  // const getTasks = () => {
+  //         dispatch(getTasksAction())
+  //     }
+  //   console.log('Todos at calendar', todos)
 
   
   const fetchItemSpecificDate = (selectedDate) =>{
-    // nếu chọn ngày
-    if(selectedDate){
-      selectedYear = selectedDate.getFullYear()
-      selectedMonth = selectedDate.getMonth()
-      selectedDate = selectedDate.getDate()
-      console.log(selectedYear, selectedMonth, selectedDate)
-      if( //check null for every undefined number in the hashmap
-        hashMap[selectedYear] &&
-        hashMap[selectedYear][selectedMonth]&&
-        hashMap[selectedYear][selectedMonth][selectedDate]){ 
-        setItemOnSpecificDate(hashMap[selectedYear][selectedMonth][selectedDate])
-        var tasksOnSpecificDate = hashMap[selectedYear][selectedMonth][selectedDate]
-        dispatch({
-          type: "getTasksOnSpecificDate",
-          tasksOnSpecificDate
-        })
-      }else{
-        dispatch({
-          type: "getTasksOnSpecificDate",
-          tasksOnSpecificDate: []
-        })
-      }
-      
-    }
-    else{ // nếu ngày là null. khi users chuyển trang qua. 
-      var dateToday = new Date().getDate()
-      var monthToday = new Date().getMonth()
-      var yearToday = new Date().getFullYear()
-      setItemOnSpecificDate(hashMap[yearToday][monthToday][dateToday])
-      var tasksOnSpecificDate = hashMap[yearToday][monthToday][dateToday]
-      console.log('tasks when opening calendar overview', tasksOnSpecificDate)
-      dispatch({
-        type: "getTasksOnSpecificDate",
-        tasksOnSpecificDate
-      })
-    }
+    overviewCalendar_API.fetchItemSpecificDate(selectedDate, hashMap, dispatch, setItemOnSpecificDate)
     console.log('itemOSD', itemsOnSpecificDate)
-    
+
   }
-  useEffect(() => {
+  useEffect(() => { // onComponentDidUpdate
     fetchItemSpecificDate(selectedDate)
   });
+
+  useEffect(()=>{ // didmount
+    // setUpDateHashmap()
+  }, [])
   return (
       <React.Fragment>
            <Calendar

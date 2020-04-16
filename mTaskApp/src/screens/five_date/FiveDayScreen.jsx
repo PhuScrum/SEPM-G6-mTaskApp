@@ -52,7 +52,7 @@ const FiveDayScreen = (props) => {
     const getTasks = () => {
         dispatch(getTasksAction())
     }
-    console.log(tasks)
+    // console.log(tasks)
 
     const [bottomSheetShow, setBottomSheetShow] = useState(false);
     const [refreshing, setRefreshing] = useState(false)
