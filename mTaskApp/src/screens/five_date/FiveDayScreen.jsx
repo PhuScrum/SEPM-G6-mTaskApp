@@ -157,11 +157,8 @@ const FiveDayScreen = (props) => {
                     />
                 </SafeAreaView>
             </Layout>
-
         </TouchableWithoutFeedback>
-
     )
-
 }
 
 const styles = StyleSheet.create({
