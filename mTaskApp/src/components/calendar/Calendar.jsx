@@ -19,7 +19,7 @@ const getDateFromDateTime = ()=>{
     var date = dateTime.getDate()
     var month = dateTime.getMonth()
     var year = dateTime.getFullYear()
-    console.log(year)
+    // console.log(year)
     // set up hashmap {year: {month: {date: [tasks]}}}
     if(hashMap[year]){
       if(hashMap[year][month]){
@@ -38,8 +38,8 @@ const getDateFromDateTime = ()=>{
   }
 }
 getDateFromDateTime()
-console.log('tasks list: ', tasks)
-console.log('hashmap: ', hashMap)
+// console.log('tasks list: ', tasks)
+// console.log('hashmap: ', hashMap)
 const now = new Date();
 const minDate = new Date(100, now.getMonth(), 15);
 const maxDate = new Date(99999, now.getMonth() + 1, 15);

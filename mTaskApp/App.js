@@ -4,15 +4,19 @@ import { ApplicationProvider, IconRegistry, Layout, Text } from '@ui-kitten/comp
 import { mapping, light as lightTheme } from '@eva-design/eva';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStore } from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import { Provider } from 'react-redux'
 import rootReducer from './src/reducers/root-reducer';
 
 // initialState
 const initialState = {}
 
+//define middleware
+const middleware = [thunk]
+
         // Create store
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, initialState, compose(applyMiddleware(...middleware)));
 export default function App() {
   return (
     <React.Fragment>
