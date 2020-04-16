@@ -4,22 +4,25 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomNavigation, BottomNavigationTab, Layout, Text, Icon } from '@ui-kitten/components';
 import HomeScreen from '../../screens/home_screen/HomeScreen'
-const BottomTab = createBottomTabNavigator();
-const PersonIcon = (style) => (
-    <Icon {...style} name='person-outline'/>
-  );
-  
-  const BellIcon = (style) => (
-    <Icon {...style} name='bell-outline'/>
-  );
-  
-  const HomeIcon = (style) => (
-    <Icon {...style} name='home-outline'/>
-  );
 
-  const ListIcon = (style) => (
-    <Icon {...style} name='list-outline'/>
-  );
+
+const BottomTab = createBottomTabNavigator();
+
+const PersonIcon = (style) => (
+    <Icon {...style} name='person-outline' />
+);
+
+const BellIcon = (style) => (
+    <Icon {...style} name='bell-outline' />
+);
+
+const HomeIcon = (style) => (
+    <Icon {...style} name='home-outline' />
+);
+
+const ListIcon = (style) => (
+    <Icon {...style} name='list-outline' />
+);
 
 const UsersScreen = () => (
     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -35,7 +38,7 @@ const NotificationScreen = () => (
 
 const ListScreen = () => (
     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text category='h1'>LISTS</Text>
+        <Text category='h1'>Hi</Text>
     </Layout>
 );
 
@@ -53,7 +56,7 @@ const BottomTabBar = ({ navigation, state }) => {
                 <BottomNavigationTab title='HOME' icon={HomeIcon} />
 
                 <BottomNavigationTab title='NOTIFICATIONS' icon={BellIcon} />
-                <BottomNavigationTab title='USERS' icon={PersonIcon}/>
+                <BottomNavigationTab title='USERS' icon={PersonIcon} />
             </BottomNavigation>
         </SafeAreaView>
     );
@@ -73,7 +76,7 @@ const TabNavigator = () => (
 export default class BottomNavBar extends Component {
     render() {
         return (
-                <TabNavigator />
+            <TabNavigator />
         )
     }
 }
