@@ -27,6 +27,7 @@ if(selectedDate){
     }
   }
   else{ // nếu ngày là null. khi users chuyển trang qua. 
+    // alert('1'+ selectedDate)
     var dateToday = new Date().getDate()
     var monthToday = new Date().getMonth()
     var yearToday = new Date().getFullYear()
@@ -36,11 +37,16 @@ if(selectedDate){
       {
         setItemOnSpecificDate(hashMap[yearToday][monthToday][dateToday])
         var tasksOnSpecificDate = hashMap[yearToday][monthToday][dateToday]
-        // console.log('tasks when opening calendar overview', tasksOnSpecificDate)
+        console.log('tasks when opening calendar overview', tasksOnSpecificDate)
         dispatch({
           type: "getTasksOnSpecificDate",
           tasksOnSpecificDate
         })
+    }else{
+      dispatch({
+        type: "getTasksOnSpecificDate",
+        tasksOnSpecificDate: []
+      })
     }
   
   }

@@ -89,15 +89,18 @@ export default function CalendarCustomDayShowcase  () {
   const fetchItemSpecificDate = (selectedDate) =>{
     overviewCalendar_API.fetchItemSpecificDate(selectedDate, hashMap, dispatch, setItemOnSpecificDate)
     // console.log('itemOSD', itemsOnSpecificDate)
-
   }
 
 
 
 
   useEffect(() => { // onComponentDidUpdate
+    // alert(selectedDate)
     fetchItemSpecificDate(selectedDate)
   });
+  // useEffect(() => { // onComponentDidUpdate
+  //   fetchItemSpecificDate(selectedDate)
+  // }, []);
 
  
   return (

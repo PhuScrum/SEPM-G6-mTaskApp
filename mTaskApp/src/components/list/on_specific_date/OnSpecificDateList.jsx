@@ -65,12 +65,12 @@ export default function ListCompositeItemShowcase (){
         <React.Fragment>
           <View style={style.container}>
           {/* <Text>Nothing to show</Text> */}
-          <Image
+          {/* <Image
             style={style.image}
             source={{
-              uri: 'https://previews.123rf.com/images/jemastock/jemastock1602/jemastock160203305/52780560-rest-concept-with-tired-icon-design-vector-illustration-10-eps-graphic-.jpg',
+              uri: 'https://img.freepik.com/free-vector/womens-freelance-girl-with-laptop-lies-hammock-palm-trees-with-cocktail-concept-illustration-working-outdoors-studying-communication-healthy-lifestyle-flat-style_189033-12.jpg?size=626&ext=jpg',
             }}
-          />
+          /> */}
           </View>
          
         </React.Fragment>
@@ -88,7 +88,7 @@ const style = StyleSheet.create({
     flex: 1
   },
   image:{
-    height: 200,
+    height: 230,
     width: 300,
     borderRadius: 50
     
