@@ -1,4 +1,4 @@
-import {STORE_DATEHASHMAP} from '../actions/types'
+import {STORE_DATEHASHMAP, GET_TASKS_ON_SPECIFIC_DATE} from '../actions/types'
 const initiateState ={
     tasksOnSpecificDate: [],
     dateHashMap: {}
@@ -7,7 +7,7 @@ const initiateState ={
 
 export default function calendarOverview(state = initiateState, action){
     switch(action.type){
-        case "getTasksOnSpecificDate":
+        case GET_TASKS_ON_SPECIFIC_DATE:
             return {tasksOnSpecificDate: action.tasksOnSpecificDate}
         case STORE_DATEHASHMAP:
             return {dateHashMap: action.dateHashMap}

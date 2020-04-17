@@ -1,7 +1,8 @@
-import {STORE_DATEHASHMAP} from './types'
+import {STORE_DATEHASHMAP, GET_TASKS_ON_SPECIFIC_DATE} from './types'
+
 export function fetchSpecificDate(tasks){
     return {
-        type: "getTasksOnSpecificDate",
+        type: GET_TASKS_ON_SPECIFIC_DATE,
         tasks
     }
 }

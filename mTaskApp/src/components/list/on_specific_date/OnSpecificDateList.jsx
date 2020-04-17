@@ -15,8 +15,7 @@ import {
   Layout
 } from '@ui-kitten/components';
 import {useSelector} from 'react-redux'
-import {useDispatch} from 'react-redux'
-import {Image, Text, View, StyleSheet} from 'react-native'
+import {View, StyleSheet} from 'react-native'
 
 
 

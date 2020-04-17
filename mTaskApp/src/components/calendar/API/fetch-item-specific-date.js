@@ -1,3 +1,4 @@
+import {GET_TASKS_ON_SPECIFIC_DATE} from '../../../actions/types'
 const fetchItemSpecificDate = (selectedDate, hashMap, dispatch, setItemOnSpecificDate)=>{
 /**
  * from the date hashmap, extract tasks on a specific date and dispatch to overview-calendar store.
@@ -16,12 +17,12 @@ if(selectedDate){
       setItemOnSpecificDate(hashMap[selectedYear][selectedMonth][selectedDate])
       var tasksOnSpecificDate = hashMap[selectedYear][selectedMonth][selectedDate]
       dispatch({
-        type: "getTasksOnSpecificDate",
+        type: GET_TASKS_ON_SPECIFIC_DATE,
         tasksOnSpecificDate
       })
     }else{
       dispatch({
-        type: "getTasksOnSpecificDate",
+        type: GET_TASKS_ON_SPECIFIC_DATE,
         tasksOnSpecificDate: []
       })
     }
@@ -39,12 +40,12 @@ if(selectedDate){
         var tasksOnSpecificDate = hashMap[yearToday][monthToday][dateToday]
         console.log('tasks when opening calendar overview', tasksOnSpecificDate)
         dispatch({
-          type: "getTasksOnSpecificDate",
+          type: GET_TASKS_ON_SPECIFIC_DATE,
           tasksOnSpecificDate
         })
     }else{
       dispatch({
-        type: "getTasksOnSpecificDate",
+        type: GET_TASKS_ON_SPECIFIC_DATE,
         tasksOnSpecificDate: []
       })
     }

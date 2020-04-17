@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,11 +7,8 @@ import {
   Calendar,
   Text,
 } from '@ui-kitten/components';
-import tasks from '../../constants/fake_data/tasks'
-import OnSpecificDateList from '../../components/list/on_specific_date/OnSpecificDateList'
 import { useDispatch, useSelector } from "react-redux";
 import overviewCalendar_API from './API'
-import {STORE_DATEHASHMAP} from '../../actions/types'
 
 const now = new Date();
 const minDate = new Date(100, now.getMonth(), 15);
@@ -26,14 +23,9 @@ export default function CalendarCustomDayShowcase  () {
   const [itemsOnSpecificDate, setItemOnSpecificDate] = React.useState([])
   const dispatch = useDispatch();
   const todos = useSelector(state => state.taskReducer.tasks);
-  // console.log('Todos at calendar1', todos)
   if(Object.keys(hashMap).length ===0) //debugging overpopulate data in each date in the hashmap
   hashMap = overviewCalendar_API.setUpDateHashmap(hashMap, todos)
-  // dispatch({
-  //   type: STORE_DATEHASHMAP,
-  //   dateHashMap: hashMap
-  // })
-  
+
   /**
    *  DayCell, MonthCell and YearCell is for customizing ui for each cell.
    *  implemented logic to mark cells with events. 
@@ -95,13 +87,9 @@ export default function CalendarCustomDayShowcase  () {
 
 
   useEffect(() => { // onComponentDidUpdate
-    // alert(selectedDate)
     fetchItemSpecificDate(selectedDate)
   });
-  // useEffect(() => { // onComponentDidUpdate
-  //   fetchItemSpecificDate(selectedDate)
-  // }, []);
-
+ 
  
   return (
       <React.Fragment>
@@ -116,7 +104,6 @@ export default function CalendarCustomDayShowcase  () {
             min={minDate}
             max={maxDate}
           />
-    {/* <OnSpecificDateList/> */}
       </React.Fragment>
    
   );
