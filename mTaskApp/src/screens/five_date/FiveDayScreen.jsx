@@ -9,11 +9,12 @@ import {
     Keyboard,
     SafeAreaView,
     RefreshControl,
-    Modal,
-    TouchableHighlight
+    TouchableHighlight,
+    SectionList,
+
 } from 'react-native';
 import { BottomSheet } from 'react-native-btr';
-
+import moment from 'moment-timezone'
 import { Layout, Text } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
 import { FlatList, ScrollView, } from 'react-native-gesture-handler';
@@ -41,15 +42,7 @@ const FiveDayScreen = (props) => {
         dispatch(getTasksAction())
     }
     // console.log(tasks)
-
-    const onRefresh = useCallback(() => {
-        setRefreshing(true);
-        wait(1500).then(() => {
-            setRefreshing(false)
-            getTasks()
-        });
-    }, [refreshing]);
-
+    
     const deleteHandler = (id) => {
         dispatch(deleteTaskAction(id))
     }
@@ -57,6 +50,16 @@ const FiveDayScreen = (props) => {
     useEffect(() => {
         getTasks()
     }, [])
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        getTasks()
+        wait(2000).then(() => {
+            setRefreshing(false)
+            
+        });
+    }, [refreshing]);
+
 
     const submitHandler = (text) => {
         if (text.length > 3) {
@@ -67,6 +70,39 @@ const FiveDayScreen = (props) => {
             ])
         }
     }
+
+    
+
+    const bd = new Date()
+    // console.log(bd)
+    const start = Date.now() //epoch time
+
+    const end = 1587255645000
+    console.log(moment.locale())
+    console.log(start)
+    const startDate = moment(start).tz('Asia/Ho_Chi_Minh')
+    const endDate = moment(end).tz('Asia/Ho_Chi_Minh')
+    console.log("Start: ",startDate)
+    console.log("End: ", endDate)
+    console.log("Start Date: ", startDate.date())
+    console.log("End Date: ", endDate.date())
+    // const diff = moment(end).diff(moment(start))
+    // const diffDuration = moment.duration(diff)
+
+    // console.log("Total Duration in millis:", diffDuration.asMilliseconds());
+    // console.log("Days:", diffDuration.days());
+    // console.log("Hours:", diffDuration.hours());
+    // console.log("Minutes:", diffDuration.minutes());
+    // console.log("Seconds:", diffDuration.seconds());
+    // console.log("Months:", diffDuration.months());
+
+
+    // const day = new Date(1593036765000)
+    // console.log(day)
+    // const u = moment().calendar()
+    // console.log(u)
+
+    
 
     return (
 
@@ -91,6 +127,7 @@ const FiveDayScreen = (props) => {
                             <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                         }
                     />
+
                 </SafeAreaView>
                 {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => setBottomSheetShow(true)} />)}
                 <BottomSheet
