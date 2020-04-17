@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, useCallback } from 'react';
+import React, { useState, useEffect, useReducer, useCallback, createRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { GET_TASKS } from '../../actions/types'
 import {
@@ -31,8 +31,34 @@ function wait(timeout) {
     });
 }
 
+const getSections = (tasks) => {
+    //Devide Data
+    const todayData = tasks.filter(task => moment(task.dateTime).date() === moment().date())
+    const tmrData = tasks.filter(task => moment(task.dateTime).date() === moment().date() + 1)
+    const twodayData = tasks.filter(task => moment(task.dateTime).date() === moment().date() + 2)
+    const threeDayData = tasks.filter(task => moment(task.dateTime).date() === moment().date() + 3)
+    const fourDayData = tasks.filter(task => moment(task.dateTime).date() === moment().date() + 4)
+    const fiveDayData = tasks.filter(task => moment(task.dateTime).date() === moment().date() + 5)
+
+    //Define Section
+    const twoDay = moment().add(2, 'days').format('ll')
+    const threeDay = moment().add(3, 'days').format('ll')
+    const fourDay = moment().add(4, 'days').format('ll')
+    const fiveDay = moment().add(5, 'days').format('ll')
+    const sectionsList = [
+        { title: 'Today', data: todayData },
+        { title: 'Tomorrow', data: tmrData },
+        { title: `${twoDay}`, data: twodayData },
+        { title: `${threeDay}`, data: threeDayData },
+        { title: `${fourDay}`, data: fourDayData },
+        { title: `${fiveDay}`, data: fiveDayData }
+    ]
+    const sections = sectionsList.filter(section => section.data.length !== 0)
+    return sections
+}
+
 const FiveDayScreen = (props) => {
-    // const [todos, setTodos] = useState([])
+    const scrollRef = createRef()
     const tasks = useSelector(state => state.taskReducer.tasks);
     const dispatch = useDispatch();
     const [bottomSheetShow, setBottomSheetShow] = useState(false);
@@ -42,7 +68,7 @@ const FiveDayScreen = (props) => {
         dispatch(getTasksAction())
     }
     // console.log(tasks)
-    
+
     const deleteHandler = (id) => {
         dispatch(deleteTaskAction(id))
     }
@@ -56,7 +82,7 @@ const FiveDayScreen = (props) => {
         getTasks()
         wait(2000).then(() => {
             setRefreshing(false)
-            
+
         });
     }, [refreshing]);
 
@@ -71,38 +97,18 @@ const FiveDayScreen = (props) => {
         }
     }
 
-    
+    //Seperator Style
+    const FlatListItemSeparator = () => {
+        return (
+            //Item Separator
+            <View
+                style={{ height: 0.5, width: '100%', backgroundColor: '#C8C8C8' }}
+            />
+        );
+    };
 
-    const bd = new Date()
-    // console.log(bd)
-    const start = Date.now() //epoch time
+    const sections = getSections(tasks)
 
-    const end = 1587255645000
-    console.log(moment.locale())
-    console.log(start)
-    const startDate = moment(start).tz('Asia/Ho_Chi_Minh')
-    const endDate = moment(end).tz('Asia/Ho_Chi_Minh')
-    console.log("Start: ",startDate)
-    console.log("End: ", endDate)
-    console.log("Start Date: ", startDate.date())
-    console.log("End Date: ", endDate.date())
-    // const diff = moment(end).diff(moment(start))
-    // const diffDuration = moment.duration(diff)
-
-    // console.log("Total Duration in millis:", diffDuration.asMilliseconds());
-    // console.log("Days:", diffDuration.days());
-    // console.log("Hours:", diffDuration.hours());
-    // console.log("Minutes:", diffDuration.minutes());
-    // console.log("Seconds:", diffDuration.seconds());
-    // console.log("Months:", diffDuration.months());
-
-
-    // const day = new Date(1593036765000)
-    // console.log(day)
-    // const u = moment().calendar()
-    // console.log(u)
-
-    
 
     return (
 
@@ -114,18 +120,24 @@ const FiveDayScreen = (props) => {
             <Layout style={styles.container} >
                 <TopNavigationBar {...props} />
                 <Text style={{ alignSelf: "center" }}>Five Days List</Text>
-                
+
                 <SafeAreaView style={styles.list} >
-                    <FlatList
-                        data={tasks}
+                    <SectionList
+                        refreshControl={
+                            <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+                        }
                         keyExtractor={item => item._id}
+                        ref={ref => scrollRef}
+                        ItemSeparatorComponent={FlatListItemSeparator}
+                        sections={sections}
+                        renderSectionHeader={({ section }) => (
+                            <Text style={styles.SectionHeaderStyle}> {section.title} </Text>
+                        )}
                         renderItem={({ item }) => (
                             <TaskItem item={item} deleteHandler={deleteHandler} />
                         )
                         }
-                        refreshControl={
-                            <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
-                        }
+
                     />
 
                 </SafeAreaView>
@@ -142,9 +154,9 @@ const FiveDayScreen = (props) => {
                             flexDirection: 'column',
                             justifyContent: 'space-between',
                         }}>
-                            <AddTask submitHandler={submitHandler}/>
+                            <AddTask submitHandler={submitHandler} />
                         </View>
-                        
+
                     </View>
                 </BottomSheet>
             </Layout>
@@ -182,6 +194,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         // marginVertical: 10
     },
+    SectionHeaderStyle: {
+        // backgroundColor: '#CDDC89',
+        fontSize: 20,
+        padding: 5,
+        color: 'black',
+    }
+
 })
 
 export default FiveDayScreen

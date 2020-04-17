@@ -11,6 +11,7 @@ const TrashIcon = (props) => (
 );
 
 const TaskItem = ({ item, deleteHandler }) => {
+    // console.log(item.dateTime)
     return (
         <TouchableOpacity >
             <Layout style={styles.item} level='1'>
