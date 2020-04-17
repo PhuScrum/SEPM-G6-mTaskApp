@@ -10,58 +10,96 @@ import {
 import tasks from '../../constants/fake_data/tasks'
 import OnSpecificDateList from '../../components/list/on_specific_date/OnSpecificDateList'
 import { useDispatch, useSelector } from "react-redux";
-import {getTasksAction} from '../../actions/TaskAction'
 import overviewCalendar_API from './API'
+import {STORE_DATEHASHMAP} from '../../actions/types'
 
-// console.log('tasks list: ', tasks)
-// console.log('hashmap: ', hashMap)
 const now = new Date();
 const minDate = new Date(100, now.getMonth(), 15);
 const maxDate = new Date(99999, now.getMonth() + 1, 15);
-const DayCell = ({ date }, style) => (
-  <View
-    style={[styles.dayContainer, style.container]}>
-    <Text style={style.text}>{`${date.getDate()}`}</Text>
-    <Text style={[style.text, styles.value]}>
-      
-      {
-        hashMap[date.getFullYear()] &&
-        hashMap[date.getFullYear()][date.getMonth()] &&
-      hashMap[date.getFullYear()][date.getMonth()][date.getDate()] ? <Text>x</Text>: null}
 
-    </Text>
-  </View>
-);
 var hashMap = {}
-  const setUpDateHashmap = (todo)=>{
-    hashMap = overviewCalendar_API.setUpDateHashmap(hashMap, tasks)
-  }
-setUpDateHashmap()
+
 
 export default function CalendarCustomDayShowcase  () {
   
   const [selectedDate, setSelectedDate] = React.useState(null);
   const [itemsOnSpecificDate, setItemOnSpecificDate] = React.useState([])
   const dispatch = useDispatch();
-  // const todos = useSelector(state => state.taskReducer.tasks);
-  // const getTasks = () => {
-  //         dispatch(getTasksAction())
-  //     }
-  //   console.log('Todos at calendar', todos)
-
+  const todos = useSelector(state => state.taskReducer.tasks);
+  // console.log('Todos at calendar1', todos)
+  if(Object.keys(hashMap).length ===0) //debugging overpopulate data in each date in the hashmap
+  hashMap = overviewCalendar_API.setUpDateHashmap(hashMap, todos)
+  // dispatch({
+  //   type: STORE_DATEHASHMAP,
+  //   dateHashMap: hashMap
+  // })
   
+  /**
+   *  DayCell, MonthCell and YearCell is for customizing ui for each cell.
+   *  implemented logic to mark cells with events. 
+   * 
+   */
+  const DayCell = ({ date }, style) => (
+    <View
+      style={[styles.dayContainer, style.container]}>
+      <Text style={style.text}>{`${date.getDate()}`}</Text>
+      <Text style={[style.text, styles.value]}>
+      {
+            hashMap[date.getFullYear()] &&
+            hashMap[date.getFullYear()][date.getMonth()] &&
+          hashMap[date.getFullYear()][date.getMonth()][date.getDate()] ? <Text>x</Text>: null}
+     
+      </Text>
+    </View>
+  );
+
+  const MonthCell = ({ date }, style) => 
+  { 
+    const monthArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    return (
+      <View
+        style={[styles.dayContainer, style.container]}>
+        <Text style={style.text}>{`${monthArr[date.getMonth()]}`}</Text>
+        <Text style={[style.text, styles.value]}>
+        {
+              hashMap[date.getFullYear()] &&
+              hashMap[date.getFullYear()][date.getMonth()] ? <Text>x</Text>: null}
+       
+        </Text>
+      </View>
+    );
+  }
+
+  const YearCell = ({ date }, style) => 
+  { 
+    return (
+      <View
+        style={[styles.dayContainer, style.container]}>
+        <Text style={style.text}>{`${date.getFullYear()}`}</Text>
+        <Text style={[style.text, styles.value]}>
+        {
+              hashMap[date.getFullYear()]  ? <Text>x</Text>: null}
+       
+        </Text>
+      </View>
+    );
+  }
+  
+
   const fetchItemSpecificDate = (selectedDate) =>{
     overviewCalendar_API.fetchItemSpecificDate(selectedDate, hashMap, dispatch, setItemOnSpecificDate)
-    console.log('itemOSD', itemsOnSpecificDate)
+    // console.log('itemOSD', itemsOnSpecificDate)
 
   }
+
+
+
+
   useEffect(() => { // onComponentDidUpdate
     fetchItemSpecificDate(selectedDate)
   });
 
-  useEffect(()=>{ // didmount
-    // setUpDateHashmap()
-  }, [])
+ 
   return (
       <React.Fragment>
            <Calendar
@@ -70,6 +108,8 @@ export default function CalendarCustomDayShowcase  () {
             date={selectedDate}
             onSelect={setSelectedDate}
             renderDay={DayCell}
+            renderMonth={MonthCell}
+            renderYear={YearCell}
             min={minDate}
             max={maxDate}
           />

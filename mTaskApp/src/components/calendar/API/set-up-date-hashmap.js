@@ -1,5 +1,5 @@
 const setUpDateHashMap = (hashMap, tasks)=>{
-  //set up hashmap
+  //set up hashmap, store tasks in each specific date
   for(let i=0; i < tasks.length; i++){
     var dateTime = new Date(tasks[i].dateTime)
     var date = dateTime.getDate()

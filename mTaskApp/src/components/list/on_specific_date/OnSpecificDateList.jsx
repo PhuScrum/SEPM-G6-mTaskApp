@@ -12,10 +12,12 @@ import {
   Icon,
   List,
   ListItem,
+  Layout
 } from '@ui-kitten/components';
 import {useSelector} from 'react-redux'
 import {useDispatch} from 'react-redux'
-import {Image} from 'react-native'
+import {Image, Text, View, StyleSheet} from 'react-native'
+
 
 
 const renderItemAccessory = (style) => (
@@ -34,20 +36,24 @@ export default function ListCompositeItemShowcase (){
   const data = tasksData
 
   const renderItem = ({ item, index }) => {
+    var convertedDateTime = new Date(item.dateTime)
+    var hr = convertedDateTime.getHours()
+    var min = convertedDateTime.getMinutes()
+
     var ampm ='am'
-    if(item.dateTime.getHours()> 12){
+    if(convertedDateTime.getHours()> 12){
       ampm ='pm'
     }
     return (
       <ListItem
         title={`${item.name}`}
-        description={`${item.description} \n${item.dateTime.getHours()}.${item.dateTime.getMinutes()} ${ampm} `}
+        description={`${item.description ? item.description : ``} ${item.description ? `\n${hr}.${min} ${ampm}` : `${hr}.${min} ${ampm}`} `}
         icon={renderItemIcon}
         accessory={renderItemAccessory}
       />
     );
   }
-    if(data){
+    if(data && data.length >0){
       return (
         <List
           data={data}
@@ -56,14 +62,35 @@ export default function ListCompositeItemShowcase (){
         );
     }else{
       return(
-        <Image
-        source={{
-          uri: 'https://reactnative.dev/img/tiny_logo.png',
-        }}
-      />
+        <React.Fragment>
+          <View style={style.container}>
+          {/* <Text>Nothing to show</Text> */}
+          <Image
+            style={style.image}
+            source={{
+              uri: 'https://previews.123rf.com/images/jemastock/jemastock1602/jemastock160203305/52780560-rest-concept-with-tired-icon-design-vector-illustration-10-eps-graphic-.jpg',
+            }}
+          />
+          </View>
+         
+        </React.Fragment>
+        
       )
     }
   
   
 };
 
+const style = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1
+  },
+  image:{
+    height: 200,
+    width: 300,
+    borderRadius: 50
+    
+  }
+})

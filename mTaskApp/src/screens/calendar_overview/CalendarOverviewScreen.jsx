@@ -15,7 +15,7 @@ export default class CalendarOverviewScreen extends Component {
             <Layout  style={styles.screen}>
                 <TopNavigationBarBackButton {...this.props} title='Calendar Overview'/>
                 <CalendarOverview />
-                    <OnSpecificDateList/>
+                <OnSpecificDateList/>
 
             </Layout>
         )
