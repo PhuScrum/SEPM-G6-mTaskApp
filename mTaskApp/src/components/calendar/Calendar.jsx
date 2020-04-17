@@ -47,7 +47,7 @@ export default function CalendarCustomDayShowcase  () {
       {
             hashMap[date.getFullYear()] &&
             hashMap[date.getFullYear()][date.getMonth()] &&
-          hashMap[date.getFullYear()][date.getMonth()][date.getDate()] ? <Text>x</Text>: null}
+          hashMap[date.getFullYear()][date.getMonth()][date.getDate()] ? <Text >x</Text>: null}
      
       </Text>
     </View>
@@ -133,6 +133,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '400',
   },
+  eventMarker: {
+    backgroundColor: 'green',
+    height: 1,
+    width: 10
+  }
   
     // calendar: {
     //   flexDirection: 'column',
