@@ -1,6 +1,9 @@
 import React from 'react'
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { Layout, Text, Icon, Button } from '@ui-kitten/components';
+import { Divider, List, ListItem } from '@ui-kitten/components';
+import moment from 'moment-timezone'
+
 
 const TrashIcon = (props) => (
     <Icon
@@ -10,22 +13,23 @@ const TrashIcon = (props) => (
     />
 );
 
-const TaskItem = ({ item, deleteHandler }) => {
+
+const TaskItem = ({ item }) => {
+    // console.log(item.dateTime)
     return (
-        <TouchableOpacity >
-            <Layout style={styles.item} level='1'>
-                <Button 
-                    style={styles.button} 
-                    accessoryLeft={TrashIcon}
-                    status='primary' 
-                    onPress={() => deleteHandler(item._id)} 
-                >X</Button>
-               
-                <Text style={styles.itemText}>
-                    {item.name}
-                </Text>
-            </Layout>
-        </TouchableOpacity>
+        <TouchableHighlight
+            style={styles.rowFront}
+            underlayColor={'#f0ffff'}
+        >
+            <View>
+                <ListItem 
+                    style={{borderRadius:12}}
+                    title={item.name}
+                    description={moment(item.dateTime).format('LT')}
+                    onPress={() => console.log('You touched me')}
+                />
+            </View>
+        </TouchableHighlight>
     )
 }
 
@@ -40,17 +44,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap'
     },
-    
-    icon: {
-        width: 18,
-        height: 18,
-    },
     itemText: {
         marginLeft: 10,
         alignSelf:'center'
     },
     button: {
         margin: 0
+    },
+    rowFront: {
+        
+        // alignItems: 'center',
+        backgroundColor: '#CCC',
+        justifyContent: 'center',
+        // height: 50,
+        borderRadius:12
+        
     }
 })
 
