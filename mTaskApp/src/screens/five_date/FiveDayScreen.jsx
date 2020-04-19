@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useReducer, useCallback, createRef } from 'react';
+import React, { useState, useEffect, useCallback, createRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { GET_TASKS } from '../../actions/types'
 import {
     View,
     StyleSheet,
@@ -11,13 +10,14 @@ import {
     RefreshControl,
     TouchableHighlight,
     SectionList,
+    TouchableOpacity
 
 } from 'react-native';
 import { BottomSheet } from 'react-native-btr';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import moment from 'moment-timezone'
 import { Layout, Text } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
-import { FlatList, ScrollView, } from 'react-native-gesture-handler';
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
 
@@ -86,7 +86,6 @@ const FiveDayScreen = (props) => {
         });
     }, [refreshing]);
 
-
     const submitHandler = (text) => {
         if (text.length > 3) {
             console.log(text)
@@ -107,7 +106,38 @@ const FiveDayScreen = (props) => {
         );
     };
 
+    //Define Section Elements
     const sections = getSections(tasks)
+    const renderItem = (data) => (
+        <TaskItem item={data.item} />
+    )
+    const closeRow = (rowMap, rowKey) => {
+        if (rowMap[rowKey]) {
+            rowMap[rowKey].closeRow();
+        }
+    };
+
+    const renderHiddenItem = (data, rowMap) => (
+        <View style={styles.rowBack}>
+            <Text>Left</Text>
+            <TouchableOpacity
+                style={[styles.backRightBtn, styles.backRightBtnLeft]}
+                onPress={() => closeRow(rowMap, data.item._id)}
+            >
+                <Text style={styles.backTextWhite}>Close</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[styles.backRightBtn, styles.backRightBtnRight]}
+                onPress={() => console.log(data.item._id)}
+            >
+                <Text style={styles.backTextWhite}>Delete</Text>
+            </TouchableOpacity>
+        </View>
+    );
+    const onRowDidOpen = rowKey => {
+        console.log('This row opened', rowKey);
+    };
+    const renderSectionHeader = ({ section }) => <Text>{section.title}</Text>
 
 
     return (
@@ -122,7 +152,7 @@ const FiveDayScreen = (props) => {
                 <Text style={{ alignSelf: "center" }}>Five Days List</Text>
 
                 <SafeAreaView style={styles.list} >
-                    <SectionList
+                    {/* <SectionList
                         refreshControl={
                             <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                         }
@@ -138,7 +168,23 @@ const FiveDayScreen = (props) => {
                         )
                         }
 
+                    /> */}
+                    <SwipeListView
+                        useSectionList
+                        keyExtractor={item => item._id}
+                        // ItemSeparatorComponent={FlatListItemSeparator}
+                        sections={sections}
+                        renderItem={renderItem}
+                        renderHiddenItem={renderHiddenItem}
+                        renderSectionHeader={renderSectionHeader}
+                        leftOpenValue={75}
+                        rightOpenValue={-150}
+                        previewRowKey={'0'}
+                        previewOpenValue={-40}
+                        previewOpenDelay={3000}
+                        onRowDidOpen={onRowDidOpen}
                     />
+
 
                 </SafeAreaView>
                 {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => setBottomSheetShow(true)} />)}
@@ -170,7 +216,7 @@ const styles = StyleSheet.create({
         flex: 1,
         // alignItems: "center",
         justifyContent: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: '#F5F5F5',
         paddingTop: 16,
         paddingBottom: 0
     },
@@ -185,7 +231,6 @@ const styles = StyleSheet.create({
         marginTop: 22
 
     },
-
     bottomNavigationView: {
         backgroundColor: '#fff',
         width: '100%',
@@ -199,8 +244,33 @@ const styles = StyleSheet.create({
         fontSize: 20,
         padding: 5,
         color: 'black',
+    },
+    rowBack: {
+        alignItems: 'center',
+        backgroundColor: '#DDD',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingLeft: 15,
+    },
+    backRightBtn: {
+        alignItems: 'center',
+        bottom: 0,
+        justifyContent: 'center',
+        position: 'absolute',
+        top: 0,
+        width: 75,
+    },
+    backRightBtnLeft: {
+        backgroundColor: 'blue',
+        right: 75,
+    },
+    backRightBtnRight: {
+        backgroundColor: 'red',
+        right: 0,
     }
 
 })
 
 export default FiveDayScreen
+
