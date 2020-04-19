@@ -9,27 +9,37 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux'
 import rootReducer from './src/reducers/root-reducer';
 
+import { AppLoading } from 'expo';
+import { useFonts } from '@use-expo/font';
+import fonts from './fonts'
+
 // initialState
 const initialState = {}
 
 //define middleware
 const middleware = [thunk]
 
-        // Create store
+// Create store
 const store = createStore(rootReducer, initialState, compose(applyMiddleware(...middleware)));
-export default function App() {
-  return (
-    <React.Fragment>
-    
-    <IconRegistry icons={EvaIconsPack} />
-    <ApplicationProvider mapping={mapping} theme={lightTheme}>
-    <NavigationContainer>
-    <Provider store={store}>
-    <MTaskApp/>
-    </Provider>
-    </NavigationContainer>
-    </ApplicationProvider>
-    </React.Fragment>
 
-  );
+export default function App() {
+  let [fontsLoaded] = useFonts(fonts);
+  if (!fontsLoaded) {
+    return <AppLoading />
+  } else {
+    return (
+      <React.Fragment>
+
+        <IconRegistry icons={EvaIconsPack} />
+        <ApplicationProvider mapping={mapping} theme={lightTheme}>
+          <NavigationContainer>
+            <Provider store={store}>
+              <MTaskApp />
+            </Provider>
+          </NavigationContainer>
+        </ApplicationProvider>
+      </React.Fragment>
+
+    )
+  }
 }

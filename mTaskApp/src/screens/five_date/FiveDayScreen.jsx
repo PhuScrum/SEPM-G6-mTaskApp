@@ -20,10 +20,9 @@ import { Layout, Text } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
+import AddToDoButton from '../../components/tasks/AddTaskButton';
 
 import { getTasksAction, deleteTaskAction } from '../../actions/TaskAction'
-
-import AddToDoButton from '../../components/tasks/AddTaskButton';
 
 function wait(timeout) {
     return new Promise(resolve => {
@@ -106,17 +105,16 @@ const FiveDayScreen = (props) => {
         );
     };
 
-    //Define Section Elements
+    //Define Swipeable Section Elements
     const sections = getSections(tasks)
-    const renderItem = (data) => (
-        <TaskItem item={data.item} />
+    const renderItem = ({ item }) => (
+        <TaskItem item={item} />
     )
     const closeRow = (rowMap, rowKey) => {
         if (rowMap[rowKey]) {
             rowMap[rowKey].closeRow();
         }
     };
-
     const renderHiddenItem = (data, rowMap) => (
         <View style={styles.rowBack}>
             <Text>Left</Text>
@@ -137,19 +135,23 @@ const FiveDayScreen = (props) => {
     const onRowDidOpen = rowKey => {
         console.log('This row opened', rowKey);
     };
-    const renderSectionHeader = ({ section }) => <Text>{section.title}</Text>
+    const renderSectionHeader = ({ section }) => <Text style={styles.SectionHeaderStyle}>{section.title}</Text>
 
 
     return (
-
         <TouchableWithoutFeedback
             onPress={() => {
                 Keyboard.dismiss()
             }}
         >
             <Layout style={styles.container} >
-                <TopNavigationBar {...props} />
-                <Text style={{ alignSelf: "center" }}>Five Days List</Text>
+                
+                    <TopNavigationBar {...props} />
+                
+                
+
+                
+                <Text style={styles.title}>Five Days List</Text>
 
                 <SafeAreaView style={styles.list} >
                     {/* <SectionList
@@ -171,6 +173,9 @@ const FiveDayScreen = (props) => {
                     /> */}
                     <SwipeListView
                         useSectionList
+                        refreshControl={
+                            <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+                        }
                         keyExtractor={item => item._id}
                         // ItemSeparatorComponent={FlatListItemSeparator}
                         sections={sections}
@@ -205,10 +210,12 @@ const FiveDayScreen = (props) => {
 
                     </View>
                 </BottomSheet>
+                
             </Layout>
 
         </TouchableWithoutFeedback>
     )
+
 }
 
 const styles = StyleSheet.create({
@@ -217,19 +224,19 @@ const styles = StyleSheet.create({
         // alignItems: "center",
         justifyContent: 'center',
         backgroundColor: '#F5F5F5',
-        paddingTop: 16,
+        marginTop: 16,
         paddingBottom: 0
+    },
+    title: {
+        fontFamily: 'Lato-Regular',
+        fontSize: 36,
+        paddingTop: 30,
+        paddingLeft: 10
+        
     },
     list: {
         flex: 1,
-        padding: 16
-    },
-    centerView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22
-
+        padding: 10
     },
     bottomNavigationView: {
         backgroundColor: '#fff',
@@ -241,13 +248,13 @@ const styles = StyleSheet.create({
     },
     SectionHeaderStyle: {
         // backgroundColor: '#CDDC89',
-        fontSize: 20,
+        fontSize: 24,
         padding: 5,
         color: 'black',
     },
     rowBack: {
         alignItems: 'center',
-        backgroundColor: '#DDD',
+        // backgroundColor: '#DDD',
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',

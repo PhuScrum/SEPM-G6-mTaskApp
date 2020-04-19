@@ -23,6 +23,7 @@ const TaskItem = ({ item }) => {
         >
             <View>
                 <ListItem 
+                    style={{borderRadius:12}}
                     title={item.name}
                     description={moment(item.dateTime).format('LT')}
                     onPress={() => console.log('You touched me')}
@@ -56,6 +57,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#CCC',
         justifyContent: 'center',
         // height: 50,
+        borderRadius:12
+        
     }
 })
 

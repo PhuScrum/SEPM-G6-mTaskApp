@@ -15,6 +15,7 @@
     "@react-navigation/stack": "^5.2.9",
     "@ui-kitten/components": "^4.4.1",
     "@ui-kitten/eva-icons": "^4.4.1",
+    "@use-expo/font": "^2.0.0",
     "axios": "^0.19.2",
     "expo": "~36.0.0",
     "moment": "^2.24.0",
@@ -40,6 +41,11 @@
   "devDependencies": {
     "babel-preset-expo": "~8.0.0",
     "@babel/core": "^7.0.0"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
   },
   "private": true
 }
