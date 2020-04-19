@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import {Layout, Text, Button } from '@ui-kitten/components';
 import TopNavigationBarBackButton from '../../components/cores/TopNavigationBarBackButton';
-import {Modal, FlatList, StyleSheet, View, ActivityIndicator, TouchableOpacity} from 'react-native';
+import {Modal, FlatList, StyleSheet, View, ActivityIndicator, TouchableOpacity, SectionList} from 'react-native';
 import Timeago from './TimeAgo';
 import Timeformat from './TimeFormat';
+import _ from 'lodash'
+import moment from 'moment';
+
+
+
 
 export default class DoneListScreen extends Component {
 
@@ -17,79 +22,72 @@ export default class DoneListScreen extends Component {
         selectedItemId: '',
         selectedDescription:'',
         selectedCompletedDate:'',
+        selectedTaggedFriend:[],
        
-        
        }
    }
-   
-  
 
    componentDidMount () {
        return fetch('https://bigquery-project-medium.df.r.appspot.com/task')
         .then((response) => response.json())
-       // .then((responseJson) => {
-     //       this.setState({
-     //       isLoading: false,
-     //       dataSource: responseJson
-    //    })
-
-    //   })
+ 
         .then(dataSource => {
             this.setState({dataSource: dataSource.filter(d => d.completed === true)})
+       
         })
         
     }
 
-    //fetchData = async () => {
-    //    const response = await fetch("http://localhost:19000/task");
-    //    const json =await response.json();
-    //       this.setState({data: json.task});
+    renderHeader = ({ section }) => {
+        return (
+          <View style={styles.header} >
+            <Text style={{fontSize:20, color:'#6375df'}}>{section.title}</Text>
+          </View>
+        )
+    }
 
-
-   // }
-
- 
    _renderItem = ({ item }) => (
-    
-   
     
     <View>
     
-         <Modal
-            
+         <Modal  
             transparent={true}
             visible={this.state.show}
-            >
+        >
     
             <View style={{backgroundColor: "#000000aa", flex: 1}}>
             <View  style={{backgroundColor:"#ffffff", marginHorizontal:50,marginVertical:100, padding:40, borderRadius:10, flex:1}}>
                 <View style={{marginBottom:20}}>
-                 <Text style={{fontSize:20, textAlign:"center"}}>Task Title</Text>
-                 <Text style={{fontSize:15, textAlign:"center"}}>{this.state.selectedItemName}</Text>
+                    <Text style={{fontSize:20, textAlign:"center"}}>Task Title</Text>
+                    <Text style={{fontSize:15, textAlign:"center"}}>{this.state.selectedItemName}</Text>
                 </View>
 
                 <View style={{marginBottom:20}}>
-                 <Text style={{fontSize:20, textAlign:"center"}}>Description</Text>
-                 <Text style={{fontSize:15, textAlign:"center"}}>{this.state.selectedDescription}</Text>
+                    <Text style={{fontSize:20, textAlign:"center"}}>Description</Text>
+                    <Text style={{fontSize:15, textAlign:"center"}}>{this.state.selectedDescription}</Text>
                 </View>
 
                 <View style={{marginBottom:20}}>
-                
-                 <Text style={{fontSize:20, textAlign:"center"}}>Completed Time</Text>
-                 <Timeformat time={this.state.selectedCompletedDate}/>
-                
+                    <Text style={{fontSize:20, textAlign:"center"}}>Completed Time</Text>
+                    <Timeformat time={this.state.selectedCompletedDate}/>
                 </View>
 
-                 <View style={{marginLeft:'50%', marginBottom:36, position: 'absolute', bottom:0}}>
-                    
-                <Button onPress={()=>{this.setState({show:false})}}>Back</Button>   
-                 </View>  
+                <View style={{marginBottom:20}}>
+                    <Text style={{fontSize:20, textAlign:"center"}}>Tagged Friend</Text>
+                    <Text style={{fontSize:15, textAlign:"center"}}>{this.state.selectedTaggedFriend}</Text>
+                </View>
+
+                <View style={{marginLeft:'50%', marginBottom:36, position: 'absolute', bottom:0}}>
+                    <Button onPress={()=>{this.setState({show:false})}}>Back</Button>   
+                </View>  
+
             </View>    
             </View>
          </Modal>
    
     <TouchableOpacity onPress={() => {this.setState(
-        {show: true, selectedItemId: item._id, selectedItemName:item.name, selectedDescription:item.description, selectedCompletedDate:item.dateTime})}}>
+        {show: true, selectedItemId: item._id, selectedItemName:item.name, selectedDescription:item.description, selectedCompletedDate:item.dateTime, selectedTaggedFriend:item.taggedUsers})}}
+    >
 
         <View style={styles.item}> 
             <Text style={{fontSize:18, fontWeight:"bold", }}>{item.name}</Text> 
@@ -100,33 +98,57 @@ export default class DoneListScreen extends Component {
     </View>
     
    );
-    
+
+
+  
     render() {
 
-        const sortByDate = this.state.dataSource.sort((first, second) => {
+        const sortbyDate = this.state.dataSource.sort((first, second) => {
             return new Date(second.dateTime).getTime() - new Date(first.dateTime).getTime();
           });
-        
 
+        const groupbydate = _.groupBy(sortbyDate, task => moment(task.dateTime).format('MMMM Do YYYY'))
+        const newList = _.reduce(groupbydate, (acc,next,index)=>{
+            acc.push({
+                title: index,
+                data: next
+            })
+              return acc
+        }, [])
+          
+        
+        
         return (
             
-            <View  style={{paddingTop: 20, paddingBottom: 0,  }}>
+
+            <Layout  style={{paddingTop: 16, paddingBottom: 0 }}>
                 <View style={{marginVertical: 10, borderBottomColor:'black'}}>
                 <TopNavigationBarBackButton {...this.props} title='Back'/>
                 
                 </View>
                 <Text style={{textAlign:"center"}}category='h1'>Done List</Text>
+                
                 <View style={{paddingBottom:260}}>
 
-                
-                <FlatList 
+              {/* <FlatList 
                 //Try to sort the data by date
-                    data={sortByDate}
+                    data={sortbyDate}
                     renderItem={this._renderItem}
                     keyExtractor={i => i._id}
-                    />
+                 />
+              */}
+
+                <SectionList
+
+                    sections={newList} 
+                    renderSectionHeader={this.renderHeader} 
+                    renderItem={this._renderItem} 
+                    keyExtractor={item => item._id}
+                />
+            
+                    
                 </View>
-            </View>
+            </Layout>
             
         )
     }
@@ -142,4 +164,11 @@ const styles = StyleSheet.create({
         marginRight:10,
 
     },
+    header:{
+        paddingTop: 20,
+        paddingLeft:10,
+        backgroundColor: 'white',
+        paddingBottom:3,
+        
+    }
 });
