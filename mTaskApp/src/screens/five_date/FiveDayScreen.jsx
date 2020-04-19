@@ -9,14 +9,15 @@ import {
     SafeAreaView,
     RefreshControl,
     TouchableHighlight,
-    SectionList,
-    TouchableOpacity
+    TouchableOpacity,
+    Dimensions
 
 } from 'react-native';
+import { Ionicons, Entypo } from '@expo/vector-icons';
 import { BottomSheet } from 'react-native-btr';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import moment from 'moment-timezone'
-import { Layout, Text } from '@ui-kitten/components';
+import { Layout, Text, Icon } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
@@ -62,6 +63,7 @@ const FiveDayScreen = (props) => {
     const dispatch = useDispatch();
     const [bottomSheetShow, setBottomSheetShow] = useState(false);
     const [refreshing, setRefreshing] = useState(false)
+    const [blankWidth, setBlankWidth] = useState(0)
 
     const getTasks = () => {
         dispatch(getTasksAction())
@@ -81,7 +83,6 @@ const FiveDayScreen = (props) => {
         getTasks()
         wait(2000).then(() => {
             setRefreshing(false)
-
         });
     }, [refreshing]);
 
@@ -95,16 +96,6 @@ const FiveDayScreen = (props) => {
         }
     }
 
-    //Seperator Style
-    const FlatListItemSeparator = () => {
-        return (
-            //Item Separator
-            <View
-                style={{ height: 0.5, width: '100%', backgroundColor: '#C8C8C8' }}
-            />
-        );
-    };
-
     //Define Swipeable Section Elements
     const sections = getSections(tasks)
     const renderItem = ({ item }) => (
@@ -117,18 +108,39 @@ const FiveDayScreen = (props) => {
     };
     const renderHiddenItem = (data, rowMap) => (
         <View style={styles.rowBack}>
-            <Text>Left</Text>
+            
             <TouchableOpacity
-                style={[styles.backRightBtn, styles.backRightBtnLeft]}
+                style={[styles.backRightBtn, styles.backLeftBtnRight]}
                 onPress={() => closeRow(rowMap, data.item._id)}
             >
-                <Text style={styles.backTextWhite}>Close</Text>
+                <Text style={styles.backTextWhite}>Delay</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                style={[styles.backRightBtn, styles.backRightBtnRight]}
-                onPress={() => console.log(data.item._id)}
+                style={[styles.backRightBtn, styles.backLeftBtnLeft]}
+                onPress={() => deleteHandler(data.item._id)}
             >
-                <Text style={styles.backTextWhite}>Delete</Text>
+                <Ionicons name="ios-trash" size={32} color="white" />
+            </TouchableOpacity>
+            <View style={[
+                styles.backRightBtn, 
+                {
+                    backgroundColor: '#2F3860',
+                    left: 149,
+                    width: 200
+                }]}></View>
+            <View style={[
+                styles.backRightBtn, 
+                {
+                    backgroundColor: '#2AB785',
+                    right: 74,
+                    width: 75
+                }]}></View>
+                
+            <TouchableOpacity
+                style={[styles.backRightBtn, styles.backRightBtnRight]}
+                onPress={() => console.log("Task ID: ", data.item._id)}
+            >
+                <Ionicons name="ios-trash" size={32} color="white" />
             </TouchableOpacity>
         </View>
     );
@@ -136,7 +148,11 @@ const FiveDayScreen = (props) => {
         console.log('This row opened', rowKey);
     };
     const renderSectionHeader = ({ section }) => <Text style={styles.SectionHeaderStyle}>{section.title}</Text>
-
+    const onSwipeValueChange = ({key, value}) => {
+        // console.log('Key: ', key)
+        // console.log('Value: ', value)
+        
+    }
 
     return (
         <TouchableWithoutFeedback
@@ -145,32 +161,11 @@ const FiveDayScreen = (props) => {
             }}
         >
             <Layout style={styles.container} >
-                
-                    <TopNavigationBar {...props} />
-                
-                
 
-                
-                <Text style={styles.title}>Five Days List</Text>
+                <TopNavigationBar {...props} />
 
                 <SafeAreaView style={styles.list} >
-                    {/* <SectionList
-                        refreshControl={
-                            <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
-                        }
-                        keyExtractor={item => item._id}
-                        ref={ref => scrollRef}
-                        ItemSeparatorComponent={FlatListItemSeparator}
-                        sections={sections}
-                        renderSectionHeader={({ section }) => (
-                            <Text style={styles.SectionHeaderStyle}> {section.title} </Text>
-                        )}
-                        renderItem={({ item }) => (
-                            <TaskItem item={item} deleteHandler={deleteHandler} />
-                        )
-                        }
-
-                    /> */}
+                    <Text style={styles.title}>Five Days List</Text>
                     <SwipeListView
                         useSectionList
                         refreshControl={
@@ -182,15 +177,14 @@ const FiveDayScreen = (props) => {
                         renderItem={renderItem}
                         renderHiddenItem={renderHiddenItem}
                         renderSectionHeader={renderSectionHeader}
-                        leftOpenValue={75}
-                        rightOpenValue={-150}
+                        leftOpenValue={150}
+                        rightOpenValue={-75}
                         previewRowKey={'0'}
                         previewOpenValue={-40}
-                        previewOpenDelay={3000}
-                        onRowDidOpen={onRowDidOpen}
+                        previewOpenDelay={150}
+                        // onRowDidOpen={onRowDidOpen}
+                        onSwipeValueChange={onSwipeValueChange}
                     />
-
-
                 </SafeAreaView>
                 {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => setBottomSheetShow(true)} />)}
                 <BottomSheet
@@ -199,18 +193,19 @@ const FiveDayScreen = (props) => {
                     onBackdropPress={() => setBottomSheetShow(!bottomSheetShow)}
                 >
                     <View style={styles.bottomNavigationView}>
+                        
                         <View style={{
                             width: '100%',
                             flex: 1,
                             flexDirection: 'column',
-                            justifyContent: 'space-between',
+                            marginTop: 15
                         }}>
                             <AddTask submitHandler={submitHandler} />
                         </View>
 
                     </View>
                 </BottomSheet>
-                
+
             </Layout>
 
         </TouchableWithoutFeedback>
@@ -223,16 +218,15 @@ const styles = StyleSheet.create({
         flex: 1,
         // alignItems: "center",
         justifyContent: 'center',
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#EDF1F7',
         marginTop: 16,
         paddingBottom: 0
     },
     title: {
         fontFamily: 'Lato-Regular',
         fontSize: 36,
-        paddingTop: 30,
-        paddingLeft: 10
-        
+        paddingTop: 32,
+        color: '#1E262C'
     },
     list: {
         flex: 1,
@@ -247,10 +241,12 @@ const styles = StyleSheet.create({
         // marginVertical: 10
     },
     SectionHeaderStyle: {
+        paddingTop: 20,
         // backgroundColor: '#CDDC89',
-        fontSize: 24,
+        fontSize: 20,
         padding: 5,
         color: 'black',
+        paddingBottom: 2
     },
     rowBack: {
         alignItems: 'center',
@@ -259,6 +255,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingLeft: 15,
+        marginTop: 2
     },
     backRightBtn: {
         alignItems: 'center',
@@ -268,13 +265,32 @@ const styles = StyleSheet.create({
         top: 0,
         width: 75,
     },
-    backRightBtnLeft: {
-        backgroundColor: 'blue',
-        right: 75,
+    backLeftBtnRight: {
+        backgroundColor: '#2F3860',
+        left: 75,
+        
     },
-    backRightBtnRight: {
-        backgroundColor: 'red',
+    backLeftBtnLeft: {
+        backgroundColor: '#D26759',
+        left: 0,
+        borderTopLeftRadius: 13,
+        borderBottomLeftRadius: 13
+    },
+    backRightBtnRight:{
+        backgroundColor: '#2AB785',
         right: 0,
+        borderTopRightRadius: 13,
+        borderBottomRightRadius: 13
+    },
+    backLeftPlank:{
+       
+    },
+    backRightPlank:{
+       
+    },
+    backTextWhite:{
+        color: 'white',
+        fontWeight: 'bold'
     }
 
 })
