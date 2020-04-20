@@ -30,7 +30,7 @@ const AddTask = () => {
 
     return (
         <Layout style={styles.containter}>
-            <View style={styles.inputGroup}>
+            <View style={styles.inputGroup, {flex: 1}}>
                 <Input
                     style={styles.input}
                     value={value}
@@ -38,7 +38,7 @@ const AddTask = () => {
                     placeholder='New Task ...'
                 />
             </View>
-            <View style={styles.inputGroup}>
+            <View style={styles.inputGroup, {flex: 1}}>
                 <Input
                     style={styles.input}
                     value={desc}
@@ -46,7 +46,7 @@ const AddTask = () => {
                     placeholder='Description'
                 />
             </View>
-            <View style={styles.inputGroup, { flexDirection: 'row' }}>
+            <View style={styles.inputGroup, { flexDirection: 'row', flex:1 }}>
                 <Datepicker
                     style={styles.input}
                     value={dateTime}
@@ -61,7 +61,7 @@ const AddTask = () => {
                     placeholder='New Task ...'
                 />
             </View>
-            <View style={{paddingTop: 8}}>
+            <View style={{paddingTop: 8, flex: 1}}>
             <Button style={styles.button} onPress={() => submitHandler(value)}>Add</Button>
             </View>
 
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     containter: {
         flex: 1,
         // justifyContent: "center",
-        alignItems: "center",
+        // alignItems: "center",
 
     },
     input: {
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     inputGroup: {
         width: '100%',
         paddingBottom: 8,
-        //   position:'absolute' 
+        position:'relative'
     }
 })
 
