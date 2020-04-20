@@ -2,15 +2,38 @@ import React, { useState } from 'react'
 import { StyleSheet, View, TouchableOpacity, Alert, } from 'react-native'
 import { Layout, Text, Input, Button, Datepicker, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const DateIcon = (style) => (
-    <Icon {...style} name='calendar'/>
-  )
+    <Icon {...style} name='calendar' />
+)
 
 const AddTask = () => {
     const [value, setValue] = useState('')
     const [desc, setDesc] = useState('')
-    const [dateTime, setDateTime] = useState(moment())
+    const [dateTime, setDateTime] = useState(new Date(Date.now()))
+
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || dateTime;
+        setShow(Platform.OS === 'ios');
+        setDateTime(currentDate);
+    };
+
+    const showMode = currentMode => {
+        setShow(true);
+        setMode(currentMode);
+    };
+
+    const showDatepicker = () => {
+        showMode('date');
+    };
+
+    const showTimepicker = () => {
+        showMode('time');
+    };
 
     const submitHandler = (text) => {
         if (text.length > 3) {
@@ -22,15 +45,15 @@ const AddTask = () => {
         }
     }
 
-    const time = Date.parse('20 Apr 2020 09:50:53 GMT+07:00')
+    const time = Date.parse(dateTime)
 
-    console.log(moment(time).format('DD MMM YYYY hh:mm:ss a'))
+    console.log(moment(dateTime).format('DD MMM YYYY hh:mm:ss a'))
     console.log(time)
     console.log(dateTime)
 
     return (
         <Layout style={styles.containter}>
-            <View style={styles.inputGroup, {flex: 1}}>
+            <View style={styles.inputGroup, { flex: 1 }}>
                 <Input
                     style={styles.input}
                     value={value}
@@ -38,7 +61,7 @@ const AddTask = () => {
                     placeholder='New Task ...'
                 />
             </View>
-            <View style={styles.inputGroup, {flex: 1}}>
+            <View style={styles.inputGroup, { flex: 1 }}>
                 <Input
                     style={styles.input}
                     value={desc}
@@ -46,14 +69,14 @@ const AddTask = () => {
                     placeholder='Description'
                 />
             </View>
-            <View style={styles.inputGroup, { flexDirection: 'row', flex:1 }}>
-                <Datepicker
+            <View style={styles.inputGroup, { flexDirection: 'row', flex: 1 }}>
+                {/* <Datepicker
                     style={styles.input}
                     value={dateTime}
                     onChangeText={setDateTime}
                     placeholder='Date'
                     icon={DateIcon}
-                />
+                /> */}
                 <Input
                     style={styles.input}
                     value={value}
@@ -61,8 +84,27 @@ const AddTask = () => {
                     placeholder='New Task ...'
                 />
             </View>
-            <View style={{paddingTop: 8, flex: 1}}>
-            <Button style={styles.button} onPress={() => submitHandler(value)}>Add</Button>
+            <View style={styles.inputGroup, { flexDirection: 'row', flex: 1 }}>
+                <View style={styles.input}>
+                    <Button onPress={showDatepicker}>Show date picker!</Button>
+                </View>
+                <View style={styles.input}>
+                    <Button onPress={showTimepicker} >Show time picker!</Button>
+                </View>
+                {show && (
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        timeZoneOffsetInMinutes={0}
+                        value={dateTime}
+                        mode={mode}
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChange}
+                    />
+                )}
+            </View>
+            <View style={{ paddingTop: 8, flex: 1 }}>
+                <Button style={styles.button} onPress={() => submitHandler(value)}>Add</Button>
             </View>
 
         </Layout>
@@ -89,7 +131,7 @@ const styles = StyleSheet.create({
     inputGroup: {
         width: '100%',
         paddingBottom: 8,
-        position:'relative'
+        position: 'relative'
     }
 })
 
