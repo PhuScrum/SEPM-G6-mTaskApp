@@ -1,56 +1,51 @@
 import React from 'react'
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { Layout, Text, Icon, Button } from '@ui-kitten/components';
+import { ListItem } from '@ui-kitten/components';
+import moment from 'moment-timezone'
 
-const TrashIcon = (props) => (
-    <Icon
-        {...props}
-        name='star'
-        fill='#8F9BB3'
-    />
-);
 
-const TaskItem = ({ item, deleteHandler }) => {
+const TaskItem = ({ item }) => {
+    // console.log(item.dateTime)
     return (
-        <TouchableOpacity >
-            <Layout style={styles.item} level='1'>
-                <Button 
-                    style={styles.button} 
-                    accessoryLeft={TrashIcon}
-                    status='primary' 
-                    onPress={() => deleteHandler(item._id)} 
-                >X</Button>
-               
-                <Text style={styles.itemText}>
-                    {item.name}
-                </Text>
-            </Layout>
-        </TouchableOpacity>
+        <TouchableHighlight
+            style={styles.rowFront}
+            // underlayColor={'#f0ffff'}
+        >
+            <View>
+                <ListItem 
+                    style={styles.item}
+                    title={item.name}
+                    description={moment(item.dateTime).format('LT')}
+                    onPress={() => console.log('You touched me')}
+                />
+            </View>
+        </TouchableHighlight>
     )
 }
 
 const styles = StyleSheet.create({
     item: {
-        padding: 16,
-        marginTop: 16,
-        borderColor: '#bbb',
-        borderWidth: 1,
-        borderStyle: 'dashed',
+        // marginTop:5,
+        // borderColor: 'transparent',
+        // borderWidth: 1,
+        // borderStyle: 'solid',
         borderRadius: 10,
         flexDirection: 'row',
-        flexWrap: 'wrap'
-    },
-    
-    icon: {
-        width: 18,
-        height: 18,
-    },
-    itemText: {
-        marginLeft: 10,
-        alignSelf:'center'
+        flexWrap: 'wrap',
+        // backgroundColor: '#EEF7FA'
     },
     button: {
         margin: 0
+    },
+    rowFront: {
+        marginTop:2,
+        // alignItems: 'center',
+        backgroundColor: '#EEF7FA',
+        justifyContent: 'center',
+        // height: 50,
+        borderRadius:12
+        
     }
 })
 

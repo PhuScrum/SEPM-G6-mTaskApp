@@ -12,10 +12,11 @@ import {
   Icon,
   List,
   ListItem,
+  Layout
 } from '@ui-kitten/components';
 import {useSelector} from 'react-redux'
-import {useDispatch} from 'react-redux'
-import {Image} from 'react-native'
+import {View, StyleSheet} from 'react-native'
+
 
 
 const renderItemAccessory = (style) => (
@@ -34,20 +35,24 @@ export default function ListCompositeItemShowcase (){
   const data = tasksData
 
   const renderItem = ({ item, index }) => {
+    var convertedDateTime = new Date(item.dateTime)
+    var hr = convertedDateTime.getHours()
+    var min = convertedDateTime.getMinutes()
+
     var ampm ='am'
-    if(item.dateTime.getHours()> 12){
+    if(convertedDateTime.getHours()> 12){
       ampm ='pm'
     }
     return (
       <ListItem
         title={`${item.name}`}
-        description={`${item.description} \n${item.dateTime.getHours()}.${item.dateTime.getMinutes()} ${ampm} `}
+        description={`${item.description ? item.description : ``} ${item.description ? `\n${hr}.${min} ${ampm}` : `${hr}.${min} ${ampm}`} `}
         icon={renderItemIcon}
         accessory={renderItemAccessory}
       />
     );
   }
-    if(data){
+    if(data && data.length >0){
       return (
         <List
           data={data}
@@ -56,14 +61,35 @@ export default function ListCompositeItemShowcase (){
         );
     }else{
       return(
-        <Image
-        source={{
-          uri: 'https://reactnative.dev/img/tiny_logo.png',
-        }}
-      />
+        <React.Fragment>
+          <View style={style.container}>
+          {/* <Text>Nothing to show</Text> */}
+          {/* <Image
+            style={style.image}
+            source={{
+              uri: 'https://img.freepik.com/free-vector/womens-freelance-girl-with-laptop-lies-hammock-palm-trees-with-cocktail-concept-illustration-working-outdoors-studying-communication-healthy-lifestyle-flat-style_189033-12.jpg?size=626&ext=jpg',
+            }}
+          /> */}
+          </View>
+         
+        </React.Fragment>
+        
       )
     }
   
   
 };
 
+const style = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1
+  },
+  image:{
+    height: 230,
+    width: 300,
+    borderRadius: 50
+    
+  }
+})
