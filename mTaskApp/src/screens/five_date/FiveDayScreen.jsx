@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
     View,
     StyleSheet,
-    
+    Alert,
     TouchableWithoutFeedback,
     Keyboard,
     SafeAreaView,
@@ -13,7 +13,7 @@ import {
     Dimensions
 
 } from 'react-native';
-import { Ionicons, Entypo } from '@expo/vector-icons';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { BottomSheet } from 'react-native-btr';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import moment from 'moment-timezone'
@@ -23,7 +23,7 @@ import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
 import AddToDoButton from '../../components/tasks/AddTaskButton';
 
-import { getTasksAction, deleteTaskAction } from '../../actions/TaskAction'
+import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction } from '../../actions/TaskAction'
 
 function wait(timeout) {
     return new Promise(resolve => {
@@ -63,7 +63,6 @@ const FiveDayScreen = (props) => {
     const dispatch = useDispatch();
     const [bottomSheetShow, setBottomSheetShow] = useState(false);
     const [refreshing, setRefreshing] = useState(false)
-    const [blankWidth, setBlankWidth] = useState(0)
 
     const getTasks = () => {
         dispatch(getTasksAction())
@@ -74,6 +73,24 @@ const FiveDayScreen = (props) => {
         dispatch(deleteTaskAction(id))
     }
 
+    const editTaskHandler = (id, data) => {
+        dispatch(editTaskAction(id, data))
+        onRefresh()
+    }
+
+    const addTaskHandler = (data) => {
+        if (data.name.length > 3) {
+            dispatch(addTaskAction(data))
+            onRefresh()
+            setBottomSheetShow(false)
+        } else {
+            Alert.alert('Warning!!!', 'Todos must be over 3 characters long', [
+                { text: 'Understood' }
+            ])
+        }
+
+    }
+
     useEffect(() => {
         getTasks()
     }, [])
@@ -81,7 +98,8 @@ const FiveDayScreen = (props) => {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         getTasks()
-        wait(2000).then(() => {
+        wait(1000).then(() => {
+            
             setRefreshing(false)
         });
     }, [refreshing]);
@@ -98,7 +116,6 @@ const FiveDayScreen = (props) => {
     };
     const renderHiddenItem = (data, rowMap) => (
         <View style={styles.rowBack}>
-            
             <TouchableOpacity
                 style={[styles.backRightBtn, styles.backLeftBtnRight]}
                 onPress={() => closeRow(rowMap, data.item._id)}
@@ -112,25 +129,35 @@ const FiveDayScreen = (props) => {
                 <Ionicons name="ios-trash" size={32} color="white" />
             </TouchableOpacity>
             <View style={[
-                styles.backRightBtn, 
+                styles.backRightBtn,
                 {
                     backgroundColor: '#2F3860',
                     left: 149,
                     width: 200
                 }]}></View>
             <View style={[
-                styles.backRightBtn, 
+                styles.backRightBtn,
                 {
                     backgroundColor: '#2AB785',
                     right: 74,
                     width: 75
                 }]}></View>
-                
+
             <TouchableOpacity
+                activeOpacity={1.0}
                 style={[styles.backRightBtn, styles.backRightBtnRight]}
-                onPress={() => console.log("Task ID: ", data.item._id)}
+                onPress={() => {
+                    editTaskHandler(data.item._id, {completed: !data.item.completed})
+                    wait(800).then(() => {
+                        closeRow(rowMap, data.item._id)
+                    })
+                }}
             >
-                <Ionicons name="ios-trash" size={32} color="white" />
+                <AntDesign 
+                    name= {data.item.completed ? 'checkcircle' : 'checkcircleo'}
+                    size={32} 
+                    color="white" 
+                />
             </TouchableOpacity>
         </View>
     );
@@ -138,10 +165,10 @@ const FiveDayScreen = (props) => {
         console.log('This row opened', rowKey);
     };
     const renderSectionHeader = ({ section }) => <Text style={styles.SectionHeaderStyle}>{section.title}</Text>
-    const onSwipeValueChange = ({key, value}) => {
+    const onSwipeValueChange = ({ key, value }) => {
         // console.log('Key: ', key)
         // console.log('Value: ', value)
-        
+
     }
 
     return (
@@ -183,7 +210,7 @@ const FiveDayScreen = (props) => {
                     onBackdropPress={() => setBottomSheetShow(!bottomSheetShow)}
                 >
                     <View style={styles.bottomNavigationView}>
-                        <View style={{flex:3, justifyContent:'center'}}>
+                        <View style={{ flex: 3, justifyContent: 'center' }}>
                             <Text style={styles.bottomSheetTitle}>Create a new task</Text>
                         </View>
                         <View style={{
@@ -191,7 +218,7 @@ const FiveDayScreen = (props) => {
                             flex: 16,
                             marginTop: 2
                         }}>
-                            <AddTask />
+                            <AddTask submitHandler={addTaskHandler} />
                         </View>
                     </View>
                 </BottomSheet>
@@ -266,17 +293,17 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 13,
         borderBottomLeftRadius: 13
     },
-    backRightBtnRight:{
+    backRightBtnRight: {
         backgroundColor: '#2AB785',
         right: 0,
         borderTopRightRadius: 13,
         borderBottomRightRadius: 13
     },
-    backTextWhite:{
+    backTextWhite: {
         color: 'white',
         fontWeight: 'bold'
     },
-    bottomSheetTitle:{
+    bottomSheetTitle: {
         // flexDirection:'row',
         fontFamily: 'Lato-Light',
         fontWeight: 'bold',

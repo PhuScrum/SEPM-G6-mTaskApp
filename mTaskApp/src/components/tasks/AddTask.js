@@ -1,63 +1,59 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, TouchableOpacity, Alert, } from 'react-native'
+import { StyleSheet, View, TouchableOpacity,} from 'react-native'
 import { Layout, Text, Input, Button, Datepicker, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useSelector, useDispatch } from 'react-redux'
+import {addTaskAction} from '../../actions/TaskAction'
 
 const DateIcon = (style) => (
     <Icon {...style} name='calendar' />
 )
 
-const AddTask = () => {
-    const [value, setValue] = useState('')
+const combineDateTime = (date, time) => {
+    const datePick = moment(date).format('DD MMM YYYY ')
+    const timePick = moment(time).format('h:mm:ss a')
+    const finalTime = Date.parse(`${datePick}${timePick}`)
+    return finalTime
+}
+
+const AddTask = ({submitHandler}) => {
+    const [name, setName] = useState('')
     const [desc, setDesc] = useState('')
-    const [dateTime, setDateTime] = useState(new Date(Date.now()))
 
-    const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
+    const [showDatePicker, setShowDatePicker] = useState(false)
+    const [showTimePicker, setShowTimePicker] = useState(false)
+    const [date, setDate] = useState(new Date(Date.now()))
+    const [time, setTime] = useState(new Date(Date.now()))
 
-    const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate || dateTime;
-        setShow(Platform.OS === 'ios');
-        setDateTime(currentDate);
+
+    const onChangeDate = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShowDatePicker(false);
+        setDate(currentDate);
     };
 
-    const showMode = currentMode => {
-        setShow(true);
-        setMode(currentMode);
+    const onChangeTime = (event, selectedTime) => {
+        const currentTime = selectedTime || time;
+        setShowTimePicker(false);
+        setTime(currentTime);
     };
 
-    const showDatepicker = () => {
-        showMode('date');
-    };
-
-    const showTimepicker = () => {
-        showMode('time');
-    };
-
-    const submitHandler = (text) => {
-        if (text.length > 3) {
-            console.log(text)
-        } else {
-            Alert.alert('oops!!', 'Todos must be over 3 characters long', [
-                { text: 'Understood', onPress: () => console.log('alert closed') }
-            ])
-        }
+    const taskData = {
+        name: name,
+        description: desc,
+        dateTime: combineDateTime(date,time)
     }
 
-    const time = Date.parse(dateTime)
-
-    console.log(moment(dateTime).format('DD MMM YYYY hh:mm:ss a'))
-    console.log(time)
-    console.log(dateTime)
+    const dateTime = combineDateTime(date, time)
 
     return (
         <Layout style={styles.containter}>
             <View style={styles.inputGroup, { flex: 1 }}>
                 <Input
                     style={styles.input}
-                    value={value}
-                    onChangeText={setValue}
+                    value={name}
+                    onChangeText={setName}
                     placeholder='New Task ...'
                 />
             </View>
@@ -70,41 +66,37 @@ const AddTask = () => {
                 />
             </View>
             <View style={styles.inputGroup, { flexDirection: 'row', flex: 1 }}>
-                {/* <Datepicker
-                    style={styles.input}
-                    value={dateTime}
-                    onChangeText={setDateTime}
-                    placeholder='Date'
-                    icon={DateIcon}
-                /> */}
-                <Input
-                    style={styles.input}
-                    value={value}
-                    onChangeText={setValue}
-                    placeholder='New Task ...'
-                />
-            </View>
-            <View style={styles.inputGroup, { flexDirection: 'row', flex: 1 }}>
                 <View style={styles.input}>
-                    <Button onPress={showDatepicker}>Show date picker!</Button>
+                    <Button onPress={()=> setShowDatePicker(true)}>Show date picker!</Button>
                 </View>
                 <View style={styles.input}>
-                    <Button onPress={showTimepicker} >Show time picker!</Button>
+                    <Button onPress={()=> setShowTimePicker(true)} >Show time picker!</Button>
                 </View>
-                {show && (
+                {showDatePicker && (
                     <DateTimePicker
                         testID="dateTimePicker"
                         timeZoneOffsetInMinutes={0}
-                        value={dateTime}
-                        mode={mode}
+                        value={date}
+                        mode={'date'}
                         is24Hour={true}
                         display="default"
-                        onChange={onChange}
+                        onChange={onChangeDate}
+                    />
+                )}
+                {showTimePicker && (
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        timeZoneOffsetInMinutes={0}
+                        value={time}
+                        mode={'time'}
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeTime}
                     />
                 )}
             </View>
             <View style={{ paddingTop: 8, flex: 1 }}>
-                <Button style={styles.button} onPress={() => submitHandler(value)}>Add</Button>
+                <Button style={styles.button} onPress={() => submitHandler(taskData)}>Add</Button>
             </View>
 
         </Layout>
