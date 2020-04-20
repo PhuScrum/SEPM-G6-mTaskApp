@@ -41,10 +41,10 @@ const getSections = (tasks) => {
     const fiveDayData = tasks.filter(task => moment(task.dateTime).date() === moment().date() + 5)
 
     //Define Section
-    const twoDay = moment().add(2, 'days').format('ll')
-    const threeDay = moment().add(3, 'days').format('ll')
-    const fourDay = moment().add(4, 'days').format('ll')
-    const fiveDay = moment().add(5, 'days').format('ll')
+    const twoDay = moment().add(2, 'days').format('Do MMMM YYYY')
+    const threeDay = moment().add(3, 'days').format('Do MMMM YYYY')
+    const fourDay = moment().add(4, 'days').format('Do MMMM YYYY')
+    const fiveDay = moment().add(5, 'days').format('Do MMMM YYYY')
     const sectionsList = [
         { title: 'Today', data: todayData },
         { title: 'Tomorrow', data: tmrData },
@@ -193,16 +193,17 @@ const FiveDayScreen = (props) => {
                     onBackdropPress={() => setBottomSheetShow(!bottomSheetShow)}
                 >
                     <View style={styles.bottomNavigationView}>
-                        
+                        <View style={{flex:2, justifyContent:'center'}}>
+                            <Text style={styles.bottomSheetTitle}>Create a new task</Text>
+                        </View>
                         <View style={{
                             width: '100%',
-                            flex: 1,
+                            flex: 12,
                             flexDirection: 'column',
-                            marginTop: 15
+                            marginTop: 10
                         }}>
                             <AddTask submitHandler={submitHandler} />
                         </View>
-
                     </View>
                 </BottomSheet>
 
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
     bottomNavigationView: {
         backgroundColor: '#fff',
         width: '100%',
-        height: '30%',
+        height: '40%',
         justifyContent: 'center',
         alignItems: 'center',
         // marginVertical: 10
@@ -282,15 +283,13 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 13,
         borderBottomRightRadius: 13
     },
-    backLeftPlank:{
-       
-    },
-    backRightPlank:{
-       
-    },
     backTextWhite:{
         color: 'white',
         fontWeight: 'bold'
+    },
+    bottomSheetTitle:{
+        // flexDirection:'row',
+        
     }
 
 })

@@ -29,7 +29,6 @@ export default function App() {
   } else {
     return (
       <React.Fragment>
-
         <IconRegistry icons={EvaIconsPack} />
         <ApplicationProvider mapping={mapping} theme={lightTheme}>
           <NavigationContainer>
