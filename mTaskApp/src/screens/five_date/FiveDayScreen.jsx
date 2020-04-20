@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
     View,
     StyleSheet,
-    Alert,
+    
     TouchableWithoutFeedback,
     Keyboard,
     SafeAreaView,
@@ -85,16 +85,6 @@ const FiveDayScreen = (props) => {
             setRefreshing(false)
         });
     }, [refreshing]);
-
-    const submitHandler = (text) => {
-        if (text.length > 3) {
-            console.log(text)
-        } else {
-            Alert.alert('oops!!', 'Todos must be over 3 characters long', [
-                { text: 'Understood', onPress: () => console.log('alert closed') }
-            ])
-        }
-    }
 
     //Define Swipeable Section Elements
     const sections = getSections(tasks)
@@ -193,16 +183,15 @@ const FiveDayScreen = (props) => {
                     onBackdropPress={() => setBottomSheetShow(!bottomSheetShow)}
                 >
                     <View style={styles.bottomNavigationView}>
-                        <View style={{flex:2, justifyContent:'center'}}>
+                        <View style={{flex:3, justifyContent:'center'}}>
                             <Text style={styles.bottomSheetTitle}>Create a new task</Text>
                         </View>
                         <View style={{
                             width: '100%',
-                            flex: 12,
-                            flexDirection: 'column',
-                            marginTop: 10
+                            flex: 16,
+                            marginTop: 2
                         }}>
-                            <AddTask submitHandler={submitHandler} />
+                            <AddTask />
                         </View>
                     </View>
                 </BottomSheet>
@@ -234,9 +223,10 @@ const styles = StyleSheet.create({
         padding: 10
     },
     bottomNavigationView: {
+        borderRadius: 15,
         backgroundColor: '#fff',
         width: '100%',
-        height: '40%',
+        height: '50%',
         justifyContent: 'center',
         alignItems: 'center',
         // marginVertical: 10
@@ -269,7 +259,6 @@ const styles = StyleSheet.create({
     backLeftBtnRight: {
         backgroundColor: '#2F3860',
         left: 75,
-        
     },
     backLeftBtnLeft: {
         backgroundColor: '#D26759',
@@ -289,7 +278,9 @@ const styles = StyleSheet.create({
     },
     bottomSheetTitle:{
         // flexDirection:'row',
-        
+        fontFamily: 'Lato-Light',
+        fontWeight: 'bold',
+        fontSize: 18
     }
 
 })
