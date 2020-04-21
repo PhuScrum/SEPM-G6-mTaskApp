@@ -3,8 +3,6 @@ import { StyleSheet, View, TouchableOpacity,} from 'react-native'
 import { Layout, Text, Input, Button, Datepicker, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useSelector, useDispatch } from 'react-redux'
-import {addTaskAction} from '../../actions/TaskAction'
 
 const DateIcon = (style) => (
     <Icon {...style} name='calendar' />
@@ -45,7 +43,7 @@ const AddTask = ({submitHandler}) => {
         dateTime: combineDateTime(date,time)
     }
 
-    const dateTime = combineDateTime(date, time)
+    const displayDateTime = moment(combineDateTime(date,time)).format("Do MMMM YYYY, hh:mm:ss a")
 
     return (
         <Layout style={styles.containter}>
@@ -65,11 +63,14 @@ const AddTask = ({submitHandler}) => {
                     placeholder='Description'
                 />
             </View>
-            <View style={styles.inputGroup, { flexDirection: 'row', flex: 1 }}>
-                <View style={styles.input}>
+            <View style={styles.inputGroup, { flex: 0.5 }}>
+    <Text style={styles.dateTimeText}>Chosen Time: {displayDateTime}</Text>
+            </View>
+            <View style={styles.inputGroup, { flexDirection: 'row', flex: 1, marginHorizontal: 10 }}>
+                <View style={styles.pickerButton}>
                     <Button onPress={()=> setShowDatePicker(true)}>Show date picker!</Button>
                 </View>
-                <View style={styles.input}>
+                <View style={styles.pickerButton}>
                     <Button onPress={()=> setShowTimePicker(true)} >Show time picker!</Button>
                 </View>
                 {showDatePicker && (
@@ -96,7 +97,7 @@ const AddTask = ({submitHandler}) => {
                 )}
             </View>
             <View style={{ paddingTop: 8, flex: 1 }}>
-                <Button style={styles.button} onPress={() => submitHandler(taskData)}>Add</Button>
+                <Button style={styles.submitButton} onPress={() => submitHandler(taskData)}>Add</Button>
             </View>
 
         </Layout>
@@ -111,10 +112,11 @@ const styles = StyleSheet.create({
 
     },
     input: {
+        marginVertical: 3,
         marginHorizontal: 15,
         flex: 1
     },
-    button: {
+    submitButton: {
         justifyContent: 'center',
         margin: 8,
         backgroundColor: '#1E262C',
@@ -124,6 +126,16 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingBottom: 8,
         position: 'relative'
+    },
+    dateTimeText:{
+        fontSize: 16,
+        fontWeight: 'normal',
+        fontFamily: 'Lato-Regular',
+        marginLeft: 15
+    },
+    pickerButton: {
+        flex: 1, 
+        margin: 3
     }
 })
 

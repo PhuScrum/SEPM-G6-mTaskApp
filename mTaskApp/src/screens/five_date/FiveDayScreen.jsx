@@ -11,17 +11,18 @@ import {
     TouchableHighlight,
     TouchableOpacity,
     Dimensions
-
 } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { BottomSheet } from 'react-native-btr';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import moment from 'moment-timezone'
 import { Layout, Text, Icon } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
 import AddToDoButton from '../../components/tasks/AddTaskButton';
+
+import _ from 'lodash'
+import moment from 'moment-timezone'
 
 import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction } from '../../actions/TaskAction'
 
@@ -31,20 +32,26 @@ function wait(timeout) {
     });
 }
 
-const getSections = (tasks) => {
-    //Devide Data
-    const todayData = tasks.filter(task => moment(task.dateTime).date() === moment().date())
-    const tmrData = tasks.filter(task => moment(task.dateTime).date() === moment().date() + 1)
-    const twodayData = tasks.filter(task => moment(task.dateTime).date() === moment().date() + 2)
-    const threeDayData = tasks.filter(task => moment(task.dateTime).date() === moment().date() + 3)
-    const fourDayData = tasks.filter(task => moment(task.dateTime).date() === moment().date() + 4)
-    const fiveDayData = tasks.filter(task => moment(task.dateTime).date() === moment().date() + 5)
+function between(x, min, max) {
+    return x >= min && x <= max;
+  }
 
-    //Define Section
+const getSections = (tasks) => {
+    const tmrDay = moment().add(1, 'days').format('Do MMMM YYYY')
     const twoDay = moment().add(2, 'days').format('Do MMMM YYYY')
     const threeDay = moment().add(3, 'days').format('Do MMMM YYYY')
     const fourDay = moment().add(4, 'days').format('Do MMMM YYYY')
     const fiveDay = moment().add(5, 'days').format('Do MMMM YYYY')
+
+    //Devide Data
+    const todayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === moment().format('Do MMMM YYYY'))
+    const tmrData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === tmrDay)
+    const twodayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === twoDay)
+    const threeDayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === threeDay )
+    const fourDayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === fourDay)
+    const fiveDayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === fiveDay)
+
+    //Define Section
     const sectionsList = [
         { title: 'Today', data: todayData },
         { title: 'Tomorrow', data: tmrData },
@@ -63,6 +70,15 @@ const FiveDayScreen = (props) => {
     const dispatch = useDispatch();
     const [bottomSheetShow, setBottomSheetShow] = useState(false);
     const [refreshing, setRefreshing] = useState(false)
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        
+        wait(2000).then(() => {
+            getTasks()
+            setRefreshing(false)
+        });
+    }, [refreshing]);
 
     const getTasks = () => {
         dispatch(getTasksAction())
@@ -88,26 +104,18 @@ const FiveDayScreen = (props) => {
                 { text: 'Understood' }
             ])
         }
-
     }
 
     useEffect(() => {
         getTasks()
     }, [])
 
-    const onRefresh = useCallback(() => {
-        setRefreshing(true);
-        getTasks()
-        wait(1000).then(() => {
-            
-            setRefreshing(false)
-        });
-    }, [refreshing]);
+    
 
     //Define Swipeable Section Elements
     const sections = getSections(tasks)
-    const renderItem = ({ item }) => (
-        <TaskItem item={item} />
+    const renderItem = (data, rowMap) => (
+        <TaskItem item={data.item} />
     )
     const closeRow = (rowMap, rowKey) => {
         if (rowMap[rowKey]) {
