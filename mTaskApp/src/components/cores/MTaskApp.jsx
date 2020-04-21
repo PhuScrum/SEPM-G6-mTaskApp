@@ -8,10 +8,9 @@ const Stack = createStackNavigator();
 export default class MTaskApp extends Component {
     render() {
         const isLogged = true
-        const mainApp = 'MainApp'
-        const login = 'Login'
+        
         return (
-            <Stack.Navigator headerMode='none' initialRouteName='MainApp' >
+            <Stack.Navigator headerMode='none' initialRouteName='Login' >
                     <Stack.Screen name="Login" component={Login} />
                     <Stack.Screen name="MainApp" component={BottomNavBar} />
              </Stack.Navigator>
