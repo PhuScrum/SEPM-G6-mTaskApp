@@ -3,12 +3,7 @@ import { StyleSheet, View, TouchableOpacity,} from 'react-native'
 import { Layout, Text, Input, Button, Datepicker, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useSelector, useDispatch } from 'react-redux'
-import {addTaskAction} from '../../actions/TaskAction'
-
-const DateIcon = (style) => (
-    <Icon {...style} name='calendar' />
-)
+import CustomDateTimePicker from './CustomDateTimePicker';
 
 const combineDateTime = (date, time) => {
     const datePick = moment(date).format('DD MMM YYYY ')
@@ -25,27 +20,18 @@ const AddTask = ({submitHandler}) => {
     const [showTimePicker, setShowTimePicker] = useState(false)
     const [date, setDate] = useState(new Date(Date.now()))
     const [time, setTime] = useState(new Date(Date.now()))
+    const [dateTime, setDateTime] = useState(Date.now())
 
-
-    const onChangeDate = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setShowDatePicker(false);
-        setDate(currentDate);
-    };
-
-    const onChangeTime = (event, selectedTime) => {
-        const currentTime = selectedTime || time;
-        setShowTimePicker(false);
-        setTime(currentTime);
-    };
+    const onDateTimeHandler = (dateTime) => {
+        setDateTime(dateTime)
+        console.log(moment(dateTime))
+    }
 
     const taskData = {
         name: name,
         description: desc,
-        dateTime: combineDateTime(date,time)
+        dateTime: dateTime
     }
-
-    const dateTime = combineDateTime(date, time)
 
     return (
         <Layout style={styles.containter}>
@@ -66,34 +52,8 @@ const AddTask = ({submitHandler}) => {
                 />
             </View>
             <View style={styles.inputGroup, { flexDirection: 'row', flex: 1 }}>
-                <View style={styles.input}>
-                    <Button onPress={()=> setShowDatePicker(true)}>Show date picker!</Button>
-                </View>
-                <View style={styles.input}>
-                    <Button onPress={()=> setShowTimePicker(true)} >Show time picker!</Button>
-                </View>
-                {showDatePicker && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        timeZoneOffsetInMinutes={0}
-                        value={date}
-                        mode={'date'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={onChangeDate}
-                    />
-                )}
-                {showTimePicker && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        timeZoneOffsetInMinutes={0}
-                        value={time}
-                        mode={'time'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={onChangeTime}
-                    />
-                )}
+                
+                <CustomDateTimePicker onDateTimeHandler={onDateTimeHandler}/>
             </View>
             <View style={{ paddingTop: 8, flex: 1 }}>
                 <Button style={styles.button} onPress={() => submitHandler(taskData)}>Add</Button>
