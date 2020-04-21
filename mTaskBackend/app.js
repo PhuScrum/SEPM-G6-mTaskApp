@@ -47,6 +47,9 @@ app.route('/simple-facebook-login')
 
 app.route('/search-members')
   .post(useCase_API.searchMembers)
+
+app.route('/notify-user')
+//   .post()
 var port = process.env.PORT || 19003
 app.listen(port, ()=>{
     console.log('server running at port: ' + port)
