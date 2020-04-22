@@ -60,6 +60,9 @@ export default class Login extends Component {
   render() {
     return (
         <View style={styles.container}>
+           <View >
+             <Image style = {styles.logo} source={require('../../../assets/14th.png')} />
+          </View>
           <Text style={styles.paragraph}>
             Welcome to mTask
           </Text>
