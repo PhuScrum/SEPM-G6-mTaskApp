@@ -25,6 +25,9 @@ const ObjectId = Schema.ObjectId;
 
 const task_API = require('./controller/task')
 const user_API = require('./controller/user')
+const auth_API = require('./controller/user/authentication')
+const useCase_API = require('./controller/use_cases')
+
 app.route('/task')
     .get(task_API.crud.getAll)
     .post(task_API.crud.postTask)
@@ -39,6 +42,14 @@ app.route('/tasks-on-specific-date')
 app.route('/user')
     .post(user_API.crud.createUser)
 
+app.route('/simple-facebook-login')
+  .post(auth_API.simpleFbLogin)
+
+app.route('/search-members')
+  .post(useCase_API.searchMembers)
+
+app.route('/notify-user')
+//   .post()
 var port = process.env.PORT || 19003
 app.listen(port, ()=>{
     console.log('server running at port: ' + port)
