@@ -10,7 +10,8 @@ import {
     RefreshControl,
     TouchableHighlight,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    SectionList
 } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { BottomSheet } from 'react-native-btr';
@@ -114,8 +115,8 @@ const FiveDayScreen = (props) => {
 
     //Define Swipeable Section Elements
     const sections = getSections(tasks)
-    const renderItem = (data, rowMap) => (
-        <TaskItem item={data.item} />
+    const renderItem = ({item, index}) => (
+        <TaskItem item={item} index={index} />
     )
     const closeRow = (rowMap, rowKey) => {
         if (rowMap[rowKey]) {
@@ -191,7 +192,7 @@ const FiveDayScreen = (props) => {
 
                 <SafeAreaView style={styles.list} >
                     <Text style={styles.title}>Five Days List</Text>
-                    <SwipeListView
+                    {/* <SwipeListView
                         useSectionList
                         refreshControl={
                             <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
@@ -209,6 +210,13 @@ const FiveDayScreen = (props) => {
                         previewOpenDelay={150}
                         // onRowDidOpen={onRowDidOpen}
                         onSwipeValueChange={onSwipeValueChange}
+                    /> */}
+                    <SectionList
+                        ref = {scrollRef}
+                        sections={sections}
+                        renderSectionHeader={renderSectionHeader}
+                        renderItem={renderItem}
+                        keyExtractor={item => item._id}
                     />
                 </SafeAreaView>
                 {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => setBottomSheetShow(true)} />)}
@@ -313,7 +321,7 @@ const styles = StyleSheet.create({
     },
     bottomSheetTitle: {
         // flexDirection:'row',
-        fontFamily: 'Lato-Light',
+        fontFamily: 'Lato-Regular',
         fontWeight: 'bold',
         fontSize: 18
     }
