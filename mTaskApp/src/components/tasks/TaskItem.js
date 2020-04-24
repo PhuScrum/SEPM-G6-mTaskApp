@@ -3,73 +3,90 @@ import { StyleSheet, View, TouchableOpacity, TouchableHighlight, Animated, I18nM
 import { RectButton } from 'react-native-gesture-handler';
 
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { Layout, Text, Button } from '@ui-kitten/components';
 import { ListItem } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 
-const AnimatedIcon = Animated.createAnimatedComponent(Icon);
-
-class GmailStyleSwipeableRow extends React.Component {
+class SwipeableRow extends React.Component {
 
     renderLeftActions = (progress, dragX) => {
-        const scale = dragX.interpolate({
-            inputRange: [0, 80],
-            outputRange: [0, 1],
-            extrapolate: 'clamp',
+        const trans = dragX.interpolate({
+            inputRange: [0, 50, 100, 101],
+            outputRange: [-20, 0, 0, 1],
         });
         return (
             <RectButton style={styles.leftAction} onPress={this.close}>
-               <Ionicons name="ios-trash" size={32} color="white" />
+                <Animated.Text
+                    style={[
+                        styles.actionText,
+                        {
+                            transform: [{ translateX: trans }],
+                        },
+                    ]}>
+                    Archive
+            </Animated.Text>
             </RectButton>
         );
     };
-    renderRightActions = (progress, dragX) => {
-        const scale = dragX.interpolate({
-            inputRange: [-80, 0],
-            outputRange: [1, 0],
-            extrapolate: 'clamp',
+    renderRightAction = (text, color, x, progress) => {
+        const trans = progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [x, 0],
         });
+        const pressHandler = () => {
+            this.close();
+            alert(text);
+        };
         return (
-            <RectButton style={styles.rightAction} onPress={this.close}>
-                <Ionicons name="ios-trash" size={32} color="white" />
-            </RectButton>
+            <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
+                <RectButton
+                    style={[styles.rightAction, { backgroundColor: color }]}
+                    onPress={pressHandler}>
+                    <Text style={styles.actionText}>{text}</Text>
+                </RectButton>
+            </Animated.View>
         );
     };
+    renderRightActions = progress => (
+        <View style={{ width: 192, flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row', borderTopRightRadius: 10 }}>
+            {this.renderRightAction('More', '#C8C7CD', 192, progress)}
+            {this.renderRightAction('Flag', '#ffab00', 128, progress)}
+            {this.renderRightAction('More', '#dd2c00', 64, progress)}
+        </View>
+    );
     updateRef = ref => {
         this._swipeableRow = ref;
     };
     close = () => {
         this._swipeableRow.close();
     };
-
     render() {
         const { children } = this.props;
         return (
             <Swipeable
+
                 ref={this.updateRef}
                 friction={2}
-                leftThreshold={80}
+                leftThreshold={30}
                 rightThreshold={40}
                 renderLeftActions={this.renderLeftActions}
-                renderRightActions={this.renderRightActions}
-            >
+                renderRightActions={this.renderRightActions}>
                 {children}
             </Swipeable>
-        )
+        );
     }
 
 }
 
-const RowItem = ({item}) => (
+const RowItem = ({ item }) => (
     <RectButton >
-        <ListItem 
-                    style={styles.item}
-                    title={item.name}
-                    description={moment(item.dateTime).format('LT')}
-                    onPress={() => console.log('You touched me')}
-                />
+        <ListItem
+            style={styles.item}
+            title={item.name}
+            description={moment(item.dateTime).format('LT')}
+            onPress={() => console.log('You touched me')}
+        />
     </RectButton>
 )
 
@@ -78,7 +95,6 @@ const TaskItem = ({ item, index }) => {
     return (
         <TouchableHighlight
             style={styles.rowFront}
-        // underlayColor={'#f0ffff'}
         >
             {/* <View>
                 <ListItem 
@@ -88,9 +104,9 @@ const TaskItem = ({ item, index }) => {
                     onPress={() => console.log('You touched me')}
                 />
             </View> */}
-            <GmailStyleSwipeableRow>
-                <RowItem item={item}/>
-            </GmailStyleSwipeableRow>
+            <SwipeableRow>
+                <RowItem item={item} />
+            </SwipeableRow>
 
         </TouchableHighlight>
     )
@@ -102,7 +118,7 @@ const styles = StyleSheet.create({
         // borderColor: 'transparent',
         // borderWidth: 1,
         // borderStyle: 'solid',
-        // borderRadius: 10,
+
         flexDirection: 'row',
         flexWrap: 'wrap',
         // backgroundColor: '#EEF7FA'
@@ -121,21 +137,19 @@ const styles = StyleSheet.create({
     },
     leftAction: {
         flex: 1,
-        backgroundColor: '#388e3c',
+        backgroundColor: '#497AFC',
         justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse'
     },
-    actionIcon: {
-        width: 30,
-        marginHorizontal: 10
+    actionText: {
+        color: 'white',
+        fontSize: 16,
+        backgroundColor: 'transparent',
+        padding: 10,
     },
     rightAction: {
         alignItems: 'center',
-        flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-        backgroundColor: '#dd2c00',
         flex: 1,
-        justifyContent: 'flex-end'
+        justifyContent: 'center',
     },
     rectButton: {
         flex: 1,
@@ -145,7 +159,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flexDirection: 'column',
         backgroundColor: 'white',
-      },
+    },
 })
 
 export default TaskItem

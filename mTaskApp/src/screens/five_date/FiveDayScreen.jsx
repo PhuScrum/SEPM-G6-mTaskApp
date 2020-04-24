@@ -35,7 +35,7 @@ function wait(timeout) {
 
 function between(x, min, max) {
     return x >= min && x <= max;
-  }
+}
 
 const getSections = (tasks) => {
     const tmrDay = moment().add(1, 'days').format('Do MMMM YYYY')
@@ -48,7 +48,7 @@ const getSections = (tasks) => {
     const todayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === moment().format('Do MMMM YYYY'))
     const tmrData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === tmrDay)
     const twodayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === twoDay)
-    const threeDayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === threeDay )
+    const threeDayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === threeDay)
     const fourDayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === fourDay)
     const fiveDayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === fiveDay)
 
@@ -74,7 +74,7 @@ const FiveDayScreen = (props) => {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        
+
         wait(2000).then(() => {
             getTasks()
             setRefreshing(false)
@@ -111,11 +111,11 @@ const FiveDayScreen = (props) => {
         getTasks()
     }, [])
 
-    
+
 
     //Define Swipeable Section Elements
     const sections = getSections(tasks)
-    const renderItem = ({item, index}) => (
+    const renderItem = ({ item, index }) => (
         <TaskItem item={item} index={index} />
     )
     const closeRow = (rowMap, rowKey) => {
@@ -156,16 +156,16 @@ const FiveDayScreen = (props) => {
                 activeOpacity={1.0}
                 style={[styles.backRightBtn, styles.backRightBtnRight]}
                 onPress={() => {
-                    editTaskHandler(data.item._id, {completed: !data.item.completed})
+                    editTaskHandler(data.item._id, { completed: !data.item.completed })
                     wait(800).then(() => {
                         closeRow(rowMap, data.item._id)
                     })
                 }}
             >
-                <AntDesign 
-                    name= {data.item.completed ? 'checkcircle' : 'checkcircleo'}
-                    size={32} 
-                    color="white" 
+                <AntDesign
+                    name={data.item.completed ? 'checkcircle' : 'checkcircleo'}
+                    size={32}
+                    color="white"
                 />
             </TouchableOpacity>
         </View>
@@ -212,11 +212,14 @@ const FiveDayScreen = (props) => {
                         onSwipeValueChange={onSwipeValueChange}
                     /> */}
                     <SectionList
-                        ref = {scrollRef}
+                        ref={scrollRef}
                         sections={sections}
                         renderSectionHeader={renderSectionHeader}
                         renderItem={renderItem}
                         keyExtractor={item => item._id}
+                        refreshControl={
+                            <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+                        }
                     />
                 </SafeAreaView>
                 {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => setBottomSheetShow(true)} />)}
