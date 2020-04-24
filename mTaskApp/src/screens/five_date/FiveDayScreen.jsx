@@ -25,7 +25,7 @@ import _ from 'lodash'
 import moment from 'moment-timezone'
 
 import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction } from '../../actions/TaskAction'
-
+import TagMembers from '../../components/tag_members/TagMembers'
 function wait(timeout) {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
@@ -188,7 +188,7 @@ const FiveDayScreen = (props) => {
             <Layout style={styles.container} >
 
                 <TopNavigationBar {...props} />
-
+                <TagMembers/>
                 <SafeAreaView style={styles.list} >
                     <Text style={styles.title}>Five Days List</Text>
                     <SwipeListView

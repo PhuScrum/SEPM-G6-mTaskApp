@@ -18,7 +18,7 @@ export default function TagMembers() {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Select members:</Text>
+                        <Text style={styles.modalText}>Select members123:</Text>
 
                         <TagMemberInput/>
 
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
         height:250,
-        width: 300,
+        width: 400,
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
