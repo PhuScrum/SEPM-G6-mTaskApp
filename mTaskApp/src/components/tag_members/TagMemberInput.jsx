@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import axios from 'axios'
@@ -25,22 +25,20 @@ export default function TagMemberInput() {
     const [selectedItems, setSelectedItems] = React.useState([])
     const [searchResult, setSearchResult] = React.useState(items)
     const searchMembers = async (searchTerm)=>{
+      try{
         var resp = await axios.post(url.searchMembers, {searchTerm})
         var data = resp.data
-        // console.log(searchTerm, 'search result: ', data)
+        // console.log(searchTerm, 'search result: ', f)
         data = restructureData(data)
         loadToSearchResult(data)
-
+        // return data
+      }catch(err){
+        console.error(err)
+      }
+    
     }
     const loadToSearchResult =(data)=>{
-        var fake = [
-            {name: 'hoang long',id: 'asdfasklfi'},
-            {name: 'vu pham', id: 'fadsf413423'}
-          ]
-        console.log('fake: ',fake)
-        console.log('data: ', data)
-        
-        items[0]['children'] = fake
+        items[0]['children'] = data
         console.log('loadToSearchResult: ', items)
         setSearchResult(items)
 
@@ -58,6 +56,7 @@ export default function TagMemberInput() {
         console.log('restructure data: ', data)
         return data
     }
+    
     return (
       <View>
         <Text>Tag members</Text>
@@ -72,8 +71,8 @@ export default function TagMemberInput() {
           selectedItems={selectedItems}
           searchPlaceholderText='Search members1...'
           selectText='Tag members'
-        //   searchAdornment={(searchTerm)=>{searchMembers(searchTerm)}}
-        //   filterItems={(searchTerm, items, props)=> {searchMembers(searchTerm)}}
+          searchAdornment={(searchTerm)=>{searchMembers(searchTerm)}}
+          // filterItems={(searchTerm, items, props)=> {return searchMembers(searchTerm)}}
         />
       </View>
     );
