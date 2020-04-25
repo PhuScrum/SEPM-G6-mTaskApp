@@ -7,3 +7,7 @@ export const ADD_TASK = "ADD_TASK"
 export const EDIT_TASK = "EDIT_TASK"
 
 //User Types
+
+//Tag-members
+export const SET_ITEMS_TO_SELECTED = 'SET_ITEMS_TO_SELECTED'
+export const REMOVE_ITEMS_FROM_SELECTED = 'REMOVE_ITEMS_FROM_SELECTED'

@@ -3,78 +3,111 @@ import { View, Text } from 'react-native';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import axios from 'axios'
 import * as url from '../../constants/url/url'
-const items = [
-  {childr: [
-      {
-        name: 'Justin',
-        id: '0',
-      },
-      {
-        name: 'Tu Bui',
-        id: '1',
-      },
-   
-    ]
-    }
- 
-
-
-];
-
+import {
+  Icon,
+  Input,
+} from '@ui-kitten/components';
+import OptionListing from './OptionListing'
+import { useSelector } from 'react-redux';
 export default function TagMemberInput() {
-    const [selectedItems, setSelectedItems] = React.useState([])
-    const [searchResult, setSearchResult] = React.useState(items)
-    const searchMembers = async (searchTerm)=>{
-      try{
-        var resp = await axios.post(url.searchMembers, {searchTerm})
+  
+
+  // input
+  const [value, setValue] = useState('');
+  const [searchResult, setSearchResult] = useState([])
+
+    const searchMembers = async (searchTerm) => {
+      setValue(searchTerm)
+      try {
+        var resp = await axios.post(url.searchMembers, { searchTerm })
         var data = resp.data
-        // console.log(searchTerm, 'search result: ', f)
-        data = restructureData(data)
-        loadToSearchResult(data)
+        console.log(data)
+        setSearchResult(data)
         // return data
-      }catch(err){
+      } catch (err) {
         console.error(err)
       }
-    
-    }
-    const loadToSearchResult =(data)=>{
-        items[0]['children'] = data
-        console.log('loadToSearchResult: ', items)
-        setSearchResult(items)
-
-    }
-    const restructureData = (data)=>{
-        data.map((unit)=>{
-            unit.id = unit._id
-            unit.name = unit.fName + ' ' + unit.lName
-            delete unit._id
-            delete unit.fName
-            delete unit.lName
-            delete unit.email
-            return unit
-        })
-        console.log('restructure data: ', data)
-        return data
-    }
-    
-    return (
-      <View>
-        <Text>Tag members</Text>
-        <SectionedMultiSelect
-          items={searchResult}
-          uniqueKey="id"
-          subKey="children"
-          selectText="Choose some things..."
-          showDropDowns={true}
-          readOnlyHeadings={true}
-          onSelectedItemsChange={(selectedItems)=> setSelectedItems(selectedItems)}
-          selectedItems={selectedItems}
-          searchPlaceholderText='Search members1...'
-          selectText='Tag members'
-          searchAdornment={(searchTerm)=>{searchMembers(searchTerm)}}
-          // filterItems={(searchTerm, items, props)=> {return searchMembers(searchTerm)}}
-        />
-      </View>
-    );
+  }
+  const onIconPress = () => {
+    setValue('');
+  };
+  const renderIcon = (style) => (
+    <Icon {...style} name={value ? 'close-outline' : 'corner-down-left-outline'}/>
+  );
   
+// const selectedMembersListing = selectedItems.map((unit, index)=> <Text key={index}>{unit.fName}</Text>)
+  return (
+    <View>
+      <Input
+        value={value}
+        placeholder='search members'
+        icon={renderIcon}
+        onIconPress={onIconPress}
+        onChangeText={searchMembers}
+      />
+      <OptionListing data={searchResult}/>
+    </View>
+  );
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const [selectedItems, setSelectedItems] = React.useState([])
+//   const [searchResult, setSearchResult] = React.useState(items)
+//   const searchMembers = async (searchTerm) => {
+//     try {
+//       var resp = await axios.post(url.searchMembers, { searchTerm })
+//       var data = resp.data
+//       // console.log(searchTerm, 'search result: ', f)
+//       data = restructureData(data)
+//       loadToSearchResult(data)
+//       // return data
+//     } catch (err) {
+//       console.error(err)
+//     }
+
+//   }
+//   const loadToSearchResult = (data) => {
+//     items[0]['children'] = data
+//     console.log('loadToSearchResult: ', items)
+//     setSearchResult(items)
+
+//   }
+//   const restructureData = (data) => {
+//     data.map((unit) => {
+//       unit.id = unit._id
+//       unit.name = unit.fName + ' ' + unit.lName
+//       delete unit._id
+//       delete unit.fName
+//       delete unit.lName
+//       delete unit.email
+//       return unit
+//     })
+//     console.log('restructure data: ', data)
+//     return data
+//   }

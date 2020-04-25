@@ -18,7 +18,7 @@ export default function TagMembers() {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Select members123:</Text>
+                        <Text style={styles.modalText}>Select members:</Text>
 
                         <TagMemberInput/>
 
