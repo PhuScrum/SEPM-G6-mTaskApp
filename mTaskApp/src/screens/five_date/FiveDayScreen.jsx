@@ -21,6 +21,7 @@ import TopNavigationBar from './TopNavigationBar'
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
 import AddToDoButton from '../../components/tasks/AddTaskButton';
+import BottomSheetComponent from '../../components/bottomSheet'
 
 import _ from 'lodash'
 import moment from 'moment-timezone'
@@ -223,7 +224,7 @@ const FiveDayScreen = (props) => {
                     />
                 </SafeAreaView>
                 {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => setBottomSheetShow(true)} />)}
-                <BottomSheet
+                {/* <BottomSheet
                     visible={bottomSheetShow}
                     onBackButtonPress={() => setBottomSheetShow(!bottomSheetShow)}
                     onBackdropPress={() => setBottomSheetShow(!bottomSheetShow)}
@@ -240,7 +241,14 @@ const FiveDayScreen = (props) => {
                             <AddTask submitHandler={addTaskHandler} />
                         </View>
                     </View>
-                </BottomSheet>
+                </BottomSheet> */}
+                <BottomSheetComponent
+                    visible={bottomSheetShow}
+                    onBackButtonPress={() => setBottomSheetShow(!bottomSheetShow)}
+                    onBackdropPress={() => setBottomSheetShow(!bottomSheetShow)}
+                >
+                    <AddTask submitHandler={addTaskHandler} />
+                </BottomSheetComponent>
 
             </Layout>
 
@@ -267,15 +275,6 @@ const styles = StyleSheet.create({
     list: {
         flex: 1,
         padding: 10
-    },
-    bottomNavigationView: {
-        borderRadius: 15,
-        backgroundColor: '#fff',
-        width: '100%',
-        height: '50%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        // marginVertical: 10
     },
     SectionHeaderStyle: {
         paddingTop: 20,
@@ -321,12 +320,6 @@ const styles = StyleSheet.create({
     backTextWhite: {
         color: 'white',
         fontWeight: 'bold'
-    },
-    bottomSheetTitle: {
-        // flexDirection:'row',
-        fontFamily: 'Lato-Regular',
-        fontWeight: 'bold',
-        fontSize: 18
     }
 
 })
