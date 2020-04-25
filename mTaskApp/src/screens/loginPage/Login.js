@@ -11,8 +11,7 @@ export default class Login extends Component {
   constructor(props, navigation) {
     super(props, navigation);
     this.state = {
-      username:'',
-      passward:'',
+      userInfo: null,
     }
 
   }
@@ -27,19 +26,28 @@ export default class Login extends Component {
         permissions,
         declinedPermissions,
       } = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ['public_profile'],
+        permissions: ['public_profile','email'],
       });
       if (type === 'success') {
         // Get the user's name using Facebook's Graph API
-        const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+        const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=email,id,name,picture.type(large)`);
+       // break;
+        let clone = response.clone();
+        const json = await clone.json();
+        this.setState({userInfo: json});
         
+        console.log(this.state.userInfo.name)
+        console.log(this.state.userInfo.email)
+
         Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
         this.props.navigation.navigate('MainApp')
+        
       } else {
         // type === 'cancel'
       }
     } catch ({ message }) {
       alert(`Facebook Login Error: ${message}`);
+      //this.props.navigation.navigate('MainApp')
     }
   }
 
