@@ -42,6 +42,7 @@ app.route('/tasks-on-specific-date')
 app.route('/user')
     .get(user_API.crud.getAll)
     .post(user_API.crud.createUser)
+    .delete(user_API.crud.deleteUser)
 
 app.route('/user/:id')
   .get(user_API.crud.getUserById)
