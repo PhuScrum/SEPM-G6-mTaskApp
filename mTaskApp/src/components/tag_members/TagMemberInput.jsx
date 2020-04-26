@@ -9,6 +9,7 @@ import {
 } from '@ui-kitten/components';
 import OptionListing from './OptionListing'
 import { useSelector } from 'react-redux';
+import SelectedMembers from './SelectedMembers'
 export default function TagMemberInput() {
   
 
@@ -38,6 +39,7 @@ export default function TagMemberInput() {
 // const selectedMembersListing = selectedItems.map((unit, index)=> <Text key={index}>{unit.fName}</Text>)
   return (
     <View>
+      <SelectedMembers/>
       <Input
         value={value}
         placeholder='search members'

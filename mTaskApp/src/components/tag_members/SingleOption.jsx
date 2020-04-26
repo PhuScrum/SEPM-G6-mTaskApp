@@ -24,7 +24,7 @@ export default function SingleOption(props){
     const onCheckedChange = (isChecked) => {
 
         isChecked ? sendToSelected(props.unit) : removeFromSelected(props.unit)
-        props.setParentState(selectedItems)
+        // props.setParentState(selectedItems)
 
         setChecked(isChecked);
     };
