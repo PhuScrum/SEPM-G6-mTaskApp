@@ -40,7 +40,14 @@ app.route('/tasks-on-specific-date')
     .post(task_API.crud.getTaskSpecificDate)
 
 app.route('/user')
+    .get(user_API.crud.getAll)
     .post(user_API.crud.createUser)
+
+app.route('/user/:id')
+  .get(user_API.crud.getUserById)
+
+app.route('/get-user-by-email')
+  .post(user_API.crud.getUserByEmail)
 
 app.route('/simple-facebook-login')
   .post(auth_API.simpleFbLogin)
