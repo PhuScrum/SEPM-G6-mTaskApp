@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Text, View, Image, TextInput, KeyboardAvoidingView,TouchableOpacity, AsyncStorage, StyleSheet, Alert,} from 'react-native';
 import Expo from 'expo';
 import * as Facebook from 'expo-facebook';
-
+import axios  from 'axios';
 
 
 
@@ -15,6 +15,44 @@ export default class Login extends Component {
     }
 
   }
+
+
+ /* postMethod2 = e => {
+    e.preventDefault()
+    console.log('postmethod called')
+    axios
+      .post('http://192.168.100.28/simple-facebook-login', this.state.userInfo.email)
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }*/
+
+  async postMethod (){
+    console.log('function called')
+    try{
+      await fetch('http://192.168.100.28:19003/simple-facebook-login', {
+        method:'post',
+        mode:'no-cors',
+        headers:{
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: this.state.userInfo.email,
+          fName: this.state.userInfo.first_name,
+          lName: this.state.userInfo.last_name,
+          displayPhoto: this.state.userInfo.picture.data.url
+
+        })
+      });
+    }catch(e){
+      console.log(e)
+    }
+  }   
+
 
   async logInFB() {
     try {
@@ -30,14 +68,22 @@ export default class Login extends Component {
       });
       if (type === 'success') {
         // Get the user's name using Facebook's Graph API
-        const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=email,id,name,picture.type(large)`);
+        const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=email,first_name,last_name,id,name,picture.type(large)`);
        // break;
         let clone = response.clone();
         const json = await clone.json();
         this.setState({userInfo: json});
         
-        console.log(this.state.userInfo.name)
-        console.log(this.state.userInfo.email)
+        //this.postMethod2();
+        this.postMethod();
+        
+        console.log(this.state.userInfo.name);
+        console.log(this.state.userInfo.email);
+        console.log(this.state.userInfo.first_name);
+        console.log(this.state.userInfo.last_name);
+        console.log(this.state.userInfo.picture.data.url)
+
+
 
         Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
         this.props.navigation.navigate('MainApp')
