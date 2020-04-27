@@ -112,75 +112,13 @@ const FiveDayScreen = (props) => {
         getTasks()
     }, [])
 
-
-
     //Define Swipeable Section Elements
-    const sections = getSections(tasks)
+    const unDoneList = tasks.filter(task => task.completed !== true)
+    const sections = getSections(unDoneList)
     const renderItem = ({ item, index }) => (
-        <TaskItem item={item} index={index} />
+        <TaskItem item={item} index={index} deleteHandler={deleteHandler} editTaskHandler={editTaskHandler}  />
     )
-    const closeRow = (rowMap, rowKey) => {
-        if (rowMap[rowKey]) {
-            rowMap[rowKey].closeRow();
-        }
-    };
-    const renderHiddenItem = (data, rowMap) => (
-        <View style={styles.rowBack}>
-            <TouchableOpacity
-                style={[styles.backRightBtn, styles.backLeftBtnRight]}
-                onPress={() => closeRow(rowMap, data.item._id)}
-            >
-                <Text style={styles.backTextWhite}>Delay</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={[styles.backRightBtn, styles.backLeftBtnLeft]}
-                onPress={() => deleteHandler(data.item._id)}
-            >
-                <Ionicons name="ios-trash" size={32} color="white" />
-            </TouchableOpacity>
-            <View style={[
-                styles.backRightBtn,
-                {
-                    backgroundColor: '#2F3860',
-                    left: 149,
-                    width: 200
-                }]}></View>
-            <View style={[
-                styles.backRightBtn,
-                {
-                    backgroundColor: '#2AB785',
-                    right: 74,
-                    width: 75
-                }]}></View>
-
-            <TouchableOpacity
-                activeOpacity={1.0}
-                style={[styles.backRightBtn, styles.backRightBtnRight]}
-                onPress={() => {
-                    editTaskHandler(data.item._id, { completed: !data.item.completed })
-                    wait(800).then(() => {
-                        closeRow(rowMap, data.item._id)
-                    })
-                }}
-            >
-                <AntDesign
-                    name={data.item.completed ? 'checkcircle' : 'checkcircleo'}
-                    size={32}
-                    color="white"
-                />
-            </TouchableOpacity>
-        </View>
-    );
-    const onRowDidOpen = rowKey => {
-        console.log('This row opened', rowKey);
-    };
     const renderSectionHeader = ({ section }) => <Text style={styles.SectionHeaderStyle}>{section.title}</Text>
-    const onSwipeValueChange = ({ key, value }) => {
-        // console.log('Key: ', key)
-        // console.log('Value: ', value)
-
-    }
-
     return (
         <TouchableWithoutFeedback
             onPress={() => {
@@ -193,25 +131,6 @@ const FiveDayScreen = (props) => {
 
                 <SafeAreaView style={styles.list} >
                     <Text style={styles.title}>Five Days List</Text>
-                    {/* <SwipeListView
-                        useSectionList
-                        refreshControl={
-                            <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
-                        }
-                        keyExtractor={item => item._id}
-                        // ItemSeparatorComponent={FlatListItemSeparator}
-                        sections={sections}
-                        renderItem={renderItem}
-                        renderHiddenItem={renderHiddenItem}
-                        renderSectionHeader={renderSectionHeader}
-                        leftOpenValue={150}
-                        rightOpenValue={-75}
-                        previewRowKey={'0'}
-                        previewOpenValue={-40}
-                        previewOpenDelay={150}
-                        // onRowDidOpen={onRowDidOpen}
-                        onSwipeValueChange={onSwipeValueChange}
-                    /> */}
                     <SectionList
                         ref={scrollRef}
                         sections={sections}
@@ -224,24 +143,6 @@ const FiveDayScreen = (props) => {
                     />
                 </SafeAreaView>
                 {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => setBottomSheetShow(true)} />)}
-                {/* <BottomSheet
-                    visible={bottomSheetShow}
-                    onBackButtonPress={() => setBottomSheetShow(!bottomSheetShow)}
-                    onBackdropPress={() => setBottomSheetShow(!bottomSheetShow)}
-                >
-                    <View style={styles.bottomNavigationView}>
-                        <View style={{ flex: 3, justifyContent: 'center' }}>
-                            <Text style={styles.bottomSheetTitle}>Create a new task</Text>
-                        </View>
-                        <View style={{
-                            width: '100%',
-                            flex: 16,
-                            marginTop: 2
-                        }}>
-                            <AddTask submitHandler={addTaskHandler} />
-                        </View>
-                    </View>
-                </BottomSheet> */}
                 <BottomSheetComponent
                     visible={bottomSheetShow}
                     onBackButtonPress={() => setBottomSheetShow(!bottomSheetShow)}

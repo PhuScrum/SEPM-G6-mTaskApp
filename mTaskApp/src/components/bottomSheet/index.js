@@ -11,7 +11,7 @@ const BottomSheetComponent = ({ visible, children, onBackButtonPress, onBackdrop
                 onBackdropPress={onBackdropPress}
             >
                 <View style={styles.bottomNavigationView}>
-                    <View style={{ flex: 3, justifyContent: 'center' }}>
+                    <View style={{ flex: 2, justifyContent: 'center' }}>
                         <Text style={styles.bottomSheetTitle}>Create a new task</Text>
                     </View>
                     <View style={{

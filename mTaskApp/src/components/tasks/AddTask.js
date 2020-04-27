@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, TouchableOpacity,} from 'react-native'
-import { Layout, Text, Input, Button, Datepicker, Icon } from '@ui-kitten/components';
+import { StyleSheet, View, TouchableOpacity, Platform } from 'react-native'
+import { Layout, Text, Input, Button, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -10,12 +10,14 @@ const DateIcon = (style) => (
 
 const combineDateTime = (date, time) => {
     const datePick = moment(date).format('DD MMM YYYY ')
-    const timePick = moment(time).format('h:mm:ss a')
+    const timePick = moment(time).format('hh:mm:ss a')
     const finalTime = Date.parse(`${datePick}${timePick}`)
     return finalTime
 }
 
-const AddTask = ({submitHandler}) => {
+const AddTask = ({ submitHandler }) => {
+    const os = Platform.OS
+
     const [name, setName] = useState('')
     const [desc, setDesc] = useState('')
 
@@ -27,26 +29,105 @@ const AddTask = ({submitHandler}) => {
 
     const onChangeDate = (event, selectedDate) => {
         const currentDate = selectedDate || date;
-        setShowDatePicker(false);
+        { os === 'android' && setShowDatePicker(false) }
         setDate(currentDate);
     };
 
     const onChangeTime = (event, selectedTime) => {
         const currentTime = selectedTime || time;
-        setShowTimePicker(false);
+        { os === 'android' && setShowTimePicker(false) }
         setTime(currentTime);
     };
 
     const taskData = {
         name: name,
         description: desc,
-        dateTime: combineDateTime(date,time)
+        dateTime: combineDateTime(date, time)
     }
 
-    const displayDateTime = moment(combineDateTime(date,time)).format("Do MMMM YYYY, hh:mm:ss a")
+    const displayDateTime = moment(combineDateTime(date, time)).format("LLL")
+
+    const DateTimePickerAndroid = () => {
+        return (
+            <>
+                {showDatePicker && (
+                    <View >
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            timeZoneOffsetInMinutes={0}
+                            value={date}
+                            mode={'date'}
+                            is24Hour={true}
+                            display="default"
+                            onChange={onChangeDate}
+                            style={{ width: '100%', backgroundColor: 'white' }}
+                        />
+                    </View>
+                )}
+                {showTimePicker && (
+                    <View>
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            timeZoneOffsetInMinutes={0}
+                            value={time}
+                            mode={'time'}
+                            is24Hour={true}
+                            display="spinner"
+                            onChange={onChangeTime}
+                            style={{ width: '100%', backgroundColor: 'white' }}
+                        />
+                    </View>
+                )}
+            </>
+        )
+    }
+
+    const DateTimePickerIOS = () => {
+        return (
+            <>
+                {showDatePicker && (
+                    <View style={styles.iosPicker}>
+                        <View style={styles.iosPickerBackground}>
+                            <View>
+                                <DateTimePicker
+                                    value={date}
+                                    mode="date"
+                                    display="calendar"
+                                    onChange={onChangeDate}
+                                    style={{ width: '100%' }}
+                                />
+                            </View>
+                            <View style={{ alignItems: 'center' }}>
+                                <Button onPress={() => setShowDatePicker(false)}>Done</Button>
+                            </View>
+                        </View>
+                    </View>
+                )}
+
+                {showTimePicker && (
+                    <View style={styles.iosPicker}>
+                        <View style={styles.iosPickerBackground}>
+                            <View>
+                                <DateTimePicker
+                                    value={time}
+                                    mode="time"
+                                    display="default"
+                                    onChange={onChangeTime}
+                                    style={{ width: '100%' }}
+                                />
+                            </View>
+                            <View style={{ alignItems: 'center' }}>
+                                <Button onPress={() => setShowTimePicker(false)}>Done</Button>
+                            </View>
+                        </View>
+                    </View>
+                )}
+            </>
+        )
+    }
 
     return (
-        <Layout style={styles.containter}>
+        <View style={styles.containter}>
             <View style={styles.inputGroup, { flex: 1 }}>
                 <Input
                     style={styles.input}
@@ -64,43 +145,31 @@ const AddTask = ({submitHandler}) => {
                 />
             </View>
             <View style={styles.inputGroup, { flex: 0.5 }}>
-    <Text style={styles.dateTimeText}>Chosen Time: {displayDateTime}</Text>
+                <Text style={styles.dateTimeText}>Chosen Time: {displayDateTime}</Text>
             </View>
             <View style={styles.inputGroup, { flexDirection: 'row', flex: 1, marginHorizontal: 10 }}>
                 <View style={styles.pickerButton}>
-                    <Button onPress={()=> setShowDatePicker(true)}>Show date picker!</Button>
+                    <Button onPress={() => {
+                        setShowDatePicker(true) 
+                        setShowTimePicker(false)
+                        }}
+                    >Show date picker!</Button>
                 </View>
                 <View style={styles.pickerButton}>
-                    <Button onPress={()=> setShowTimePicker(true)} >Show time picker!</Button>
+                    <Button onPress={() =>{
+                        setShowTimePicker(true)
+                        setShowDatePicker(false) 
+                        }} 
+                    >Show time picker!</Button>
                 </View>
-                {showDatePicker && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        timeZoneOffsetInMinutes={0}
-                        value={date}
-                        mode={'date'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={onChangeDate}
-                    />
-                )}
-                {showTimePicker && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        timeZoneOffsetInMinutes={0}
-                        value={time}
-                        mode={'time'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={onChangeTime}
-                    />
-                )}
+
             </View>
             <View style={{ paddingTop: 8, flex: 1 }}>
                 <Button style={styles.submitButton} onPress={() => submitHandler(taskData)}>Add</Button>
             </View>
-
-        </Layout>
+            {os === 'android' && <DateTimePickerAndroid />}
+            {os === 'ios' && <DateTimePickerIOS />}
+        </View>
     )
 }
 
@@ -127,16 +196,28 @@ const styles = StyleSheet.create({
         paddingBottom: 8,
         position: 'relative'
     },
-    dateTimeText:{
+    dateTimeText: {
         fontSize: 16,
         fontWeight: 'normal',
         fontFamily: 'Lato-Regular',
         marginLeft: 15
     },
     pickerButton: {
-        flex: 1, 
+        flex: 1,
         margin: 3
+    },
+    iosPicker: {
+        position: 'absolute',
+        flex: 1,
+        width: '100%',
+        // height:'100%',
+        bottom: '50%'
+    },
+    iosPickerBackground: {
+        backgroundColor: 'white',
+        padding: 15
     }
+
 })
 
 export default AddTask

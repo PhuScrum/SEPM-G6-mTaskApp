@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { createRef } from 'react'
 import { StyleSheet, View, TouchableOpacity, TouchableHighlight, Animated, I18nManager } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 
@@ -8,35 +8,68 @@ import { Layout, Text, Button } from '@ui-kitten/components';
 import { ListItem } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 
-class SwipeableRow extends React.Component {
+class TrashIcon extends React.Component {
+    render() {
+        return <Ionicons name="ios-trash" size={32} color="white" />
+    }
+}
 
-    renderLeftActions = (progress, dragX) => {
-        const trans = dragX.interpolate({
-            inputRange: [0, 50, 100, 101],
-            outputRange: [-20, 0, 0, 1],
-        });
-        return (
-            <RectButton style={styles.leftAction} onPress={this.close}>
-                <Animated.Text
-                    style={[
-                        styles.actionText,
-                        {
-                            transform: [{ translateX: trans }],
-                        },
-                    ]}>
-                    Archive
-            </Animated.Text>
-            </RectButton>
-        );
-    };
-    renderRightAction = (text, color, x, progress) => {
+
+const RowItem = ({ item }) => (
+    <RectButton >
+        <ListItem
+            style={styles.item}
+            title={item.name}
+            description={moment(item.dateTime).format('LT')}
+            onPress={() => console.log(item.name)}
+        />
+    </RectButton>
+)
+
+const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
+    const scrollRef = createRef()
+
+    const renderLeftAction = (text, color, x, progress) => {
         const trans = progress.interpolate({
             inputRange: [0, 1],
             outputRange: [x, 0],
         });
         const pressHandler = () => {
-            this.close();
-            alert(text);
+            switch (text) {
+                case 'Delete':
+                    deleteHandler(item._id)
+
+                case 'Delay':
+
+                default:
+            }
+        }
+        return (
+            <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
+                <RectButton style={[styles.leftAction, { backgroundColor: color }]} onPress={pressHandler}>
+                    <Text style={styles.actionText}>{text}</Text>
+                </RectButton>
+            </Animated.View>
+        );
+    }
+    const renderLeftActions = (progress) => (
+        <View style={{ width: 192, flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse' }}>
+            {renderLeftAction('Delay', '#394F68', -64, progress)}
+            {renderLeftAction('Delete', '#EE001D', -32, progress)}
+        </View>
+    )
+
+    const renderRightAction = (text, color, x, progress) => {
+        const trans = progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [x, 0],
+        });
+        const pressHandler = () => {
+            switch(text){
+                case 'Done':
+                    editTaskHandler(item._id, { completed: !item.completed })
+                default:
+            }
         };
         return (
             <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
@@ -48,77 +81,34 @@ class SwipeableRow extends React.Component {
             </Animated.View>
         );
     };
-    renderRightActions = progress => (
-        <View style={{ width: 192, flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row', borderTopRightRadius: 10 }}>
-            {this.renderRightAction('More', '#C8C7CD', 192, progress)}
-            {this.renderRightAction('Flag', '#ffab00', 128, progress)}
-            {this.renderRightAction('More', '#dd2c00', 64, progress)}
+    const renderRightActions = progress => (
+        <View style={{ width: 192, flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row' }}>
+            {renderRightAction('More', '#65AEE0', 192, progress)}
+            {renderRightAction('Done', '#4CBB87', 128, progress)}
         </View>
     );
-    updateRef = ref => {
-        this._swipeableRow = ref;
-    };
-    close = () => {
-        this._swipeableRow.close();
-    };
-    render() {
-        const { children } = this.props;
-        return (
-            <Swipeable
 
-                ref={this.updateRef}
-                friction={2}
-                leftThreshold={30}
-                rightThreshold={40}
-                renderLeftActions={this.renderLeftActions}
-                renderRightActions={this.renderRightActions}>
-                {children}
-            </Swipeable>
-        );
-    }
-
-}
-
-const RowItem = ({ item }) => (
-    <RectButton >
-        <ListItem
-            style={styles.item}
-            title={item.name}
-            description={moment(item.dateTime).format('LT')}
-            onPress={() => console.log('You touched me')}
-        />
-    </RectButton>
-)
-
-const TaskItem = ({ item, index }) => {
-    // console.log(item.dateTime)
     return (
         <TouchableHighlight
             style={styles.rowFront}
         >
-            {/* <View>
-                <ListItem 
-                    style={styles.item}
-                    title={item.name}
-                    description={moment(item.dateTime).format('LT')}
-                    onPress={() => console.log('You touched me')}
-                />
-            </View> */}
-            <SwipeableRow>
+            <Swipeable
+                ref={scrollRef}
+                friction={2}
+                leftThreshold={40}
+                rightThreshold={40}
+                renderLeftActions={renderLeftActions}
+                renderRightActions={renderRightActions}
+            >
                 <RowItem item={item} />
-            </SwipeableRow>
-
+            </Swipeable>
         </TouchableHighlight>
-    )
+    );
+
 }
 
 const styles = StyleSheet.create({
     item: {
-        // marginTop:5,
-        // borderColor: 'transparent',
-        // borderWidth: 1,
-        // borderStyle: 'solid',
-
         flexDirection: 'row',
         flexWrap: 'wrap',
         // backgroundColor: '#EEF7FA'
@@ -128,17 +118,14 @@ const styles = StyleSheet.create({
     },
     rowFront: {
         marginTop: 2,
-        // alignItems: 'center',
         backgroundColor: '#EEF7FA',
         justifyContent: 'center',
-        // height: 50,
         borderRadius: 12
-
     },
     leftAction: {
+        alignItems: 'center',
         flex: 1,
-        backgroundColor: '#497AFC',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     actionText: {
         color: 'white',
