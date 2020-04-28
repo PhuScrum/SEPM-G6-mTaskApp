@@ -15,7 +15,7 @@ const itemSchema = new Schema({
   location: {type: String},
   
   listId: {type: Array},
-  hostId: {type: String},
+  creatorId: {type: String},
   taggedUsers: {type: Array},
   dateCreated: { type: Date, default: Date.now },
 

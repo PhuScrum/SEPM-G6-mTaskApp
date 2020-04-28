@@ -1,4 +1,5 @@
 const userModel = require('../../../model/user')
+const assignStatus = require('./assign-status')
 
 /**  partial search with Regex. mongoose query.
   *  search fields: first name, last name and email. 
@@ -9,9 +10,10 @@ const userModel = require('../../../model/user')
 const searchMembers = (req, res) => {
     var searchTerm = req.body.searchTerm
     if (searchTerm !== '') {
-        var query = { $or: [{ fullName: new RegExp(searchTerm, "i") }, { fName: new RegExp(searchTerm, "i") }, { lName: new RegExp(searchTerm, "i") }, { email: new RegExp(searchTerm, "i") }] }
+        var query = { $or: [{ fName: new RegExp(searchTerm, "i") }, { lName: new RegExp(searchTerm, "i") }] }
         console.log('search ' + searchTerm)
-        userModel.find(query, '_id fName lName email userImage fullName', function (err, doc) {
+        var returnField = ' fName lName email displayPhoto '
+        userModel.find(query, returnField, function (err, doc) {
             if (err) {
                 console.log(err)
                 res.json('error')
@@ -19,9 +21,10 @@ const searchMembers = (req, res) => {
             else {
                 var docResult = doc.slice(0, 9)
                 console.log(doc.length)
+                docResult = assignStatus(docResult)
                 res.json(docResult)
             }
-        })
+        }).lean()
     }else{
         res.json([])
     }
