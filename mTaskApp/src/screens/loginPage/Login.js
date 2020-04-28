@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Text, View, Image, TextInput, KeyboardAvoidingView,TouchableOpacity, AsyncStorage, StyleSheet, Alert,} from 'react-native';
+import { Text, View, Image, TextInput, KeyboardAvoidingView,TouchableOpacity, AsyncStorage, StyleSheet, Alert, ActivityIndicator} from 'react-native';
 import Expo from 'expo';
 import * as Facebook from 'expo-facebook';
 import axios  from 'axios';
@@ -12,6 +12,9 @@ export default class Login extends Component {
     super(props, navigation);
     this.state = {
       userInfo: null,
+      isLoggedIn: 'true',
+      //isLoadding: true
+
     }
 
   }
@@ -29,9 +32,10 @@ export default class Login extends Component {
         console.log(error)
       })
   }*/
+ 
 
   async postMethod (){
-    console.log('function called')
+    console.log('Post function called')
     try{
       await fetch('http://192.168.100.28:19003/simple-facebook-login', {
         method:'post',
@@ -45,9 +49,9 @@ export default class Login extends Component {
           fName: this.state.userInfo.first_name,
           lName: this.state.userInfo.last_name,
           displayPhoto: this.state.userInfo.picture.data.url
-
         })
       });
+
     }catch(e){
       console.log(e)
     }
@@ -76,14 +80,18 @@ export default class Login extends Component {
         
         //this.postMethod2();
         this.postMethod();
+        //save user info to Async storage
+        AsyncStorage.setItem('user', JSON.stringify(this.state.userInfo));
+        AsyncStorage.setItem('isLoggedIn', this.state.isLoggedIn);
+        
+
         
         console.log(this.state.userInfo.name);
         console.log(this.state.userInfo.email);
         console.log(this.state.userInfo.first_name);
         console.log(this.state.userInfo.last_name);
-        console.log(this.state.userInfo.picture.data.url)
-
-
+        console.log(this.state.userInfo.picture.data.url);
+        console.log(this.state.userInfo.id)
 
         Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
         this.props.navigation.navigate('MainApp')
@@ -98,7 +106,6 @@ export default class Login extends Component {
   }
 
   
-
   get button(){
     return(
       <TouchableOpacity onPress={() => this.logInFB()}>
@@ -112,6 +119,8 @@ export default class Login extends Component {
  
 
   render() {
+  
+
     return (
         <View style={styles.container}>
            <View >
@@ -123,6 +132,7 @@ export default class Login extends Component {
         {this.button}
         </View>
     );
+    
   }
   
 
