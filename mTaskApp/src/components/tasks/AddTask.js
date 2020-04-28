@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableOpacity,} from 'react-native'
 import { Layout, Text, Input, Button, Datepicker, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import TagMembers from '../tag_members/TagMembers'
 const DateIcon = (style) => (
     <Icon {...style} name='calendar' />
 )
@@ -95,6 +95,7 @@ const AddTask = ({submitHandler}) => {
                         onChange={onChangeTime}
                     />
                 )}
+                <TagMembers/>
             </View>
             <View style={{ paddingTop: 8, flex: 1 }}>
                 <Button style={styles.submitButton} onPress={() => submitHandler(taskData)}>Add</Button>
