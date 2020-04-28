@@ -26,7 +26,7 @@ export default function TagMembers() {
 
 
                         <TouchableHighlight
-                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                            style={{ ...styles.closeButton, backgroundColor: "#2196F3" }}
                             onPress={() => {
                                 setModalVisible(!modalVisible);
                             }}
@@ -78,7 +78,14 @@ const styles = StyleSheet.create({
         backgroundColor: "#F194FF",
         borderRadius: 20,
         padding: 10,
-        elevation: 2
+        elevation: 2,
+    },
+    closeButton: {
+        backgroundColor: "#F194FF",
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+        top : 79,
     },
     textStyle: {
         color: "white",

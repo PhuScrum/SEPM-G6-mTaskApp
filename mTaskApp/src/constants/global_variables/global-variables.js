@@ -1,4 +1,4 @@
-const localHost = 'http://192.168.1.4:19003/'
+const localHost = 'http://192.168.1.7:19003/'
 
 const globalVar = {
     urlDomain: localHost

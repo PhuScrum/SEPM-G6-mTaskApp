@@ -188,7 +188,6 @@ const FiveDayScreen = (props) => {
             <Layout style={styles.container} >
 
                 <TopNavigationBar {...props} />
-                <TagMembers/>
                 <SafeAreaView style={styles.list} >
                     <Text style={styles.title}>Five Days List</Text>
                     <SwipeListView

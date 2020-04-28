@@ -39,7 +39,7 @@ export default function TagMemberInput() {
 // const selectedMembersListing = selectedItems.map((unit, index)=> <Text key={index}>{unit.fName}</Text>)
   return (
     <View>
-      <SelectedMembers/>
+      {/* <SelectedMembers/> */}
       <Input
         value={value}
         placeholder='search members'
