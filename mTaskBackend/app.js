@@ -62,6 +62,13 @@ app.route('/notify-user')
 
 app.route('/rsvp/:userId')
   .get(rsvp_API.crud.getNotifByUserId)
+
+app.route('/accept-tagging-add-task')
+  .post(rsvp_API.responseAction.addTask.accept)
+
+app.route('/decline-add-task-tagging')
+  .post(rsvp_API.responseAction.addTask.decline)
+
 var port = process.env.PORT || 19003
 app.listen(port, ()=>{
     console.log('server running at port: ' + port)
