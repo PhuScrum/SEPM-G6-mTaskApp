@@ -1,8 +1,9 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { BottomSheet } from 'react-native-btr';
+import RBSheet from "react-native-raw-bottom-sheet";
 
-const BottomSheetComponent = ({ visible, children, onBackButtonPress, onBackdropPress }) => {
+const BottomSheetComponent = ({ visible, children, onBackButtonPress, onBackdropPress, ref }) => {
     return (
         <View>
             <BottomSheet

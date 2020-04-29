@@ -11,6 +11,7 @@ import {
     TouchableHighlight,
     TouchableOpacity,
     Dimensions,
+    TextInput,
     SectionList
 } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
@@ -21,12 +22,18 @@ import TopNavigationBar from './TopNavigationBar'
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
 import AddToDoButton from '../../components/tasks/AddTaskButton';
-import BottomSheetComponent from '../../components/bottomSheet'
+import BottomSheetComponent from '../../components/bottomSheet';
+import FAIcon from "react-native-vector-icons/FontAwesome";
+import MDIcon from "react-native-vector-icons/MaterialIcons";
+import RBSheet from "react-native-raw-bottom-sheet";
 
 import _ from 'lodash'
 import moment from 'moment-timezone'
 
 import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction } from '../../actions/TaskAction'
+
+FAIcon.loadFont();
+MDIcon.loadFont();
 
 function wait(timeout) {
     return new Promise(resolve => {
@@ -101,6 +108,7 @@ const FiveDayScreen = (props) => {
             dispatch(addTaskAction(data))
             onRefresh()
             setBottomSheetShow(false)
+            Input.close()
         } else {
             Alert.alert('Warning!!!', 'Todos must be over 3 characters long', [
                 { text: 'Understood' }
@@ -116,7 +124,7 @@ const FiveDayScreen = (props) => {
     const unDoneList = tasks.filter(task => task.completed !== true)
     const sections = getSections(unDoneList)
     const renderItem = ({ item, index }) => (
-        <TaskItem item={item} index={index} deleteHandler={deleteHandler} editTaskHandler={editTaskHandler}  />
+        <TaskItem item={item} index={index} deleteHandler={deleteHandler} editTaskHandler={editTaskHandler} />
     )
     const renderSectionHeader = ({ section }) => <Text style={styles.SectionHeaderStyle}>{section.title}</Text>
     return (
@@ -142,14 +150,32 @@ const FiveDayScreen = (props) => {
                         }
                     />
                 </SafeAreaView>
-                {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => setBottomSheetShow(true)} />)}
-                <BottomSheetComponent
+                {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)}
+                {/* <BottomSheetComponent
                     visible={bottomSheetShow}
                     onBackButtonPress={() => setBottomSheetShow(!bottomSheetShow)}
                     onBackdropPress={() => setBottomSheetShow(!bottomSheetShow)}
                 >
                     <AddTask submitHandler={addTaskHandler} />
-                </BottomSheetComponent>
+                </BottomSheetComponent> */}
+                <RBSheet
+                    ref={ref => {
+                        Input = ref;
+                    }}
+                    height={330}
+                    customStyles={{
+                        container: {
+                            borderTopLeftRadius: 10,
+                            borderTopRightRadius: 10
+                        }
+                    }}
+                >
+                    <View style={styles.listContainer}>
+                        <Text style={styles.listTitle}>Create a new task</Text>
+                        <AddTask submitHandler={addTaskHandler} />
+                    </View>
+                </RBSheet>
+                
 
             </Layout>
 
@@ -221,6 +247,21 @@ const styles = StyleSheet.create({
     backTextWhite: {
         color: 'white',
         fontWeight: 'bold'
+    },
+    listContainer: {
+        flex: 1,
+        padding: 15
+    },
+    listTitle: {
+        fontSize: 16,
+        marginBottom: 20,
+        color: "#666",
+        alignSelf: 'center'
+    },
+    listButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: 10
     }
 
 })

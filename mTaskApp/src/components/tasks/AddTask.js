@@ -60,7 +60,7 @@ const AddTask = ({ submitHandler }) => {
                             is24Hour={true}
                             display="default"
                             onChange={onChangeDate}
-                            style={{ width: '100%', backgroundColor: 'white' }}
+                            style={{ width: '100%', backgroundColor: 'white', position: "absolute" }}
                         />
                     </View>
                 )}
@@ -74,7 +74,7 @@ const AddTask = ({ submitHandler }) => {
                             is24Hour={true}
                             display="spinner"
                             onChange={onChangeTime}
-                            style={{ width: '100%', backgroundColor: 'white' }}
+                            style={{ width: '100%', backgroundColor: 'white', position: "absolute" }}
                         />
                     </View>
                 )}
@@ -211,11 +211,12 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         // height:'100%',
-        bottom: '50%'
+        // bottom: '50%'
     },
     iosPickerBackground: {
         backgroundColor: 'white',
-        padding: 15
+        padding: 15,
+        // position: "absolute",
     }
 
 })
