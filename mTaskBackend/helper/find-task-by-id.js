@@ -1,4 +1,4 @@
-const itemModel = require('../../../../../model/item')
+const itemModel = require('../model/item')
 
 const findTaskById = async (_id)=>{
     var task = await itemModel.findOne({_id},  (err, doc)=>{

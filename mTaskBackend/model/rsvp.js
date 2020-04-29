@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema;
 const rsvpSchema = new Schema({
-  senderId: {type: String, unique: true},
+  senderId: {type: String},
   receiverId: {type: String},
   text: {type: String},
   rsvpType: {type: String},
   
-  isAccepted: {type: Boolean, defaule: false},
-  isDeclined: {type: Boolean, defaule: false},
-  isOpened: {type: Boolean, defaule: false},
+  isAccepted: {type: Boolean, default: false},
+  isDeclined: {type: Boolean, default: false},
+  isOpened: {type: Boolean, default: false},
 
   //ref
   taskId: {type: String},

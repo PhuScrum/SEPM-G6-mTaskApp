@@ -1,6 +1,6 @@
 const rsvpModel = require('../../../../../model/rsvp')
-const findTaskById = require('./find-task-by-id')
-const findUserById = require('./find-user-by-id')
+const findTaskById = require('../../../../../helper/find-task-by-id')
+const findUserById = require('../../../../../helper/find-user-by-id')
 const sendNotification = async (receiverId, senderId, taskId)=>{
     var task = await findTaskById(taskId)
     var sender = await findUserById(senderId)
@@ -10,21 +10,21 @@ const sendNotification = async (receiverId, senderId, taskId)=>{
     console.log('testing sendNotification: ')
     console.log(text)
     
-    // const rsvp  = {
-    //     senderId,
-    //     receiverId,
-    //     text,
-    //     rsvpType: 'rsvp',
+    const rsvp  = {
+        senderId,
+        receiverId,
+        text,
+        rsvpType: 'rsvp',
 
-    //     isDeclined: false,
-    //     isAccepted: false,
-    //     taskId
-    // }
+        isDeclined: false,
+        isAccepted: false,
+        taskId
+    }
 
-    // rsvpModel.create(rsvp, (err, doc)=>{
-    //     if(err)console.log(err)
-    //     else console.log(doc)
-    // })
+    rsvpModel.create(rsvp, (err, doc)=>{
+        if(err)console.log(err)
+        else console.log(doc)
+    })
 }
 
 module.exports = sendNotification

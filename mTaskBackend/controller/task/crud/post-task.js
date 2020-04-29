@@ -1,5 +1,6 @@
 const itemModel = require('../../../model/item')
 const notifyUsers = require('../../rsvp/notify/add_tasks')
+const rsvp_API = require('../../rsvp')
 const postTask = (req, res)=>{
     var {taggedUsers, creatorId, name} = req.body
     req.body.name = 'testing tagging members'
@@ -9,7 +10,7 @@ const postTask = (req, res)=>{
         if(!err){
             if(req.body.taggedUsers){
                 var taskId = doc._id
-                notifyUsers(req.body.taggedUsers, req.body.creatorId, taskId)
+                rsvp_API.notify.addTask(req.body.taggedUsers, req.body.creatorId, taskId)
             }
             res.json(doc)
         }

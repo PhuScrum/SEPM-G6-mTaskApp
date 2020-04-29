@@ -26,6 +26,7 @@ const ObjectId = Schema.ObjectId;
 const task_API = require('./controller/task')
 const user_API = require('./controller/user')
 const auth_API = require('./controller/user/authentication')
+const rsvp_API = require('./controller/rsvp')
 const useCase_API = require('./controller/use_cases')
 
 app.route('/task')
@@ -58,6 +59,9 @@ app.route('/search-members')
 
 app.route('/notify-user')
 //   .post()
+
+app.route('/rsvp/:userId')
+  .get(rsvp_API.crud.getNotifByUserId)
 var port = process.env.PORT || 19003
 app.listen(port, ()=>{
     console.log('server running at port: ' + port)
