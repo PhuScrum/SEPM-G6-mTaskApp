@@ -1,6 +1,7 @@
 const sendNotification = require('./send_notification')
 
-const notifyNotification = (taggedUsers, creatorId, taskId)=>{
+const notifyNotification = (req)=>{
+    const {taggedUsers, creatorId, taskId} = req.body
     var useridArr = taggedUsers.map(unit =>{
         return unit._id
     })

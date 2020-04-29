@@ -1,6 +1,6 @@
 const notifyNotification = require('./notify-notification')
-const notifyAddTasks = (taggedUsers, creatorId, taskId)=>{
-    notifyNotification(taggedUsers, creatorId, taskId)
+const notifyAddTasks = (req)=>{
+    notifyNotification(req)
     // notifyPush()
     // notifyEmail()
 }

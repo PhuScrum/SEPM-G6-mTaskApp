@@ -1,9 +1,11 @@
 const updateTask = require('./update-task')
 const updateRSVP = require('./update-rsvp')
+const notifyCreator = require('./notify-creator')
 const accept = (req, res)=>{
-    // updateTask(req, 'accept')
+    updateTask(req, 'accept')
     updateRSVP(req, {isAccepted: true})
-    // notifySender(req)
+    notifyCreator(req)
+    res.json('done')
 }
 
 module.exports = accept

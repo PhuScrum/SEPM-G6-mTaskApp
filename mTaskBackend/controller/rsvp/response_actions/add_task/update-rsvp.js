@@ -1,9 +1,8 @@
-rsvpModel = require('../../../../model/rsvp')
+const rsvpModel = require('../../../../model/rsvp')
 
 const updateRSVP = (req, update)=>{
     const {rsvpId} = req.body
-    req.body.rsvpId = '5ea96991d844c944b8f2fece'
-    rsvpModel.findByIdAndUpdate({ _id: req.body.rsvpId }, update,  (err, doc)=>{
+    rsvpModel.findByIdAndUpdate({ _id: rsvpId }, update,  (err, doc)=>{
         if (err) {
             console.log('updateRSVP fail', err)
         } else {
@@ -13,3 +12,22 @@ const updateRSVP = (req, update)=>{
 }
 
 module.exports = updateRSVP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    req.body.rsvpId = '5ea96991d844c944b8f2fece'

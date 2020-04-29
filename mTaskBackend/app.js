@@ -66,7 +66,7 @@ app.route('/rsvp/:userId')
 app.route('/accept-tagging-add-task')
   .post(rsvp_API.responseAction.addTask.accept)
 
-app.route('/decline-add-task-tagging')
+app.route('/decline-tagging-add-task')
   .post(rsvp_API.responseAction.addTask.decline)
 
 var port = process.env.PORT || 19003
