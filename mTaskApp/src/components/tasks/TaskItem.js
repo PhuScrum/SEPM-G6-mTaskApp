@@ -1,4 +1,4 @@
-import React, { createRef, useState } from 'react'
+import React, { createRef, useState, useRef } from 'react'
 import { StyleSheet, View, TouchableOpacity, TouchableHighlight, Animated, I18nManager } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -30,6 +30,7 @@ const RowItem = ({ item }) => (
 
 const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
     const scrollRef = createRef()
+    const refRBSheet = useRef();
     const [showDatePicker, setShowDatePicker] = useState(true)
     const [showTimePicker, setShowTimePicker] = useState(true)
     const [date, setDate] = useState(new Date(Date.now()))
@@ -62,9 +63,9 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
             switch (text) {
                 case 'Delete':
                     deleteHandler(item._id)
-
+                    refRBSheet.current.close()
                 case 'Delay':
-                    Input.open()
+                    refRBSheet.current.open()
                 default:
             }
         }
@@ -129,9 +130,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
                 </Swipeable>
                 <RBSheet
                     height={550}
-                    ref={ref => {
-                        Input = ref;
-                    }}
+                    ref={refRBSheet}
                 >
                     <View style={styles.dateHeaderContainer}>
                         <TouchableOpacity
@@ -141,7 +140,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
                             <Text style={styles.dateHeaderButtonCancel}>Cancel</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => Input.close()}
+                            onPress={() => refRBSheet.current.close()}
                             style={[styles.dateHeaderButton]}
                         >
                             <Text style={styles.dateHeaderButtonDone}>Done</Text>

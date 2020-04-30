@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, createRef } from 'react';
+import React, { useState, useEffect, useCallback, createRef, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import {
     View,
@@ -75,7 +75,8 @@ const getSections = (tasks) => {
 
 const FiveDayScreen = (props) => {
     const scrollRef = createRef()
-    const tasks = useSelector(state => state.taskReducer.tasks);
+    const refBottomSheet = useRef();
+    const tasks = useSelector(state => state.taskReducer.tasks,[]);
     const dispatch = useDispatch();
     const [bottomSheetShow, setBottomSheetShow] = useState(false);
     const [refreshing, setRefreshing] = useState(false)
@@ -108,7 +109,7 @@ const FiveDayScreen = (props) => {
             dispatch(addTaskAction(data))
             onRefresh()
             setBottomSheetShow(false)
-            Input.close()
+            refBottomSheet.current.close()
         } else {
             Alert.alert('Warning!!!', 'Todos must be over 3 characters long', [
                 { text: 'Understood' }
@@ -151,18 +152,9 @@ const FiveDayScreen = (props) => {
                     />
                 </SafeAreaView>
                 {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
-                <AddToDoButton toggleBottomSheet={() => Input.open()} />
-                {/* <BottomSheetComponent
-                    visible={bottomSheetShow}
-                    onBackButtonPress={() => setBottomSheetShow(!bottomSheetShow)}
-                    onBackdropPress={() => setBottomSheetShow(!bottomSheetShow)}
-                >
-                    <AddTask submitHandler={addTaskHandler} />
-                </BottomSheetComponent> */}
+                <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()} />
                 <RBSheet
-                    ref={ref => {
-                        Input = ref;
-                    }}
+                    ref={refBottomSheet}
                     height={500}
                     customStyles={{
                         container: {
