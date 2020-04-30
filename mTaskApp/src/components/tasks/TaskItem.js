@@ -31,6 +31,7 @@ const RowItem = ({ item }) => (
 const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
     const scrollRef = createRef()
     const refRBSheet = useRef();
+    
     const [showDatePicker, setShowDatePicker] = useState(true)
     const [showTimePicker, setShowTimePicker] = useState(true)
     const [date, setDate] = useState(new Date(Date.now()))
@@ -48,7 +49,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
         setTime(currentTime);
     };
 
-    const taskData = {
+    const taskDateTime = {
         dateTime: combineDateTime(date, time)
     }
 
@@ -134,7 +135,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
                 >
                     <View style={styles.dateHeaderContainer}>
                         <TouchableOpacity
-                            onPress={() => Input.close()}
+                            onPress={() => refRBSheet.current.close()}
                             style={styles.dateHeaderButton}
                         >
                             <Text style={styles.dateHeaderButtonCancel}>Cancel</Text>

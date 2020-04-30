@@ -1,19 +1,27 @@
 import React from 'react'
-import { Text, View, StyleSheet, Modal, TouchableHighlight } from 'react-native'
+import { Text, View, StyleSheet, TouchableHighlight, Alert, TouchableWithoutFeedback, TouchableOpacity, Modal } from 'react-native'
+// import Modal from 'react-native-modal';
 import { Layout, Button, Card } from '@ui-kitten/components'
 import TagMemberInput from './TagMemberInput'
+
 export default function TagMembers() {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [selectedItems, setSelectedItems] = React.useState([])
 
+    const toggleModal = () => {
+        setModalVisible(!modalVisible)
+    };
+
     return (
-        <View style={{ flex: 1 }}>
+        <View
+            style={{ flex: 1 }}
+        >
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
+                    setModalVisible(false)
                 }}
             >
                 <View style={styles.centeredView}>
@@ -22,11 +30,8 @@ export default function TagMembers() {
 
                         <TagMemberInput/>
 
-
-
-
                         <TouchableHighlight
-                            style={{ ...styles.closeButton, backgroundColor: "#2196F3" }}
+                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
                             onPress={() => {
                                 setModalVisible(!modalVisible);
                             }}
@@ -39,14 +44,12 @@ export default function TagMembers() {
 
             <TouchableHighlight
                 style={styles.openButton}
-                onPress={() => {
-                    setModalVisible(true);
-                }}
+                onPress={() => toggleModal()}
             >
                 <Text style={styles.textStyle}>Tag members</Text>
             </TouchableHighlight>
-
         </View>
+
     )
 }
 
@@ -56,10 +59,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginTop: 22
-    },
-    modalView: {
-        height:250,
-        width: 400,
+      },
+      modalView: {
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
@@ -67,33 +68,26 @@ const styles = StyleSheet.create({
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
-            width: 0,
-            height: 2
+          width: 0,
+          height: 2
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5
-    },
-    openButton: {
+      },
+      openButton: {
         backgroundColor: "#F194FF",
         borderRadius: 20,
         padding: 10,
-        elevation: 2,
-    },
-    closeButton: {
-        backgroundColor: "#F194FF",
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2,
-        top : 79,
-    },
-    textStyle: {
+        elevation: 2
+      },
+      textStyle: {
         color: "white",
         fontWeight: "bold",
         textAlign: "center"
-    },
-    modalText: {
+      },
+      modalText: {
         marginBottom: 15,
         textAlign: "center"
-    }
+      }
 });

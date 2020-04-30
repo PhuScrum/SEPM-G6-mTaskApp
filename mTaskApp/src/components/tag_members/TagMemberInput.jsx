@@ -10,33 +10,33 @@ import {
 import OptionListing from './OptionListing'
 import { useSelector } from 'react-redux';
 import SelectedMembers from './SelectedMembers'
+
 export default function TagMemberInput() {
-  
 
   // input
   const [value, setValue] = useState('');
   const [searchResult, setSearchResult] = useState([])
 
-    const searchMembers = async (searchTerm) => {
-      setValue(searchTerm)
-      try {
-        var resp = await axios.post(url.searchMembers, { searchTerm })
-        var data = resp.data
-        console.log(data)
-        setSearchResult(data)
-        // return data
-      } catch (err) {
-        console.error(err)
-      }
+  const searchMembers = async (searchTerm) => {
+    setValue(searchTerm)
+    try {
+      var resp = await axios.post(url.searchMembers, { searchTerm })
+      var data = resp.data
+      console.log(data)
+      setSearchResult(data)
+      // return data
+    } catch (err) {
+      console.error(err)
+    }
   }
   const onIconPress = () => {
     setValue('');
   };
   const renderIcon = (style) => (
-    <Icon {...style} name={value ? 'close-outline' : 'corner-down-left-outline'}/>
+    <Icon {...style} name={value ? 'close-outline' : 'corner-down-left-outline'} />
   );
-  
-// const selectedMembersListing = selectedItems.map((unit, index)=> <Text key={index}>{unit.fName}</Text>)
+
+  // const selectedMembersListing = selectedItems.map((unit, index)=> <Text key={index}>{unit.fName}</Text>)
   return (
     <View>
       {/* <SelectedMembers/> */}
@@ -47,36 +47,11 @@ export default function TagMemberInput() {
         onIconPress={onIconPress}
         onChangeText={searchMembers}
       />
-      <OptionListing data={searchResult}/>
+      <OptionListing data={searchResult} />
     </View>
   );
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // const [selectedItems, setSelectedItems] = React.useState([])

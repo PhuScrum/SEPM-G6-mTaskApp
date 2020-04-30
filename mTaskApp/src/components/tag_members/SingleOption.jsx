@@ -3,6 +3,7 @@ import {Text} from 'react-native'
 import { CheckBox } from '@ui-kitten/components';
 import {useDispatch, useSelector} from 'react-redux'
 import {SET_ITEMS_TO_SELECTED, REMOVE_ITEMS_FROM_SELECTED} from '../../actions/types'
+
 export default function SingleOption(props){
     const [checked, setChecked] = React.useState(false);
     const dispatch = useDispatch()

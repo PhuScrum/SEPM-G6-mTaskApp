@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import {Text} from 'react-native'
 import SingleOption from './SingleOption'
-import {connect, useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
+
 export default function OptionListing(props){
      const data = useSelector(state => state.tagMemberReducer.selectedItems, [])
 

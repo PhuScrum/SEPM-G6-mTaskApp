@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {Text} from 'react-native'
 import SingleOption from './SingleOption'
 import {connect} from 'react-redux'
+
 class SelectedMembers extends React.Component{
     constructor(props){
         super(props)

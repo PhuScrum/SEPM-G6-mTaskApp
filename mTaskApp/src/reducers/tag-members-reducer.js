@@ -28,7 +28,6 @@ export default function tagMembers(state = initialState, action){
                     state.selectedItems.splice(i, 1)
                 }
             }
-            console.log('STATE:', state)
             return {...state}
         default: 
             return state

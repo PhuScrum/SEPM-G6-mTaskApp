@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { StyleSheet, View, TouchableOpacity, Platform} from 'react-native'
 import { Layout, Text, Input, Button, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
@@ -18,6 +19,7 @@ const combineDateTime = (date, time) => {
 
 const AddTask = ({ submitHandler }) => {
     const os = Platform.OS
+    const tag = useSelector(state=>state.tagMemberReducer.selectedItems, [])
 
     const [name, setName] = useState('')
     const [desc, setDesc] = useState('')
@@ -43,7 +45,8 @@ const AddTask = ({ submitHandler }) => {
     const taskData = {
         name: name,
         description: desc,
-        dateTime: combineDateTime(date, time)
+        dateTime: combineDateTime(date, time),
+        taggedUsers: tag
     }
 
     const displayDateTime = moment(combineDateTime(date, time)).format("LLL")
