@@ -67,6 +67,8 @@ const getSections = (tasks) => {
 const FiveDayScreen = (props) => {
     const scrollRef = createRef()
     const tasks = useSelector(state => state.taskReducer.tasks);
+    const data = useSelector(state => state.tagMemberReducer.selectedItems, [])
+    console.log('five day screen testing selected items:', data)
     const dispatch = useDispatch();
     const [bottomSheetShow, setBottomSheetShow] = useState(false);
     const [refreshing, setRefreshing] = useState(false)
@@ -179,6 +181,9 @@ const FiveDayScreen = (props) => {
 
     }
 
+    const selectedMemberListing = data.map(unit=> <Text>
+        {unit.fName}
+    </Text>)
     return (
         <TouchableWithoutFeedback
             onPress={() => {
@@ -190,6 +195,7 @@ const FiveDayScreen = (props) => {
                 <TopNavigationBar {...props} />
                 <SafeAreaView style={styles.list} >
                     <Text style={styles.title}>Five Days List</Text>
+                    {/* <View>{selectedMemberListing}</View> */}
                     <SwipeListView
                         useSectionList
                         refreshControl={
