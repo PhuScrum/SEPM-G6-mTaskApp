@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, createRef } from 'react';
+import React, { useState, useEffect, useCallback, createRef, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import {
     View,
@@ -10,7 +10,9 @@ import {
     RefreshControl,
     TouchableHighlight,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    TextInput,
+    SectionList
 } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { BottomSheet } from 'react-native-btr';
@@ -20,12 +22,19 @@ import TopNavigationBar from './TopNavigationBar'
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
 import AddToDoButton from '../../components/tasks/AddTaskButton';
+import BottomSheetComponent from '../../components/bottomSheet';
+import FAIcon from "react-native-vector-icons/FontAwesome";
+import MDIcon from "react-native-vector-icons/MaterialIcons";
+import RBSheet from "react-native-raw-bottom-sheet";
 
 import _ from 'lodash'
 import moment from 'moment-timezone'
 
 import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction } from '../../actions/TaskAction'
-import TagMembers from '../../components/tag_members/TagMembers'
+
+FAIcon.loadFont();
+MDIcon.loadFont();
+
 function wait(timeout) {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
@@ -34,7 +43,7 @@ function wait(timeout) {
 
 function between(x, min, max) {
     return x >= min && x <= max;
-  }
+}
 
 const getSections = (tasks) => {
     const tmrDay = moment().add(1, 'days').format('Do MMMM YYYY')
@@ -47,7 +56,7 @@ const getSections = (tasks) => {
     const todayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === moment().format('Do MMMM YYYY'))
     const tmrData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === tmrDay)
     const twodayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === twoDay)
-    const threeDayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === threeDay )
+    const threeDayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === threeDay)
     const fourDayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === fourDay)
     const fiveDayData = tasks.filter(task => moment(task.dateTime).format('Do MMMM YYYY') === fiveDay)
 
@@ -66,16 +75,15 @@ const getSections = (tasks) => {
 
 const FiveDayScreen = (props) => {
     const scrollRef = createRef()
-    const tasks = useSelector(state => state.taskReducer.tasks);
-    const data = useSelector(state => state.tagMemberReducer.selectedItems, [])
-    console.log('five day screen testing selected items:', data)
+    const refBottomSheet = useRef();
+    const tasks = useSelector(state => state.taskReducer.tasks,[]);
     const dispatch = useDispatch();
     const [bottomSheetShow, setBottomSheetShow] = useState(false);
     const [refreshing, setRefreshing] = useState(false)
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        
+
         wait(2000).then(() => {
             getTasks()
             setRefreshing(false)
@@ -101,6 +109,7 @@ const FiveDayScreen = (props) => {
             dispatch(addTaskAction(data))
             onRefresh()
             setBottomSheetShow(false)
+            refBottomSheet.current.close()
         } else {
             Alert.alert('Warning!!!', 'Todos must be over 3 characters long', [
                 { text: 'Understood' }
@@ -112,78 +121,13 @@ const FiveDayScreen = (props) => {
         getTasks()
     }, [])
 
-    
-
     //Define Swipeable Section Elements
-    const sections = getSections(tasks)
-    const renderItem = (data, rowMap) => (
-        <TaskItem item={data.item} />
+    const unDoneList = tasks.filter(task => task.completed !== true)
+    const sections = getSections(unDoneList)
+    const renderItem = ({ item, index }) => (
+        <TaskItem item={item} index={index} deleteHandler={deleteHandler} editTaskHandler={editTaskHandler} />
     )
-    const closeRow = (rowMap, rowKey) => {
-        if (rowMap[rowKey]) {
-            rowMap[rowKey].closeRow();
-        }
-    };
-    const renderHiddenItem = (data, rowMap) => (
-        <View style={styles.rowBack}>
-            <TouchableOpacity
-                style={[styles.backRightBtn, styles.backLeftBtnRight]}
-                onPress={() => closeRow(rowMap, data.item._id)}
-            >
-                <Text style={styles.backTextWhite}>Delay</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={[styles.backRightBtn, styles.backLeftBtnLeft]}
-                onPress={() => deleteHandler(data.item._id)}
-            >
-                <Ionicons name="ios-trash" size={32} color="white" />
-            </TouchableOpacity>
-            <View style={[
-                styles.backRightBtn,
-                {
-                    backgroundColor: '#2F3860',
-                    left: 149,
-                    width: 200
-                }]}></View>
-            <View style={[
-                styles.backRightBtn,
-                {
-                    backgroundColor: '#2AB785',
-                    right: 74,
-                    width: 75
-                }]}></View>
-
-            <TouchableOpacity
-                activeOpacity={1.0}
-                style={[styles.backRightBtn, styles.backRightBtnRight]}
-                onPress={() => {
-                    editTaskHandler(data.item._id, {completed: !data.item.completed})
-                    wait(800).then(() => {
-                        closeRow(rowMap, data.item._id)
-                    })
-                }}
-            >
-                <AntDesign 
-                    name= {data.item.completed ? 'checkcircle' : 'checkcircleo'}
-                    size={32} 
-                    color="white" 
-                />
-            </TouchableOpacity>
-        </View>
-    );
-    const onRowDidOpen = rowKey => {
-        console.log('This row opened', rowKey);
-    };
     const renderSectionHeader = ({ section }) => <Text style={styles.SectionHeaderStyle}>{section.title}</Text>
-    const onSwipeValueChange = ({ key, value }) => {
-        // console.log('Key: ', key)
-        // console.log('Value: ', value)
-
-    }
-
-    const selectedMemberListing = data.map(unit=> <Text>
-        {unit.fName}
-    </Text>)
     return (
         <TouchableWithoutFeedback
             onPress={() => {
@@ -195,46 +139,35 @@ const FiveDayScreen = (props) => {
                 <TopNavigationBar {...props} />
                 <SafeAreaView style={styles.list} >
                     <Text style={styles.title}>Five Days List</Text>
-                    {/* <View>{selectedMemberListing}</View> */}
-                    <SwipeListView
-                        useSectionList
+                    <SectionList
+                        ref={scrollRef}
+                        sections={sections}
+                        renderSectionHeader={renderSectionHeader}
+                        renderItem={renderItem}
+                        keyExtractor={item => item._id}
                         refreshControl={
                             <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                         }
-                        keyExtractor={item => item._id}
-                        // ItemSeparatorComponent={FlatListItemSeparator}
-                        sections={sections}
-                        renderItem={renderItem}
-                        renderHiddenItem={renderHiddenItem}
-                        renderSectionHeader={renderSectionHeader}
-                        leftOpenValue={150}
-                        rightOpenValue={-75}
-                        previewRowKey={'0'}
-                        previewOpenValue={-40}
-                        previewOpenDelay={150}
-                        // onRowDidOpen={onRowDidOpen}
-                        onSwipeValueChange={onSwipeValueChange}
                     />
                 </SafeAreaView>
-                {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => setBottomSheetShow(true)} />)}
-                <BottomSheet
-                    visible={bottomSheetShow}
-                    onBackButtonPress={() => setBottomSheetShow(!bottomSheetShow)}
-                    onBackdropPress={() => setBottomSheetShow(!bottomSheetShow)}
+                {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
+                <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()} />
+                <RBSheet
+                    ref={refBottomSheet}
+                    height={500}
+                    customStyles={{
+                        container: {
+                            borderTopLeftRadius: 10,
+                            borderTopRightRadius: 10
+                        }
+                    }}
                 >
-                    <View style={styles.bottomNavigationView}>
-                        <View style={{ flex: 3, justifyContent: 'center' }}>
-                            <Text style={styles.bottomSheetTitle}>Create a new task</Text>
-                        </View>
-                        <View style={{
-                            width: '100%',
-                            flex: 16,
-                            marginTop: 2
-                        }}>
-                            <AddTask submitHandler={addTaskHandler} />
-                        </View>
+                    <View style={styles.listContainer}>
+                        <Text style={styles.listTitle}>Create a new task</Text>
+                        <AddTask submitHandler={addTaskHandler} />
                     </View>
-                </BottomSheet>
+                </RBSheet>
+                
 
             </Layout>
 
@@ -261,15 +194,6 @@ const styles = StyleSheet.create({
     list: {
         flex: 1,
         padding: 10
-    },
-    bottomNavigationView: {
-        borderRadius: 15,
-        backgroundColor: '#fff',
-        width: '100%',
-        height: '50%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        // marginVertical: 10
     },
     SectionHeaderStyle: {
         paddingTop: 20,
@@ -316,11 +240,22 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold'
     },
-    bottomSheetTitle: {
-        // flexDirection:'row',
-        fontFamily: 'Lato-Light',
+    listContainer: {
+        flex: 1,
+        padding: 15
+    },
+    listTitle: {
+        fontFamily: 'Lato-Regular',
         fontWeight: 'bold',
-        fontSize: 18
+        fontSize: 18,
+        marginBottom: 20,
+        color: "#666",
+        alignSelf: 'center'
+    },
+    listButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: 10
     }
 
 })
