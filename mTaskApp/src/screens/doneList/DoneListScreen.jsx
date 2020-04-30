@@ -86,7 +86,7 @@ export default class DoneListScreen extends Component {
          </Modal>
    
     <TouchableOpacity onPress={() => {this.setState(
-        {show: true, selectedItemId: item._id, selectedItemName:item.name, selectedDescription:item.description, selectedCompletedDate:item.dateTime, selectedTaggedFriend:item.taggedUsers})}}
+        {show: true, selectedItemId: item._id, selectedItemName:item.name, selectedDescription:item.description, selectedCompletedDate:item.dateTime, selectedTaggedFriend:item.taggedUsers[0]._id})}}
     >
 
         <View style={styles.item}> 
