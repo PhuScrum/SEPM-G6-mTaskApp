@@ -37,7 +37,7 @@ export default class Login extends Component {
   async postMethod (){
     console.log('Post function called')
     try{
-      await fetch('http://192.168.100.28:19003/simple-facebook-login', {
+      await fetch('http://192.168.1.10:19003/simple-facebook-login', {
         method:'post',
         mode:'no-cors',
         headers:{
