@@ -39,7 +39,7 @@ export const addTaskAction = (data) => async dispatch => {
                 payload: res.data
             })
         })
-        // .then(res=>dispatch(getTasksAction))
+        .then(res=>dispatch(getTasksAction))
         .catch(err => console.log(err))
 }
 

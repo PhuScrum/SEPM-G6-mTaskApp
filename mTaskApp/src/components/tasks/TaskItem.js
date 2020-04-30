@@ -1,17 +1,19 @@
-import React, { createRef } from 'react'
+import React, { createRef, useState } from 'react'
 import { StyleSheet, View, TouchableOpacity, TouchableHighlight, Animated, I18nManager } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-
+import RBSheet from "react-native-raw-bottom-sheet";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { Layout, Text, Button } from '@ui-kitten/components';
 import { ListItem } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 
-class TrashIcon extends React.Component {
-    render() {
-        return <Ionicons name="ios-trash" size={32} color="white" />
-    }
+
+const combineDateTime = (date, time) => {
+    const datePick = moment(date).format('DD MMM YYYY ')
+    const timePick = moment(time).format('hh:mm:ss a')
+    const finalTime = Date.parse(`${datePick}${timePick}`)
+    return finalTime
 }
 
 
@@ -28,6 +30,28 @@ const RowItem = ({ item }) => (
 
 const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
     const scrollRef = createRef()
+    const [showDatePicker, setShowDatePicker] = useState(true)
+    const [showTimePicker, setShowTimePicker] = useState(true)
+    const [date, setDate] = useState(new Date(Date.now()))
+    const [time, setTime] = useState(new Date(Date.now()))
+
+    const onChangeDate = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        { os === 'android' && setShowDatePicker(false) }
+        setDate(currentDate);
+    };
+
+    const onChangeTime = (event, selectedTime) => {
+        const currentTime = selectedTime || time;
+        { os === 'android' && setShowTimePicker(false) }
+        setTime(currentTime);
+    };
+
+    const taskData = {
+        dateTime: combineDateTime(date, time)
+    }
+
+    const displayDateTime = moment(combineDateTime(date, time)).format("LLL")
 
     const renderLeftAction = (text, color, x, progress) => {
         const trans = progress.interpolate({
@@ -40,7 +64,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
                     deleteHandler(item._id)
 
                 case 'Delay':
-
+                    Input.open()
                 default:
             }
         }
@@ -65,7 +89,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
             outputRange: [x, 0],
         });
         const pressHandler = () => {
-            switch(text){
+            switch (text) {
                 case 'Done':
                     editTaskHandler(item._id, { completed: !item.completed })
                 default:
@@ -92,16 +116,44 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
         <TouchableHighlight
             style={styles.rowFront}
         >
-            <Swipeable
-                ref={scrollRef}
-                friction={2}
-                leftThreshold={40}
-                rightThreshold={40}
-                renderLeftActions={renderLeftActions}
-                renderRightActions={renderRightActions}
-            >
-                <RowItem item={item} />
-            </Swipeable>
+            <View>
+                <Swipeable
+                    ref={scrollRef}
+                    friction={2}
+                    leftThreshold={40}
+                    rightThreshold={40}
+                    renderLeftActions={renderLeftActions}
+                    renderRightActions={renderRightActions}
+                >
+                    <RowItem item={item} />
+                </Swipeable>
+                <RBSheet
+                    height={550}
+                    ref={ref => {
+                        Input = ref;
+                    }}
+                >
+                    <View style={styles.dateHeaderContainer}>
+                        <TouchableOpacity
+                            onPress={() => Input.close()}
+                            style={styles.dateHeaderButton}
+                        >
+                            <Text style={styles.dateHeaderButtonCancel}>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => Input.close()}
+                            style={[styles.dateHeaderButton]}
+                        >
+                            <Text style={styles.dateHeaderButtonDone}>Done</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.dateTimeText}>Chosen Time: {displayDateTime}</Text>
+                    </View>
+                    {/* <DatePickerIOS mode="date" date={new Date()} /> */}
+                </RBSheet>
+            </View>
+
         </TouchableHighlight>
     );
 
@@ -146,6 +198,40 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flexDirection: 'column',
         backgroundColor: 'white',
+    },
+    dateHeaderContainer: {
+        height: 45,
+        borderBottomWidth: 1,
+        borderColor: "#ccc",
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    dateHeaderButton: {
+        height: "100%",
+        paddingHorizontal: 20,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    dateHeaderButtonCancel: {
+        fontSize: 18,
+        color: "#666",
+        fontWeight: "400"
+    },
+    dateHeaderButtonDone: {
+        fontSize: 18,
+        color: "#006BFF",
+        fontWeight: "500"
+    },
+    inputGroup: {
+        width: '100%',
+        paddingVertical: 8,
+        position: 'relative'
+    },
+    dateTimeText: {
+        fontSize: 16,
+        fontWeight: 'normal',
+        fontFamily: 'Lato-Regular',
+        marginLeft: 15
     },
 })
 

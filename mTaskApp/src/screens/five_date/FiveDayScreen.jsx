@@ -150,7 +150,8 @@ const FiveDayScreen = (props) => {
                         }
                     />
                 </SafeAreaView>
-                {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)}
+                {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
+                <AddToDoButton toggleBottomSheet={() => Input.open()} />
                 {/* <BottomSheetComponent
                     visible={bottomSheetShow}
                     onBackButtonPress={() => setBottomSheetShow(!bottomSheetShow)}
@@ -162,7 +163,7 @@ const FiveDayScreen = (props) => {
                     ref={ref => {
                         Input = ref;
                     }}
-                    height={330}
+                    height={500}
                     customStyles={{
                         container: {
                             borderTopLeftRadius: 10,
@@ -253,7 +254,9 @@ const styles = StyleSheet.create({
         padding: 15
     },
     listTitle: {
-        fontSize: 16,
+        fontFamily: 'Lato-Regular',
+        fontWeight: 'bold',
+        fontSize: 18,
         marginBottom: 20,
         color: "#666",
         alignSelf: 'center'
