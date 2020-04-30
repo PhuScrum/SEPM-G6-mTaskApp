@@ -22,6 +22,8 @@ const searchMembers = (req, res) => {
                 res.json(docResult)
             }
         })
+    }else{
+        res.json([])
     }
 }
 
