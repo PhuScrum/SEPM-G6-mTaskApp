@@ -25,7 +25,7 @@ const RowItem = ({ item }) => (
             style={styles.item}
             title={item.name}
             description={moment(item.dateTime).format('LT')}
-            onPress={() => console.log(item.name)}
+            // onPress={() => console.log(item.name)}
         />
     </RectButton>
 )
@@ -129,6 +129,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
                 >
                     <RowItem item={item} />
                 </Swipeable>
+
                 <RBSheet
                     height={300}
                     ref={refRBSheet}
