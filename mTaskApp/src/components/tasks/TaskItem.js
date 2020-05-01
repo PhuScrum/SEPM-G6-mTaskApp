@@ -1,5 +1,5 @@
 import React, { createRef, useState, useRef } from 'react'
-import { StyleSheet, View, TouchableOpacity, TouchableHighlight, Animated, I18nManager } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TouchableHighlight, Animated, I18nManager, Platform } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -7,6 +7,7 @@ import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { Layout, Text, Button } from '@ui-kitten/components';
 import { ListItem } from '@ui-kitten/components';
 import moment from 'moment-timezone'
+import DateTimePickerComponent from '../dateTimePicker/DateTimePickerComponent';
 
 
 const combineDateTime = (date, time) => {
@@ -16,6 +17,7 @@ const combineDateTime = (date, time) => {
     return finalTime
 }
 
+const os = Platform.OS
 
 const RowItem = ({ item }) => (
     <RectButton >
@@ -31,29 +33,27 @@ const RowItem = ({ item }) => (
 const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
     const scrollRef = createRef()
     const refRBSheet = useRef();
-    
-    const [showDatePicker, setShowDatePicker] = useState(true)
-    const [showTimePicker, setShowTimePicker] = useState(true)
-    const [date, setDate] = useState(new Date(Date.now()))
-    const [time, setTime] = useState(new Date(Date.now()))
 
-    const onChangeDate = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        { os === 'android' && setShowDatePicker(false) }
+    const [showDatePicker, setShowDatePicker] = useState(false)
+    const [showTimePicker, setShowTimePicker] = useState(false)
+    const [date, setDate] = useState(new Date(item.dateTime))
+    const [time, setTime] = useState(new Date(item.dateTime))
+
+    const onChangeDate = (selectedDate) => {
+        const currentDate = selectedDate
+        setShowDatePicker(false)
         setDate(currentDate);
     };
 
-    const onChangeTime = (event, selectedTime) => {
-        const currentTime = selectedTime || time;
-        { os === 'android' && setShowTimePicker(false) }
+    const onChangeTime = (selectedTime) => {
+        const currentTime = selectedTime
+        setShowTimePicker(false)
         setTime(currentTime);
     };
 
     const taskDateTime = {
         dateTime: combineDateTime(date, time)
     }
-
-    const displayDateTime = moment(combineDateTime(date, time)).format("LLL")
 
     const renderLeftAction = (text, color, x, progress) => {
         const trans = progress.interpolate({
@@ -130,7 +130,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
                     <RowItem item={item} />
                 </Swipeable>
                 <RBSheet
-                    height={550}
+                    height={300}
                     ref={refRBSheet}
                 >
                     <View style={styles.dateHeaderContainer}>
@@ -141,16 +141,27 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
                             <Text style={styles.dateHeaderButtonCancel}>Cancel</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => refRBSheet.current.close()}
+                            onPress={() => {
+                                refRBSheet.current.close()
+                                editTaskHandler(item._id, taskDateTime)
+                            }}
                             style={[styles.dateHeaderButton]}
                         >
                             <Text style={styles.dateHeaderButtonDone}>Done</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.inputGroup}>
-                        <Text style={styles.dateTimeText}>Chosen Time: {displayDateTime}</Text>
+                    <View style={styles.inputGroup, { flexDirection: 'row', flex: 1, marginHorizontal: 10 }}>
+                        <DateTimePickerComponent
+                            dateVisible={showDatePicker}
+                            timeVisible={showTimePicker}
+                            onChangeDate={onChangeDate}
+                            onChangeTime={onChangeTime}
+                            setDatePickerVisible={setShowDatePicker}
+                            setTimePickerVisible={setShowTimePicker}
+                            dateValue={date}
+                            timeValue={time}
+                        />
                     </View>
-                    {/* <DatePickerIOS mode="date" date={new Date()} /> */}
                 </RBSheet>
             </View>
 
