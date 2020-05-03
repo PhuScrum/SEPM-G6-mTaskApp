@@ -12,7 +12,8 @@ import {
     TouchableOpacity,
     Dimensions,
     TextInput,
-    SectionList
+    SectionList,
+    AsyncStorage
 } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { BottomSheet } from 'react-native-btr';
@@ -30,7 +31,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import _ from 'lodash'
 import moment from 'moment-timezone'
 
-import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction } from '../../actions/TaskAction'
+import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction, getMyTasksAction } from '../../actions/TaskAction'
 
 FAIcon.loadFont();
 MDIcon.loadFont();
@@ -85,13 +86,13 @@ const FiveDayScreen = (props) => {
         setRefreshing(true);
 
         wait(2000).then(() => {
-            getTasks()
+            getMyTasks()
             setRefreshing(false)
         });
     }, [refreshing]);
 
-    const getTasks = () => {
-        dispatch(getTasksAction())
+    const getTasks = (id) => {
+        dispatch(getMyTasksAction(id))
     }
     // console.log(tasks)
 
@@ -117,8 +118,18 @@ const FiveDayScreen = (props) => {
         }
     }
 
+    const getMyTasks = async () => {
+        try{
+            let id = await AsyncStorage.getItem('userId')
+            getTasks(id)
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
     useEffect(() => {
-        getTasks()
+        // getTasks()
+        getMyTasks()
     }, [])
 
     //Define Swipeable Section Elements
@@ -183,7 +194,7 @@ const styles = StyleSheet.create({
         // alignItems: "center",
         justifyContent: 'center',
         backgroundColor: '#EDF1F7',
-        marginTop: 16,
+        marginTop: 20,
         paddingBottom: 0
     },
     title: {

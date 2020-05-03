@@ -14,10 +14,10 @@ const combineDateTime = (date, time) => {
 }
 
 const AddTask = ({ submitHandler }) => {
-    const [userId, setUserId] = useState('')
     const os = Platform.OS
     const tag = useSelector(state => state.tagMemberReducer.selectedItems, [])
 
+    const [userId, setUserId] = useState('')
     const [name, setName] = useState('')
     const [desc, setDesc] = useState('')
 

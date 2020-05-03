@@ -1,4 +1,4 @@
-import {GET_TASKS, DELETE_TASK, ADD_TASK, EDIT_TASK} from '../actions/types'
+import {GET_TASKS, DELETE_TASK, ADD_TASK, EDIT_TASK, GET_MY_TASKS} from '../actions/types'
 
 const initialState = {
     tasks: []
@@ -7,6 +7,8 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch(action.type){
         case GET_TASKS:
+            return {...state, tasks: action.payload}
+        case GET_MY_TASKS:
             return {...state, tasks: action.payload}
         case DELETE_TASK:
             return {...state}
