@@ -38,7 +38,7 @@ export default class Login extends Component {
   async postMethod (){
     console.log('Post function called')
     try{
-      await fetch('http://192.168.1.10:19003/simple-facebook-login', {
+      await fetch('http://192.168.1.11:19003/simple-facebook-login', {
         method:'post',
         mode:'no-cors',
         headers:{
@@ -60,7 +60,7 @@ export default class Login extends Component {
 
   async getUserId() {
     // Simple POST request with a JSON body using fetch
-    var resp = await axios.post('http://192.168.1.10:19003/get-user-by-email', {email: this.state.userInfo.email})
+    var resp = await axios.post('http://192.168.1.11:19003/get-user-by-email', {email: this.state.userInfo.email})
     var data = resp.data._id
     this.setState({userId: data})
     console.log(this.state.userId)
