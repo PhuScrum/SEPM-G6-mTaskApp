@@ -12,7 +12,8 @@ import {
     TouchableOpacity,
     Dimensions,
     TextInput,
-    SectionList
+    SectionList,
+    AsyncStorage
 } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { BottomSheet } from 'react-native-btr';
@@ -77,6 +78,7 @@ const FiveDayScreen = (props) => {
     const scrollRef = createRef()
     const refBottomSheet = useRef();
     const tasks = useSelector(state => state.taskReducer.tasks,[]);
+    const [userId, setUserId] = useState('')
     const dispatch = useDispatch();
     const [bottomSheetShow, setBottomSheetShow] = useState(false);
     const [refreshing, setRefreshing] = useState(false)
@@ -117,12 +119,26 @@ const FiveDayScreen = (props) => {
         }
     }
 
+    const getUserId = async () =>{
+        try{
+            let id = await AsyncStorage.getItem('userId')
+            setUserId(id)
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
     useEffect(() => {
         getTasks()
+        getUserId()
     }, [])
 
+    // console.log(userId)
+
     //Define Swipeable Section Elements
-    const unDoneList = tasks.filter(task => task.completed !== true)
+    const myTasks = tasks.filter(task=>task.creatorId===userId)
+    // console.log(myTasks)
+    const unDoneList = myTasks.filter(task => task.completed !== true)
     const sections = getSections(unDoneList)
     const renderItem = ({ item, index }) => (
         <TaskItem item={item} index={index} deleteHandler={deleteHandler} editTaskHandler={editTaskHandler} />
