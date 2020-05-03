@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { StyleSheet, View, TouchableOpacity, Platform } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Platform, AsyncStorage } from 'react-native'
 import { Layout, Text, Input, Button, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import TagMembers from '../tag_members/TagMembers'
@@ -46,12 +46,18 @@ const AddTask = ({ submitHandler }) => {
         setTime(currentTime);
     };
 
+    console.log(AsyncStorage)
+    let userId = AsyncStorage.getItem('userId')
+    console.log('UserID: ',userId)
+
     const taskData = {
         name: name,
         description: desc,
         dateTime: combineDateTime(date, time),
         taggedUsers: tag
     }
+
+
 
     const displayDate = moment(date).format('LL')
     const displayTime = moment(time).format('LT')
