@@ -1,14 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { StyleSheet, View, TouchableOpacity, Platform, AsyncStorage } from 'react-native'
 import { Layout, Text, Input, Button, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import TagMembers from '../tag_members/TagMembers'
 import DateTimePickerComponent from '../dateTimePicker/DateTimePickerComponent'
-
-const DateIcon = (style) => (
-    <Icon {...style} name='calendar' />
-)
 
 const combineDateTime = (date, time) => {
     const datePick = moment(date).format('DD MMM YYYY ')
@@ -18,6 +14,7 @@ const combineDateTime = (date, time) => {
 }
 
 const AddTask = ({ submitHandler }) => {
+    const [userId, setUserId] = useState('')
     const os = Platform.OS
     const tag = useSelector(state => state.tagMemberReducer.selectedItems, [])
 
@@ -31,36 +28,37 @@ const AddTask = ({ submitHandler }) => {
 
 
     const onChangeDate = (selectedDate) => {
-        // event.preventDefault();
         const currentDate = selectedDate
         setShowDatePicker(false)
-        // setShowDatePicker(os ==='ios')
         setDate(currentDate);
     };
 
     const onChangeTime = (selectedTime) => {
-        // event.preventDefault();
         const currentTime = selectedTime
         setShowTimePicker(false)
-        // setShowTimePicker(os ==='ios')
         setTime(currentTime);
     };
-
-    console.log(AsyncStorage)
-    let userId = AsyncStorage.getItem('userId')
-    console.log('UserID: ',userId)
 
     const taskData = {
         name: name,
         description: desc,
         dateTime: combineDateTime(date, time),
-        taggedUsers: tag
+        taggedUsers: tag,
+        creatorId: userId
     }
 
+    const getUserId = async () =>{
+        try{
+            let id = await AsyncStorage.getItem('userId')
+            setUserId(id)
+        } catch(err) {
+            console.log(err)
+        }
+    }
 
-
-    const displayDate = moment(date).format('LL')
-    const displayTime = moment(time).format('LT')
+    useEffect(() => {
+        getUserId()
+    }, [])
 
     return (
         <View style={styles.containter}>

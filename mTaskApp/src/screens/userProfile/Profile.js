@@ -21,10 +21,10 @@ export default class Profile extends Component {
       let status = await AsyncStorage.getItem('isLoggedIn');
       let userid = await AsyncStorage.getItem('userId');
 
-      console.log(userid)
+      // console.log(userid)
       this.setState({userInfo: JSON.parse(user)});
       this.setState({isLoadding: false});
-      //this.setState({userId: userid})
+      this.setState({userId: userid})
       
       
     
@@ -35,6 +35,7 @@ export default class Profile extends Component {
   }
 
   handleLogOut(){
+    console.log(this.state.userid)
     this.props.navigation.navigate('Login');
     AsyncStorage.setItem('isLoggedIn', this.state.isLoggedIn);
 
