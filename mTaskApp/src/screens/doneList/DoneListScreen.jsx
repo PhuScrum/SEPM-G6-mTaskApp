@@ -55,7 +55,7 @@ export default class DoneListScreen extends Component {
             <View>
 
                 <Modal
-                    animationType="slide"
+                    
                     transparent={true}
                     visible={this.state.show}
                 >
@@ -116,7 +116,7 @@ export default class DoneListScreen extends Component {
 
     render() {
 
-
+        console.log('run')
         const sortbyDate = this.state.dataSource.sort((first, second) => {
             return new Date(second.dateTime).getTime() - new Date(first.dateTime).getTime();
         });
