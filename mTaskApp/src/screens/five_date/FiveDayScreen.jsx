@@ -137,9 +137,10 @@ const FiveDayScreen = (props) => {
             <Layout style={styles.container} >
 
                 <TopNavigationBar {...props} />
-                <SafeAreaView style={styles.list} >
+                <View style={styles.list} >
                     <Text style={styles.title}>Five Days List</Text>
                     <SectionList
+                        stickySectionHeadersEnabled={false}
                         ref={scrollRef}
                         sections={sections}
                         renderSectionHeader={renderSectionHeader}
@@ -149,7 +150,7 @@ const FiveDayScreen = (props) => {
                             <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                         }
                     />
-                </SafeAreaView>
+                </View>
                 {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
                 <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()} />
                 <RBSheet
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
     },
     list: {
         flex: 1,
-        padding: 10
+        padding: 5
     },
     SectionHeaderStyle: {
         paddingTop: 20,

@@ -1,7 +1,11 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button} from '@ui-kitten/components';
+import { View, StyleSheet, Dimensions, Modal } from 'react-native'
+import { Button } from '@ui-kitten/components';
+import moment from 'moment-timezone'
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+
+const windowWidth = Dimensions.get('window').width;
+// const windowHeight = Dimensions.get('window').height;
 
 const DateTimePickerComponent = ({
     dateVisible,
@@ -10,93 +14,58 @@ const DateTimePickerComponent = ({
     onChangeTime,
     setDatePickerVisible,
     setTimePickerVisible,
-    date,
-    time }) => {
+    dateValue,
+    timeValue }) => {
 
     const os = Platform.OS
 
-    const DateTimePickerAndroid = () => {
-        return (
-            <>
-                {dateVisible && (
-                    <View >
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            timeZoneOffsetInMinutes={0}
-                            value={date}
-                            mode={'date'}
-                            is24Hour={true}
-                            display="default"
-                            onChange={onChangeDate}
-                            style={{ width: '100%', backgroundColor: 'white', position: "absolute" }}
-                        />
-                    </View>
-                )}
-                {timeVisible && (
-                    <View>
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            timeZoneOffsetInMinutes={0}
-                            value={time}
-                            mode={'time'}
-                            is24Hour={true}
-                            display="spinner"
-                            onChange={onChangeTime}
-                            style={{ width: '100%', backgroundColor: 'white', position: "absolute" }}
-                        />
-                    </View>
-                )}
-            </>
-        )
-    }
+    const displayDate = moment(dateValue).format('LL')
+    const displayTime = moment(timeValue).format('LT')
 
     const DateTimePickerIOS = () => {
         return (
             <>
-                {dateVisible && (
-                    <View style={styles.iosPicker}>
-                        <View style={styles.iosPickerBackground}>
-                            <View>
-                                <DateTimePicker
-                                    value={date}
-                                    mode="date"
-                                    display="calendar"
-                                    onChange={onChangeDate}
-                                    style={{ width: '100%' }}
-                                />
-                            </View>
-                            <View style={{ alignItems: 'center' }}>
-                                <Button onPress={setDatePickerVisible}>Done</Button>
-                            </View>
-                        </View>
-                    </View>
-                )}
-
-                {timeVisible && (
-                    <View style={styles.iosPicker}>
-                        <View style={styles.iosPickerBackground}>
-                            <View>
-                                <DateTimePicker
-                                    value={time}
-                                    mode="time"
-                                    display="default"
-                                    onChange={onChangeTime}
-                                    style={{ width: '100%' }}
-                                />
-                            </View>
-                            <View style={{ alignItems: 'center' }}>
-                                <Button onPress={setTimePickerVisible}>Done</Button>
-                            </View>
-                        </View>
-                    </View>
-                )}
+                <View>
+                    <DateTimePickerModal
+                        isVisible={dateVisible}
+                        date={dateValue}
+                        mode="date"
+                        display="calendar"
+                        onConfirm={onChangeDate}
+                        onCancel={() => setDatePickerVisible(false)}
+                    />
+                </View>
+                <View>
+                    <DateTimePickerModal
+                        isVisible={timeVisible}
+                        date={timeValue}
+                        mode="time"
+                        display={os === 'ios' ? "default" : "spinner"}
+                        onConfirm={onChangeTime}
+                        onCancel={() => setTimePickerVisible(false)}
+                    />
+                </View>
             </>
         )
     }
+
     return (
         <>
-            {os === 'android' && <DateTimePickerAndroid />}
-            {os === 'ios' && <DateTimePickerIOS />}
+            <View style={styles.pickerButton}>
+                <Button onPress={() => {
+                    setDatePickerVisible(true)
+                    setTimePickerVisible(false)
+                }}
+                >{displayDate}</Button>
+            </View>
+            <View style={styles.pickerButton}>
+                <Button onPress={() => {
+                    setTimePickerVisible(true)
+                    setDatePickerVisible(false)
+                }}
+                >{displayTime}</Button>
+            </View>
+            <DateTimePickerIOS />
         </>
     )
 }
@@ -106,13 +75,15 @@ const styles = StyleSheet.create({
         position: 'absolute',
         flex: 1,
         width: '100%',
-        // height:'100%',
-        // bottom: '50%'
     },
     iosPickerBackground: {
         backgroundColor: 'white',
         padding: 15,
-        // position: "absolute",
+        width: windowWidth
+    },
+    pickerButton: {
+        flex: 1,
+        margin: 3
     }
 })
 

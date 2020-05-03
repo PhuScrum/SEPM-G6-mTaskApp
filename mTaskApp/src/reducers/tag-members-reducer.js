@@ -8,7 +8,6 @@ export default function tagMembers(state = initialState, action){
     var {selectedItems} = state
     switch(action.type){
         case SET_ITEMS_TO_SELECTED:
-            console.log('STATE:', state)
             // handle checking items exists in the array selected items
             var num = 0
             for(let i=0; i< selectedItems.length; i++){

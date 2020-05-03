@@ -9,7 +9,8 @@ export default class Profile extends Component {
     this.state = {
       userInfo: null,
       isLoadding: true,
-      isLoggedIn: 'false'
+      isLoggedIn: 'false',
+      userId:''
 
     }
   }
@@ -18,8 +19,12 @@ export default class Profile extends Component {
     try{
       let user = await AsyncStorage.getItem('user');
       let status = await AsyncStorage.getItem('isLoggedIn');
+      let userid = await AsyncStorage.getItem('userId');
+
+      // console.log(userid)
       this.setState({userInfo: JSON.parse(user)});
       this.setState({isLoadding: false});
+      this.setState({userId: userid})
       
       
     
@@ -30,6 +35,7 @@ export default class Profile extends Component {
   }
 
   handleLogOut(){
+    console.log(this.state.userid)
     this.props.navigation.navigate('Login');
     AsyncStorage.setItem('isLoggedIn', this.state.isLoggedIn);
 
@@ -57,9 +63,9 @@ export default class Profile extends Component {
         )
       }else{
     
-
         
         return (
+          
           <View style={styles.container}>
           <View style={styles.header}></View>
           <Image style={styles.avatar} source={{uri: this.state.userInfo.picture.data.url}}/>
