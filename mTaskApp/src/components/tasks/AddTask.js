@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { StyleSheet, View, TouchableOpacity, Platform} from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Platform } from 'react-native'
 import { Layout, Text, Input, Button, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import TagMembers from '../tag_members/TagMembers'
@@ -19,7 +19,7 @@ const combineDateTime = (date, time) => {
 
 const AddTask = ({ submitHandler }) => {
     const os = Platform.OS
-    const tag = useSelector(state=>state.tagMemberReducer.selectedItems, [])
+    const tag = useSelector(state => state.tagMemberReducer.selectedItems, [])
 
     const [name, setName] = useState('')
     const [desc, setDesc] = useState('')
@@ -30,15 +30,19 @@ const AddTask = ({ submitHandler }) => {
     const [time, setTime] = useState(new Date(Date.now()))
 
 
-    const onChangeDate = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        { os === 'android' && setShowDatePicker(false) }
+    const onChangeDate = (selectedDate) => {
+        // event.preventDefault();
+        const currentDate = selectedDate
+        setShowDatePicker(false)
+        // setShowDatePicker(os ==='ios')
         setDate(currentDate);
     };
 
-    const onChangeTime = (event, selectedTime) => {
-        const currentTime = selectedTime || time;
-        { os === 'android' && setShowTimePicker(false) }
+    const onChangeTime = (selectedTime) => {
+        // event.preventDefault();
+        const currentTime = selectedTime
+        setShowTimePicker(false)
+        // setShowTimePicker(os ==='ios')
         setTime(currentTime);
     };
 
@@ -49,7 +53,8 @@ const AddTask = ({ submitHandler }) => {
         taggedUsers: tag
     }
 
-    const displayDateTime = moment(combineDateTime(date, time)).format("LLL")
+    const displayDate = moment(date).format('LL')
+    const displayTime = moment(time).format('LT')
 
     return (
         <View style={styles.containter}>
@@ -69,43 +74,28 @@ const AddTask = ({ submitHandler }) => {
                     placeholder='Description'
                 />
             </View>
-            <View style={styles.inputGroup, { flex: 0.5 }}>
-                <Text style={styles.dateTimeText}>Chosen Time: {displayDateTime}</Text>
-            </View>
             <View style={styles.inputGroup, { flexDirection: 'row', flex: 1, marginHorizontal: 10 }}>
-                <View style={styles.pickerButton}>
-                    <Button onPress={() => {
-                        setShowDatePicker(true) 
-                        setShowTimePicker(false)
-                        }}
-                    >Show date picker!</Button>
-                </View>
-                <View style={styles.pickerButton}>
-                    <Button onPress={() =>{
-                        setShowTimePicker(true)
-                        setShowDatePicker(false) 
-                        }} 
-                    >Show time picker!</Button>
-                </View>
+                <DateTimePickerComponent
+                    dateVisible={showDatePicker}
+                    timeVisible={showTimePicker}
+                    onChangeDate={onChangeDate}
+                    onChangeTime={onChangeTime}
+                    setDatePickerVisible={setShowDatePicker}
+                    setTimePickerVisible={setShowTimePicker}
+                    dateValue={date}
+                    timeValue={time}
+                />
             </View>
+
             <View style={{ paddingTop: 8, flex: 1 }}>
-                <TagMembers/>
+                <TagMembers />
             </View>
             <View style={{ paddingTop: 8, flex: 1 }}>
                 <Button style={styles.submitButton} onPress={() => submitHandler(taskData)}>Add</Button>
             </View>
             {/* {os === 'android' && <DateTimePickerAndroid />}
             {os === 'ios' && <DateTimePickerIOS />} */}
-            <DateTimePickerComponent
-                dateVisible = {showDatePicker}
-                timeVisible = {showTimePicker}
-                onChangeDate = {onChangeDate}
-                onChangeTime = {onChangeTime}
-                setDatePickerVisible = {() => setShowDatePicker(false)}
-                setTimePickerVisible = {() => setShowTimePicker(false)}
-                date = {date}
-                time = {time}
-            />
+
         </View>
     )
 }
@@ -119,7 +109,7 @@ const styles = StyleSheet.create({
     },
     input: {
         marginVertical: 3,
-        marginHorizontal: 15,
+        marginHorizontal: 10,
         flex: 1
     },
     submitButton: {
@@ -131,7 +121,7 @@ const styles = StyleSheet.create({
     inputGroup: {
         width: '100%',
         paddingBottom: 8,
-        position: 'relative'
+        // position: 'relative'
     },
     dateTimeText: {
         fontSize: 16,
