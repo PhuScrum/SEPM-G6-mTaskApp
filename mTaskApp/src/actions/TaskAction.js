@@ -1,4 +1,4 @@
-import { GET_TASKS, DELETE_TASK, ADD_TASK, EDIT_TASK, GET_MY_TASKS } from './types'
+import { GET_TASKS, DELETE_TASK, ADD_TASK, EDIT_TASK, GET_MY_TASKS, GET_TASK_ITEM } from './types'
 import axios from 'axios';
 import _ from 'lodash'
 import moment from 'moment-timezone'
@@ -28,7 +28,13 @@ export const getMyTasksAction = (id) => async dispatch => {
     })
 }
 
-
+//get Task Item
+export const getTaskItemAction = (item) => dispatch => {
+    dispatch({
+        type: GET_TASK_ITEM,
+        payload: item
+    })
+}
 
 //delete Task
 export const deleteTaskAction = (key) => async dispatch => {

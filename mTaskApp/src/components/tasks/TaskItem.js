@@ -30,7 +30,7 @@ const RowItem = ({ item }) => (
     </RectButton>
 )
 
-const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
+const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail}) => {
     const scrollRef = createRef()
     const refRBSheet = useRef();
 
@@ -94,6 +94,8 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
             switch (text) {
                 case 'Done':
                     editTaskHandler(item._id, { completed: !item.completed })
+                case 'More':
+                    onNavigateDetail(item)
                 default:
             }
         };
