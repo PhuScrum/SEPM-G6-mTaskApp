@@ -83,16 +83,11 @@ const FiveDayScreen = (props) => {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
 
-        wait(2000).then(() => {
+        wait(1000).then(() => {
             getMyTasks()
             setRefreshing(false)
         });
     }, [refreshing]);
-
-    const getTasks = (id) => {
-        dispatch(getMyTasksAction(id))
-    }
-    // console.log(tasks)
 
     const deleteHandler = (id) => {
         dispatch(deleteTaskAction(id))
@@ -116,14 +111,14 @@ const FiveDayScreen = (props) => {
     }
 
     const onNavigateDetail = (item) => {
-        props.navigation.navigate('TaskDetail')
-        dispatch(getTaskItemAction(item))
+        dispatch(getTaskItemAction(item._id))
+        wait(250).then(()=>props.navigation.navigate('TaskDetail'))
     }
 
     const getMyTasks = async () => {
         try {
             let id = await AsyncStorage.getItem('userId')
-            getTasks(id)
+            dispatch(getMyTasksAction(id))
         } catch (err) {
             console.log(err)
         }

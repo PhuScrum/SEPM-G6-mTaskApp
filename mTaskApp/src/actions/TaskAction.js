@@ -29,10 +29,11 @@ export const getMyTasksAction = (id) => async dispatch => {
 }
 
 //get Task Item
-export const getTaskItemAction = (item) => dispatch => {
+export const getTaskItemAction = (id) => async dispatch => {
+    const res = await axios.get(`https://bigquery-project-medium.df.r.appspot.com/task/${id}`)
     dispatch({
         type: GET_TASK_ITEM,
-        payload: item
+        payload: res.data
     })
 }
 
