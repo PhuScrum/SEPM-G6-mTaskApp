@@ -16,27 +16,15 @@ import axios from 'axios'
 import * as url from '../../constants/url/url'
 import NumberDetails from './NumberDetails'
 
-const Footer = () => (
-  <View style={styles.footerContainer}>
-    <Button
-      style={styles.footerControl}
-      size='small'
-      status='basic'>
-      DECLINE
-    </Button>
-    <Button
-      style={styles.footerControl}
-      size='small'>
-      ACCEPT
-    </Button>
-  </View>
-);
+
 
 export default function CardWithHeaderAndFooterShowcase (props){
     const [user, setUser] = useState({fName: ''})
     const [task, setTask] = useState({taggedUsers: []})
     const [numberOfAccept, setNumberOfAccept] = useState(0)
     const [numberOfDecline, setNumberOfDecline] = useState(0)
+    const [isAccepted, setIsAccepted] =useState(props.item.isAccepted)
+    const [isDeclined, setIsDeclined] = useState(props.item.isDeclined)
 
     const fetchData = async ()=>{
         const userId = props.item.senderId
@@ -56,24 +44,9 @@ export default function CardWithHeaderAndFooterShowcase (props){
     const fetchTask = async (id)=>{
         var resp = await axios.get(url.tasks + '/' + id)
         setTask(resp.data)
-        count('isAccepted')
-        count('isDeclined')
+        
+        
     }
-
-    const count = (type)=>{
-        var num = 0
-        for(let i =0; i < task.taggedUsers.length; i++){
-            var userObj = task.taggedUsers[i]
-            if(userObj[type] === true){
-                num +=1
-            }
-        }
-        if(type==='isAccepted') setNumberOfAccept(num)
-        else setNumberOfDecline(num)
-
-    }
-
-
     useEffect(()=>{
         fetchData()
     }, [])
@@ -84,14 +57,69 @@ export default function CardWithHeaderAndFooterShowcase (props){
           // description='By Wikipedia'
         />
       );
+
+    const acceptDeclineTagging = async (url)=>{
+        var taskId = task._id
+        var userId = await AsyncStorage.getItem('userId')
+        var creatorId = task.creatorId
+        var rsvpId = props.item._id
+        var resp = await axios.post(url, {taskId, userId, creatorId, rsvpId})
+        if(url.includes('accept')){
+            setNumberOfAccept(numberOfAccept + 1)
+            setIsAccepted(true)
+        } 
+        else {
+            setNumberOfDecline(numberOfDecline + 1)
+            setIsDeclined(true)
+        }
+    }
+
+    const Footer = () => (
+        <View style={styles.footerContainer}>
+          {isAccepted ? <Text>You have accepted.</Text>: null}
+          {isDeclined ? <Text>You have declined.</Text>: null}
+
+          {(isAccepted || isDeclined ) || ( 
+          props.item.rsvpType &&
+          (props.item.rsvpType).includes('system-notification') )
+          ? null:
+          
+          <React.Fragment>
+          <Button
+            onPress={()=>{
+                acceptDeclineTagging(url.declineTagging_AddTask)
+            }}
+            style={styles.footerControl}
+            size='small'
+            status='basic'>
+            DECLINE
+          </Button>
+          <Button
+            onPress={()=>{
+                acceptDeclineTagging(url.acceptTagging_AddTask)
+            }}
+            style={styles.footerControl}
+            size='small'>
+            ACCEPT
+          </Button>
+          </React.Fragment>
+          }
+         
+          
+        </View>
+      );
     return(
-        <Card style={styles.card} header={Header} footer={Footer}>
+        <Card style={styles.card} header={Header} footer={Footer}
+            status={props.item.rsvpType.includes('system') && props.item.text.includes('success') ? 'success': null}
+        >
             <Text onPress={()=> alert('pressed')}>
               {props.item.text}
             </Text>
             <View style={styles.extra}>
-            {task.taggedUsers.length > 1 ? 
-            <NumberDetails task={task} numberOfAccept={numberOfAccept} numberOfDecline={numberOfDecline} />
+            {task.taggedUsers.length &&
+            props.item.rsvpType &&
+            props.item.rsvpType.includes('system') === false > 1 ? 
+            <NumberDetails task={task} numberOfAccept={numberOfAccept} numberOfDecline={numberOfDecline} setNumberOfAccept={setNumberOfAccept} setNumberOfDecline={setNumberOfDecline} />
             : null}
             </View>
           </Card>
