@@ -35,6 +35,7 @@ app.route('/task')
     .post(task_API.crud.postTask)
 
 app.route('/task/:id')
+    .get(task_API.crud.getTaskById)
     .put(task_API.crud.editTask)
     .delete(task_API.crud.deleteTask)
 

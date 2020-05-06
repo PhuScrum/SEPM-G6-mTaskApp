@@ -16,13 +16,12 @@ import {
     AsyncStorage
 } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
-import { BottomSheet } from 'react-native-btr';
-import { SwipeListView } from 'react-native-swipe-list-view';
 import { Layout, Text, Icon } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
 import AddToDoButton from '../../components/tasks/AddTaskButton';
+import { withNavigation } from 'react-navigation';
 
 import FAIcon from "react-native-vector-icons/FontAwesome";
 import MDIcon from "react-native-vector-icons/MaterialIcons";
@@ -31,7 +30,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import _ from 'lodash'
 import moment from 'moment-timezone'
 
-import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction, getMyTasksAction } from '../../actions/TaskAction'
+import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction, getMyTasksAction, getTaskItemAction } from '../../actions/TaskAction'
 
 FAIcon.loadFont();
 MDIcon.loadFont();
@@ -77,24 +76,17 @@ const getSections = (tasks) => {
 const FiveDayScreen = (props) => {
     const scrollRef = createRef()
     const refBottomSheet = useRef();
-    const tasks = useSelector(state => state.taskReducer.tasks,[]);
+    const tasks = useSelector(state => state.taskReducer.tasks, []);
     const dispatch = useDispatch();
-    const [bottomSheetShow, setBottomSheetShow] = useState(false);
     const [refreshing, setRefreshing] = useState(false)
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-
-        wait(2000).then(() => {
-            getMyTasks()
+        getMyTasks()
+        .then(() => {
             setRefreshing(false)
-        });
+        })
     }, [refreshing]);
-
-    const getTasks = (id) => {
-        dispatch(getMyTasksAction(id))
-    }
-    // console.log(tasks)
 
     const deleteHandler = (id) => {
         dispatch(deleteTaskAction(id))
@@ -109,7 +101,6 @@ const FiveDayScreen = (props) => {
         if (data.name.length > 3) {
             dispatch(addTaskAction(data))
             onRefresh()
-            setBottomSheetShow(false)
             refBottomSheet.current.close()
         } else {
             Alert.alert('Warning!!!', 'Todos must be over 3 characters long', [
@@ -118,13 +109,14 @@ const FiveDayScreen = (props) => {
         }
     }
 
+    const onNavigateDetail = (item) => {
+        dispatch(getTaskItemAction(item._id))
+        .then(()=>props.navigation.navigate('TaskDetail'))
+    }
+
     const getMyTasks = async () => {
-        try{
-            let id = await AsyncStorage.getItem('userId')
-            getTasks(id)
-        } catch(err) {
-            console.log(err)
-        }
+        let id = await AsyncStorage.getItem('userId')
+        dispatch(getMyTasksAction(id))
     }
 
     useEffect(() => {
@@ -136,52 +128,60 @@ const FiveDayScreen = (props) => {
     const unDoneList = tasks.filter(task => task.completed !== true)
     const sections = getSections(unDoneList)
     const renderItem = ({ item, index }) => (
-        <TaskItem item={item} index={index} deleteHandler={deleteHandler} editTaskHandler={editTaskHandler} />
+        <TaskItem
+            item={item}
+            index={index}
+            deleteHandler={deleteHandler}
+            editTaskHandler={editTaskHandler}
+            onNavigateDetail={onNavigateDetail}
+        />
     )
     const renderSectionHeader = ({ section }) => <Text style={styles.SectionHeaderStyle}>{section.title}</Text>
     return (
         <TouchableWithoutFeedback
             onPress={() => {
                 Keyboard.dismiss()
+                onRefresh()
             }}
         >
-            <Layout style={styles.container} >
-
+            <>
                 <TopNavigationBar {...props} />
-                <View style={styles.list} >
-                    <Text style={styles.title}>Five Days List</Text>
-                    <SectionList
-                        stickySectionHeadersEnabled={false}
-                        ref={scrollRef}
-                        sections={sections}
-                        renderSectionHeader={renderSectionHeader}
-                        renderItem={renderItem}
-                        keyExtractor={item => item._id}
-                        refreshControl={
-                            <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
-                        }
-                    />
-                </View>
-                {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
-                <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()} />
-                <RBSheet
-                    ref={refBottomSheet}
-                    height={500}
-                    customStyles={{
-                        container: {
-                            borderTopLeftRadius: 10,
-                            borderTopRightRadius: 10
-                        }
-                    }}
-                >
-                    <View style={styles.listContainer}>
-                        <Text style={styles.listTitle}>Create a new task</Text>
-                        <AddTask submitHandler={addTaskHandler} />
-                    </View>
-                </RBSheet>
-                
 
-            </Layout>
+                <Layout style={styles.container} >
+                    <View style={styles.list} >
+                        <Text style={styles.title}>Five Days List</Text>
+                        <SectionList
+                            stickySectionHeadersEnabled={false}
+                            ref={scrollRef}
+                            sections={sections}
+                            renderSectionHeader={renderSectionHeader}
+                            renderItem={renderItem}
+                            keyExtractor={item => item._id}
+                            refreshControl={
+                                <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+                            }
+                        />
+                    </View>
+                    {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
+                    <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()} />
+                    <RBSheet
+                        ref={refBottomSheet}
+                        closeOnDragDown
+                        height={500}
+                        customStyles={{
+                            container: {
+                                borderTopLeftRadius: 10,
+                                borderTopRightRadius: 10
+                            }
+                        }}
+                    >
+                        <View style={styles.bottomSheetContainer}>
+                            <Text style={styles.bottomSheetTitle}>Create a new task</Text>
+                            <AddTask submitHandler={addTaskHandler} />
+                        </View>
+                    </RBSheet>
+                </Layout>
+            </>
 
         </TouchableWithoutFeedback>
     )
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
         // alignItems: "center",
         justifyContent: 'center',
         backgroundColor: '#EDF1F7',
-        marginTop: 20,
+        // marginTop: 20,
         paddingBottom: 0
     },
     title: {
@@ -215,62 +215,19 @@ const styles = StyleSheet.create({
         color: 'black',
         paddingBottom: 2
     },
-    rowBack: {
-        alignItems: 'center',
-        // backgroundColor: '#DDD',
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingLeft: 15,
-        marginTop: 2
-    },
-    backRightBtn: {
-        alignItems: 'center',
-        bottom: 0,
-        justifyContent: 'center',
-        position: 'absolute',
-        top: 0,
-        width: 75,
-    },
-    backLeftBtnRight: {
-        backgroundColor: '#2F3860',
-        left: 75,
-    },
-    backLeftBtnLeft: {
-        backgroundColor: '#D26759',
-        left: 0,
-        borderTopLeftRadius: 13,
-        borderBottomLeftRadius: 13
-    },
-    backRightBtnRight: {
-        backgroundColor: '#2AB785',
-        right: 0,
-        borderTopRightRadius: 13,
-        borderBottomRightRadius: 13
-    },
-    backTextWhite: {
-        color: 'white',
-        fontWeight: 'bold'
-    },
-    listContainer: {
+    bottomSheetContainer: {
         flex: 1,
         padding: 15
     },
-    listTitle: {
+    bottomSheetTitle: {
         fontFamily: 'Lato-Regular',
         fontWeight: 'bold',
         fontSize: 18,
         marginBottom: 20,
         color: "#666",
         alignSelf: 'center'
-    },
-    listButton: {
-        flexDirection: "row",
-        alignItems: "center",
-        paddingVertical: 10
     }
-
 })
 
-export default FiveDayScreen
+export default withNavigation(FiveDayScreen)
 
