@@ -14,6 +14,7 @@ export const GET_TASKS_ON_SPECIFIC_DATE = 'GET_TASKS_ON_SPECIFIC_DATE'
 export const GET_USER_ID = "GET_USER_ID"
 export const GET_USER = "GET_USER"
 export const GET_ALL_USERS = "GET_ALL_USERS"
+export const SEARCH_USERS = "SEARCH_USERS"
 
 //Tag-members
 export const SET_ITEMS_TO_SELECTED = 'SET_ITEMS_TO_SELECTED'

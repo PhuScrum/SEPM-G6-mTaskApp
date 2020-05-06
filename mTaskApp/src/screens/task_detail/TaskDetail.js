@@ -50,7 +50,7 @@ const TaskDetail = (props) => {
         // getTasks()
         dispatch(getUsersAction())
     }, [])
-
+    // console.log(users)
     // console.log(task)
 
     return (
@@ -107,7 +107,7 @@ const TaskDetail = (props) => {
                     </View>
                 </View>
                 
-                <TagUser propStyle={{borderStyle: borderStyle, iconSize: iconSize}} />
+                <TagUser propStyle={{borderStyle: borderStyle, iconSize: iconSize}} userList={users} />
 
                 <View style={[styles.descStyle, styles.borderStyle]}>
                     <View style={styles.descInputStyle}>
