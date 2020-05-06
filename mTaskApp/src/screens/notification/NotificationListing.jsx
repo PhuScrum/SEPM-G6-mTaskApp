@@ -14,7 +14,6 @@ export default function NotificationListing(props){
     const fetchNotificationByUserId = async ()=>{
       const userId = await AsyncStorage.getItem('userId')
       var resp = await axios.get(url.rsvp + '/' + userId)
-      console.log('fetch notifications by  user id: ', userId, resp.data)
       setNotifications(resp.data)
     }
 
@@ -26,7 +25,7 @@ export default function NotificationListing(props){
           <Text category='h1' style={styles.title}>Notifications</Text>
             <FlatList
                 data={notifications}
-                renderItem={({item}) => <SingleNotification item={item}/>}
+                renderItem={({item}) => <SingleNotification key={item} item={item}/>}
             />        
         </Layout>
     )
