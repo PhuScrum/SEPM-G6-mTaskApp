@@ -65,7 +65,7 @@ export default class Login extends Component {
     this.setState({userId: data})
     console.log(this.state.userId)
     AsyncStorage.setItem('userId', this.state.userId);
-
+    console.log('user:', this.state.userId)
     
 }
 
@@ -96,7 +96,7 @@ export default class Login extends Component {
 
         //save user info to Async storage
 
-        console.log('user:', this.state.userId)
+        
 
         //AsyncStorage.setItem('userId', this.state.userId);
         AsyncStorage.setItem('user', JSON.stringify(this.state.userInfo));
