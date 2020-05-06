@@ -82,11 +82,10 @@ const FiveDayScreen = (props) => {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-
-        wait(1000).then(() => {
-            getMyTasks()
+        getMyTasks()
+        .then(() => {
             setRefreshing(false)
-        });
+        })
     }, [refreshing]);
 
     const deleteHandler = (id) => {
@@ -112,16 +111,12 @@ const FiveDayScreen = (props) => {
 
     const onNavigateDetail = (item) => {
         dispatch(getTaskItemAction(item._id))
-        wait(250).then(()=>props.navigation.navigate('TaskDetail'))
+        .then(()=>props.navigation.navigate('TaskDetail'))
     }
 
     const getMyTasks = async () => {
-        try {
-            let id = await AsyncStorage.getItem('userId')
-            dispatch(getMyTasksAction(id))
-        } catch (err) {
-            console.log(err)
-        }
+        let id = await AsyncStorage.getItem('userId')
+        dispatch(getMyTasksAction(id))
     }
 
     useEffect(() => {
@@ -171,6 +166,7 @@ const FiveDayScreen = (props) => {
                     <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()} />
                     <RBSheet
                         ref={refBottomSheet}
+                        closeOnDragDown
                         height={500}
                         customStyles={{
                             container: {

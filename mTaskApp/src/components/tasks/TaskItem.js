@@ -9,7 +9,6 @@ import { ListItem } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import DateTimePickerComponent from '../dateTimePicker/DateTimePickerComponent';
 
-
 const combineDateTime = (date, time) => {
     const datePick = moment(date).format('DD MMM YYYY ')
     const timePick = moment(time).format('hh:mm:ss a')
@@ -165,7 +164,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail}) => 
                             timeValue={time}
                         />
                     </View>
-                </RBSheet>
+                </RBSheet>           
             </View>
 
         </TouchableHighlight>
