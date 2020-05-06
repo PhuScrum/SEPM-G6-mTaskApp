@@ -9,7 +9,6 @@ import { ListItem } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import DateTimePickerComponent from '../dateTimePicker/DateTimePickerComponent';
 
-
 const combineDateTime = (date, time) => {
     const datePick = moment(date).format('DD MMM YYYY ')
     const timePick = moment(time).format('hh:mm:ss a')
@@ -30,7 +29,7 @@ const RowItem = ({ item }) => (
     </RectButton>
 )
 
-const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
+const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail}) => {
     const scrollRef = createRef()
     const refRBSheet = useRef();
 
@@ -94,6 +93,8 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
             switch (text) {
                 case 'Done':
                     editTaskHandler(item._id, { completed: !item.completed })
+                case 'More':
+                    onNavigateDetail(item)
                 default:
             }
         };
@@ -163,7 +164,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler }) => {
                             timeValue={time}
                         />
                     </View>
-                </RBSheet>
+                </RBSheet>           
             </View>
 
         </TouchableHighlight>
