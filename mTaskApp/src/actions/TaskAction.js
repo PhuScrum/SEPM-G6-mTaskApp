@@ -1,4 +1,4 @@
-import { GET_TASKS, DELETE_TASK, ADD_TASK, EDIT_TASK } from './types'
+import { GET_TASKS, DELETE_TASK, ADD_TASK, EDIT_TASK, GET_MY_TASKS, GET_TASK_ITEM, CLEAR_TASK_ITEM } from './types'
 import axios from 'axios';
 import _ from 'lodash'
 import moment from 'moment-timezone'
@@ -19,6 +19,24 @@ export const getTasksAction = (is5days = false) => async dispatch => {
     })
 }
 
+//get my tasks
+export const getMyTasksAction = (id) => async dispatch => {
+    const res = await axios.get(`https://bigquery-project-medium.df.r.appspot.com/tasks-by-user-id/${id}`)
+    dispatch({
+        type: GET_MY_TASKS,
+        payload: res.data
+    })
+}
+
+//get Task Item
+export const getTaskItemAction = (id) => async dispatch => {
+    const res = await axios.get(`https://bigquery-project-medium.df.r.appspot.com/task/${id}`)
+    dispatch({
+        type: GET_TASK_ITEM,
+        payload: res.data
+    })
+}
+
 //delete Task
 export const deleteTaskAction = (key) => async dispatch => {
     axios.delete(`https://bigquery-project-medium.df.r.appspot.com/task/${key}`)
@@ -26,7 +44,7 @@ export const deleteTaskAction = (key) => async dispatch => {
             type: DELETE_TASK,
             payload: key
         }))
-        .then(res => dispatch(getTasksAction()))
+        // .then(res => dispatch(getTasksAction()))
         .catch(err => console.log(err))
 }
 
@@ -39,7 +57,7 @@ export const addTaskAction = (data) => async dispatch => {
                 payload: res.data
             })
         })
-        .then(res=>dispatch(getTasksAction))
+        // .then(res=>dispatch(getTasksAction))
         .catch(err => console.log(err))
 }
 
@@ -52,6 +70,13 @@ export const editTaskAction = (key, data) => async dispatch => {
                 payload: res.data
             })
         })
-        .then(res => dispatch(getTasksAction))
+        // .then(res => dispatch(getTasksAction))
         .catch(err => console.log(err))
+}
+
+//clear task item
+export const clearTaskItemAction = () => dispatch => {
+    dispatch({
+        type: CLEAR_TASK_ITEM
+    })
 }

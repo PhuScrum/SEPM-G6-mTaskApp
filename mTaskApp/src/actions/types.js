@@ -1,13 +1,23 @@
 //Tasks Types
 export const GET_TASKS = "GET_TASKS"
-export const STORE_DATEHASHMAP = 'STORE_DATEHASHMAP'
-export const GET_TASKS_ON_SPECIFIC_DATE = 'GET_TASKS_ON_SPECIFIC_DATE'
+export const GET_MY_TASKS = "GET_MY_TASKS"
 export const DELETE_TASK = "DELETE_TASK"
 export const ADD_TASK = "ADD_TASK"
 export const EDIT_TASK = "EDIT_TASK"
+export const GET_TASK_ITEM = "GET_TASK_ITEM"
+export const CLEAR_TASK_ITEM = "CLEAR_TASK_ITEM"
+
+//Calendar
+export const STORE_DATEHASHMAP = 'STORE_DATEHASHMAP'
+export const GET_TASKS_ON_SPECIFIC_DATE = 'GET_TASKS_ON_SPECIFIC_DATE'
 
 //User Types
+export const GET_USER_ID = "GET_USER_ID"
+export const GET_USER = "GET_USER"
+export const GET_ALL_USERS = "GET_ALL_USERS"
+export const SEARCH_USERS = "SEARCH_USERS"
 
 //Tag-members
 export const SET_ITEMS_TO_SELECTED = 'SET_ITEMS_TO_SELECTED'
 export const REMOVE_ITEMS_FROM_SELECTED = 'REMOVE_ITEMS_FROM_SELECTED'
+export const CLEAR_SELECTED = "CLEAR_SELECTED"

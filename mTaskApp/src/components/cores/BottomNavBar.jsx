@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomNavigation, BottomNavigationTab, Layout, Text, Icon } from '@ui-kitten/components';
 import HomeScreen from '../../screens/home_screen/HomeScreen';
 import ProfileScreen from '../../screens/userProfile/Profile';
-
+import NotificationScreen from '../../screens/notification/NotificationScreen'
 
 const BottomTab = createBottomTabNavigator();
 
@@ -27,11 +27,11 @@ const ListIcon = (style) => (
 
 
 
-const NotificationScreen = () => (
-    <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text category='h1'>NOTIFICATIONS</Text>
-    </Layout>
-);
+// const NotificationScreen = () => (
+//     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//         <Text category='h1'>NOTIFICATIONS</Text>
+//     </Layout>
+// );
 
 const ListScreen = () => (
     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
