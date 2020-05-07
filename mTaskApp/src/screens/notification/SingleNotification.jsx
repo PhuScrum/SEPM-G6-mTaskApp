@@ -53,7 +53,7 @@ export default function CardWithHeaderAndFooterShowcase (props){
 
     const Header = () => (
         <CardHeader
-          title={task.name}
+          title={task && task.name ? task.name : null}
           // description='By Wikipedia'
         />
       );
@@ -116,7 +116,9 @@ export default function CardWithHeaderAndFooterShowcase (props){
               {props.item.text}
             </Text>
             <View style={styles.extra}>
-            {task.taggedUsers.length &&
+            {task && task.taggedUsers && 
+            
+            task.taggedUsers.length &&
             props.item.rsvpType &&
             props.item.rsvpType.includes('system') === false > 1 ? 
             <NumberDetails task={task} numberOfAccept={numberOfAccept} numberOfDecline={numberOfDecline} setNumberOfAccept={setNumberOfAccept} setNumberOfDecline={setNumberOfDecline} />
