@@ -11,13 +11,15 @@ import {
     Button
 } from '@ui-kitten/components';
 import TagMemberInput from '../tag_members/TagMemberInput';
+import { editTaskAction } from '../../actions/TaskAction';
 
 MDIcon.loadFont();
 
-const TagUser = ({ propStyle, tagType }) => {
+const TagUser = ({ propStyle, tagType, saveTagUser, id }) => {
     const refRBSheet = useRef();
     const data = useSelector(state => state.tagMemberReducer.selectedItems, [])
 
+    console.log(data)
     const OpenTag = () => {
         switch(tagType){
             case 'input':
@@ -74,7 +76,7 @@ const TagUser = ({ propStyle, tagType }) => {
                     <TouchableOpacity
                         onPress={() => {
                             refRBSheet.current.close()
-
+                            saveTagUser(id, {taggedUsers: data})
                         }}
                         style={[styles.dateHeaderButton]}
                     >

@@ -3,7 +3,7 @@ const cloudURL = 'https://bigquery-project-medium.df.r.appspot.com/'
 const tuIP = ''
 
 const globalVar = {
-    urlDomain: cloudURL
+    urlDomain: justinLocalhost
 }
 
 module.exports = globalVar
