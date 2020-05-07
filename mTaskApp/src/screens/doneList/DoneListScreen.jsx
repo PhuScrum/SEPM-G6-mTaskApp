@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Layout, Text, Button } from '@ui-kitten/components';
 import TopNavigationBarBackButton from '../../components/cores/TopNavigationBarBackButton';
-import { Modal, FlatList, StyleSheet, View, ActivityIndicator, TouchableOpacity, SectionList } from 'react-native';
+import { Modal, FlatList, StyleSheet, View, ActivityIndicator, TouchableOpacity, SectionList, AsyncStorage } from 'react-native';
 import Timeago from './TimeAgo';
 import Timeformat from './TimeFormat';
 import _ from 'lodash'
@@ -23,19 +23,32 @@ export default class DoneListScreen extends Component {
             selectedDescription: '',
             selectedCompletedDate: '',
             selectedTaggedFriend: [],
+            userId:'',
 
         }
     }
 
     componentDidMount() {
-        return fetch('https://bigquery-project-medium.df.r.appspot.com/task')
-            .then((response) => response.json())
+        AsyncStorage.getItem("userId")
+        .then((value) => {
+            this.setState({userId: value});
+            console.log(value)
 
+            fetch(`https://bigquery-project-medium.df.r.appspot.com/tasks-by-user-id/${value}`)
+            .then((response) => response.json())
             .then(dataSource => {
                 this.setState({ dataSource: dataSource.filter(d => d.completed === true) })
-
+                // this.setState({ dataSource: dataSource.filter(d => d.creatorId == this.state.userId) })
             })
+        })
+        
+        // return fetch('https://bigquery-project-medium.df.r.appspot.com/task')
+        //     .then((response) => response.json())
 
+        //     .then(dataSource => {
+        //         this.setState({ dataSource: dataSource.filter(d => d.completed === true) })
+        //         this.setState({ dataSource: dataSource.filter(d => d.creatorId == this.state.userId) })
+        //     })
     }
 
     renderHeader = ({ section }) => {
@@ -48,7 +61,7 @@ export default class DoneListScreen extends Component {
 
     _renderItem = ({ item }) => {
         const taggedList = this.state.selectedTaggedFriend.map((i, index) =>
-            <Text key={index} style={{ fontSize: 15, textAlign: "center" }}>{i._id}</Text>
+            <Text key={index} style={{ fontSize: 15, textAlign: "center" }}>{i.fName}</Text>
         )
         return (
 
