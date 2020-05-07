@@ -92,6 +92,7 @@ const FiveDayScreen = (props) => {
 
     const deleteHandler = (id) => {
         dispatch(deleteTaskAction(id))
+        onRefresh()
     }
 
     const editTaskHandler = (id, data) => {
