@@ -23,10 +23,10 @@ export default function NotificationListing(props){
       setRefreshing(false)
 
     }
-
-    useEffect(async ()=>{
-      const unsubscribe = props.navigation.addListener('focus', ()=>{
-        fetchNotificationByUserId()
+  
+    useEffect( ()=>{
+      const unsubscribe = props.navigation.addListener('focus', async ()=>{
+        await fetchNotificationByUserId()
       })
       return unsubscribe
     },[props.navigation])

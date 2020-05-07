@@ -6,7 +6,7 @@ import { BottomNavigation, BottomNavigationTab, Layout, Text, Icon } from '@ui-k
 import HomeScreen from '../../screens/home_screen/HomeScreen';
 import ProfileScreen from '../../screens/userProfile/Profile';
 import NotificationScreen from '../../screens/notification/NotificationScreen'
-
+import NotificationListing from '../../screens/notification/NotificationListing'
 const BottomTab = createBottomTabNavigator();
 
 const PersonIcon = (style) => (
@@ -14,12 +14,8 @@ const PersonIcon = (style) => (
 );
 
 const BellIcon = (style) => (
-    <React.Fragment>
-        <Icon {...style} name='bell-outline' onPress={()=> {}}/>
-        {/* <Text>
-            1
-        </Text> */}
-    </React.Fragment>
+        <Icon {...style} name='bell-outline' />
+      
     
 );
 
@@ -62,7 +58,7 @@ const TabNavigator = () => (
         <BottomTab.Screen name='List' component={ListScreen} />
         <BottomTab.Screen name='Home' component={HomeScreen} />
 
-        <BottomTab.Screen name='Notifications' component={NotificationScreen} />
+        <BottomTab.Screen name='Notifications' component={NotificationListing} />
         <BottomTab.Screen name='Users' component={ProfileScreen} />
 
     </BottomTab.Navigator>

@@ -17,7 +17,8 @@ export default function NumberDetails (props){
     useEffect(()=>{
         count('isAccepted')
         count('isDeclined')
-    }, [])
+        // props.setNumberOfAccept(props.numberOfAccept + 1)
+    }, [props])
 
 
     return(

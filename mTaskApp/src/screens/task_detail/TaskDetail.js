@@ -112,7 +112,7 @@ const TaskDetail = (props) => {
                     </View>
                 </View>
                 
-                <TagUser propStyle={{borderStyle: borderStyle, iconSize: iconSize}} tagType={'input'} id={task._id} saveTagUser={editTaskHandler} />
+                <TagUser isSaveTag={true} propStyle={{borderStyle: borderStyle, iconSize: iconSize}} tagType={'input'} id={task._id} saveTagUser={editTaskHandler} />
 
                 <View style={[styles.descStyle, styles.borderStyle]}>
                     <View style={styles.descInputStyle}>

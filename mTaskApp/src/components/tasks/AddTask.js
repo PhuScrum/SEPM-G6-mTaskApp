@@ -93,7 +93,7 @@ const AddTask = ({ submitHandler }) => {
             </View>
 
             <View style={{ paddingTop: 8, flex: 1 }}>
-                <TagUser tagType={'button'} />
+                <TagUser tagType={'button'} isSaveTag={false} />
             </View>
             <View style={{ paddingTop: 8, flex: 1 }}>
                 <Button style={styles.submitButton} onPress={() => submitHandler(taskData)}>Add</Button>

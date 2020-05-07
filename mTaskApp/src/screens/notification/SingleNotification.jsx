@@ -19,8 +19,8 @@ import NumberDetails from './NumberDetails'
 
 
 export default function CardWithHeaderAndFooterShowcase (props){
-    const [user, setUser] = useState({fName: ''})
-    const [task, setTask] = useState({taggedUsers: []})
+    const [user, setUser] = useState({fName: ''},[])
+    const [task, setTask] = useState({taggedUsers: []}, [])
     const [numberOfAccept, setNumberOfAccept] = useState(0)
     const [numberOfDecline, setNumberOfDecline] = useState(0)
     const [isAccepted, setIsAccepted] =useState(props.item.isAccepted)
@@ -49,14 +49,22 @@ export default function CardWithHeaderAndFooterShowcase (props){
     }
     useEffect(()=>{
         fetchData()
-    }, [])
+        setIsAccepted(props.item.isAccepted)
+        setIsDeclined(props.item.isDeclined)
+    }, [props.item])
 
-    const Header = () => (
-        <CardHeader
-          title={task && task.name ? task.name : null}
-          // description='By Wikipedia'
-        />
-      );
+  //   const count = (type)=>{
+  //     var num = 0
+  //     for(let i =0; i < task.taggedUsers.length; i++){
+  //         var userObj = task.taggedUsers[i]
+  //         if(userObj[type] === true){
+  //             num +=1
+  //         }
+  //     }
+  //     if(type==='isAccepted') setNumberOfAccept(num)
+  //     else setNumberOfDecline(num)
+
+  // }
 
     const acceptDeclineTagging = async (url)=>{
         var taskId = task._id
@@ -65,8 +73,11 @@ export default function CardWithHeaderAndFooterShowcase (props){
         var rsvpId = props.item._id
         var resp = await axios.post(url, {taskId, userId, creatorId, rsvpId})
         if(url.includes('accept')){
+            console.log('increase number of accept')
             setNumberOfAccept(numberOfAccept + 1)
             setIsAccepted(true)
+            // count('isAccepted')
+
         } 
         else {
             setNumberOfDecline(numberOfDecline + 1)
@@ -107,6 +118,13 @@ export default function CardWithHeaderAndFooterShowcase (props){
          
           
         </View>
+      );
+
+      const Header = () => (
+        <CardHeader
+          title={task !==null && task.name !==null ? task.name : null}
+          // description='By Wikipedia'
+        />
       );
     return(
         <Card style={styles.card} header={Header} footer={Footer}

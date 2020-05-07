@@ -5,7 +5,9 @@ const getNotifByUserId = (req, res)=>{
     rsvpModel.find({receiverId}, (err, doc)=>{
         if(err)console.log(err)
         else res.json(doc)
-    }).sort({ _id: -1 }).limit(10)
+    })
+    // .populate('item', ['name'])
+    .sort({ _id: -1 }).limit(10)
 }
 
 module.exports = getNotifByUserId

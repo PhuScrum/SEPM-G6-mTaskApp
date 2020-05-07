@@ -15,7 +15,7 @@ import { editTaskAction } from '../../actions/TaskAction';
 
 MDIcon.loadFont();
 
-const TagUser = ({ propStyle, tagType, saveTagUser, id }) => {
+const TagUser = ({ propStyle, tagType, saveTagUser, id, isSaveTag }) => {
     const refRBSheet = useRef();
     const data = useSelector(state => state.tagMemberReducer.selectedItems, [])
 
@@ -76,7 +76,8 @@ const TagUser = ({ propStyle, tagType, saveTagUser, id }) => {
                     <TouchableOpacity
                         onPress={() => {
                             refRBSheet.current.close()
-                            saveTagUser(id, {taggedUsers: data})
+                        
+                            {isSaveTag && saveTagUser(id, {taggedUsers: data})}
                         }}
                         style={[styles.dateHeaderButton]}
                     >
