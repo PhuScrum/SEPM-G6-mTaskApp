@@ -62,9 +62,6 @@ app.route('/simple-facebook-login')
 app.route('/search-members')
   .post(useCase_API.searchMembers)
 
-app.route('/notify-user')
-//   .post()
-
 app.route('/rsvp/:userId')
   .get(rsvp_API.crud.getNotifByUserId)
 
