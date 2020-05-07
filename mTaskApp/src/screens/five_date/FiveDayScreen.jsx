@@ -99,7 +99,6 @@ const FiveDayScreen = (props) => {
         onRefresh()
     }
 
-
     const addTaskHandler = (data) => {
         if (data.name.length > 3) {
             dispatch(addTaskAction(data))
@@ -131,9 +130,9 @@ const FiveDayScreen = (props) => {
     // console.log(userId)
 
     //Define Swipeable Section Elements
-    const myTasks = tasks.filter(task=>task.creatorId===userId)
+    
     // console.log(myTasks)
-    const unDoneList = myTasks.filter(task => task.completed !== true)
+    const unDoneList = tasks.filter(task => task.completed !== true)
     const sections = getSections(unDoneList)
     const renderItem = ({ item, index }) => (
         <TaskItem

@@ -5,10 +5,6 @@ import {
   TopNavigationAction,
 } from '@ui-kitten/components';
 import { withNavigation } from 'react-navigation';
-import { useSelector, useDispatch } from 'react-redux'
-
-// import {clearTaskItemAction} from '../../actions/TaskAction'
-// import {clearSelectedAction} from '../../actions/tag-members-actions'
 
 const BackIcon = (style) => (
   <Icon {...style} name='arrow-back' />

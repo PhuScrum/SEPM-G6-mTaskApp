@@ -20,7 +20,7 @@ const reducer = (state = initialState, action) => {
         case EDIT_TASK:
             return {...state}
         case CLEAR_TASK_ITEM:
-            return {taskItem:{}}
+            return {...state, taskItem:{}}
         default:
             return state
     }

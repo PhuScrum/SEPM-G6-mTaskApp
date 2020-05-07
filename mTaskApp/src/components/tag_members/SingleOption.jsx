@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Text, TouchableOpacity, StyleSheet, View } from 'react-native'
 import { CheckBox } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux'
-import { SET_ITEMS_TO_SELECTED, REMOVE_ITEMS_FROM_SELECTED } from '../../actions/types'
+
 import { removeFromSelectedAction, sendToSelectedAction } from '../../actions/tag-members-actions'
 
 export default function SingleOption({ unit }) {
@@ -11,9 +11,7 @@ export default function SingleOption({ unit }) {
     const selectedItems = useSelector(state => state.tagMemberReducer.selectedItems, [])
     const task = useSelector(state => state.taskReducer.taskItem, []);
     var idArr = selectedItems.map(unit => unit = unit._id)
-    const idTagged = task.taggedUsers.map(unit => unit = unit._id)
-
-    console.log(idTagged)
+    const idTagged = task.taggedUsers ? task.taggedUsers.map(unit => unit = unit._id) : []
 
     const sendToSelected = (items) => dispatch(sendToSelectedAction(items))
     const removeFromSelected = (items) => dispatch(removeFromSelectedAction(items))

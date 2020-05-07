@@ -4,13 +4,15 @@ import { Layout, Text, Icon, TopNavigation, TopNavigationAction } from '@ui-kitt
 import TopNavigationBar from '../five_date/TopNavigationBar'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons';
-import { editTaskAction, getTaskItemAction, getMyTasksAction } from '../../actions/TaskAction';
-
-import TaskDate from '../../components/taskDetail/TaskDate'
 
 import moment from 'moment-timezone'
+
+import TaskDate from '../../components/taskDetail/TaskDate'
 import TagUser from '../../components/taskDetail/TagUser';
-import { getUsersAction } from '../../actions/UserActions';
+
+import {clearSelectedAction} from '../../actions/tag-members-actions'
+import {clearTaskItemAction} from '../../actions/TaskAction'
+import { editTaskAction, getTaskItemAction, getMyTasksAction } from '../../actions/TaskAction';
 
 function wait(timeout) {
     return new Promise(resolve => {
@@ -19,6 +21,7 @@ function wait(timeout) {
 }
 
 const TaskDetail = (props) => {
+    const {navigation} = props
     const dispatch = useDispatch()
     const task = useSelector(state => state.taskReducer.taskItem, []);
     const [desc, setDesc] = useState('')
@@ -46,10 +49,12 @@ const TaskDetail = (props) => {
     }
 
     useEffect(() => {
-        // dispatch(getUsersAction())
-    }, [])
-    // console.log(users)
-    console.log(task)
+        const unMount = navigation.addListener('blur',() => {
+            dispatch(clearSelectedAction())
+            dispatch(clearTaskItemAction())
+          })
+        return unMount
+    }, [navigation])
 
     return (
         <>
