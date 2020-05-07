@@ -32,18 +32,23 @@ export default class DoneListScreen extends Component {
         AsyncStorage.getItem("userId")
         .then((value) => {
             this.setState({userId: value});
-            console.log(this.state.userId)
-        })
-        
-        return fetch('https://bigquery-project-medium.df.r.appspot.com/task')
-            .then((response) => response.json())
+            console.log(value)
 
+            fetch(`https://bigquery-project-medium.df.r.appspot.com/tasks-by-user-id/${value}`)
+            .then((response) => response.json())
             .then(dataSource => {
                 this.setState({ dataSource: dataSource.filter(d => d.completed === true) })
-                this.setState({ dataSource: dataSource.filter(d => d.creatorId == this.state.userId) })
+                // this.setState({ dataSource: dataSource.filter(d => d.creatorId == this.state.userId) })
             })
-           
+        })
+        
+        // return fetch('https://bigquery-project-medium.df.r.appspot.com/task')
+        //     .then((response) => response.json())
 
+        //     .then(dataSource => {
+        //         this.setState({ dataSource: dataSource.filter(d => d.completed === true) })
+        //         this.setState({ dataSource: dataSource.filter(d => d.creatorId == this.state.userId) })
+        //     })
     }
 
     renderHeader = ({ section }) => {
