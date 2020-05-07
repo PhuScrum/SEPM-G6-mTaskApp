@@ -10,33 +10,14 @@ import {
     List, ListItem,
     Button
 } from '@ui-kitten/components';
-import SearchableDropdown from 'react-native-searchable-dropdown';
-import { searchUserAction } from '../../actions/UserActions';
-import axios from 'axios';
+import TagMemberInput from '../tag_members/TagMemberInput';
 
 MDIcon.loadFont();
 
 const TagUser = ({ propStyle, userList }) => {
     const refRBSheet = useRef();
-    const dispatch = useDispatch()
-    const [name, setName] = useState('')
-    const [searchResult, setSearchResult] = useState([])
-    const [selectedItems, setSelectedItems] = useState([])
-    const [isChosen, setIsChosen] = useState(false)
-
-    const searchUser = async (term) => {
-        setName(term)
-        try {
-            var res = await axios.post('https://bigquery-project-medium.df.r.appspot.com/search-members', { searchTerm: term })
-            setSearchResult(res.data)
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    console.log('search: ', searchResult)
-
-    const renderIcon = (style) => (<Icon {...style} name={name ? 'close-outline' : 'corner-down-left-outline'} />)
+    const data = useSelector(state => state.tagMemberReducer.selectedItems, [])
+    // console.log(data)
 
     return (
         <>
@@ -54,13 +35,14 @@ const TagUser = ({ propStyle, userList }) => {
                 </View>
             </View>
             <RBSheet
-                height={600}
+                
                 ref={refRBSheet}
                 closeOnDragDown
                 customStyles={{
                     container: {
                         borderTopLeftRadius: 10,
-                        borderTopRightRadius: 10
+                        borderTopRightRadius: 10,
+                        minHeight: 400
                     }
                 }}
             >
@@ -82,42 +64,7 @@ const TagUser = ({ propStyle, userList }) => {
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.inputContainer}>
-                    <Input
-                        value={name}
-                        style={styles.input}
-                        onIconPress={() => setName('')}
-                        icon={renderIcon}
-                        onChangeText={searchUser}
-                    />
-                    <MDIcon
-                        name="send"
-                        style={[styles.inputIcon, styles.inputIconSend]}
-                        onPress={() => refRBSheet.current.close()}
-                    />
-                </View>
-
-
-                <ScrollView>
-                    <View style={{
-                        padding: 10,
-                        marginBottom: 20
-                    }}>
-                        {searchResult.map(user => (
-                            <TouchableOpacity
-                                key={user._id}
-                                onPress={() => console.log(user.fName)}
-                                style={styles.searchUserItem}
-                            >
-                                <View style={{ flexDirection: 'row', justifyContent: "space-between", paddingLeft: 15 }}>
-                                    <Text style={{ fontSize: 16 }}>{user.fName} {user.lName}</Text>
-                                    {/* <Button size='tiny'>FOLLOW</Button> */}
-                                </View>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-
-                </ScrollView>
+                <TagMemberInput/>
 
             </RBSheet>
 

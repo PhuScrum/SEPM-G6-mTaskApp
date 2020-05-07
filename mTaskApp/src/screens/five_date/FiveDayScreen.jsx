@@ -31,6 +31,7 @@ import _ from 'lodash'
 import moment from 'moment-timezone'
 
 import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction, getMyTasksAction, getTaskItemAction } from '../../actions/TaskAction'
+import { clearSelectedAction } from '../../actions/tag-members-actions';
 
 FAIcon.loadFont();
 MDIcon.loadFont();
@@ -82,8 +83,9 @@ const FiveDayScreen = (props) => {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        getMyTasks()
+        wait(600)
         .then(() => {
+            getMyTasks()
             setRefreshing(false)
         })
     }, [refreshing]);
@@ -100,6 +102,7 @@ const FiveDayScreen = (props) => {
     const addTaskHandler = (data) => {
         if (data.name.length > 3) {
             dispatch(addTaskAction(data))
+            dispatch(clearSelectedAction())
             onRefresh()
             refBottomSheet.current.close()
         } else {
