@@ -14,7 +14,13 @@ const PersonIcon = (style) => (
 );
 
 const BellIcon = (style) => (
-    <Icon {...style} name='bell-outline' />
+    <React.Fragment>
+        <Icon {...style} name='bell-outline' onPress={()=> {}}/>
+        {/* <Text>
+            1
+        </Text> */}
+    </React.Fragment>
+    
 );
 
 const HomeIcon = (style) => (
@@ -24,14 +30,6 @@ const HomeIcon = (style) => (
 const ListIcon = (style) => (
     <Icon {...style} name='list-outline' />
 );
-
-
-
-// const NotificationScreen = () => (
-//     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//         <Text category='h1'>NOTIFICATIONS</Text>
-//     </Layout>
-// );
 
 const ListScreen = () => (
     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

@@ -3,6 +3,8 @@ const urlDomain = globalVar.urlDomain
 
 export const searchMembers = urlDomain + 'search-members'
 export const tasks = urlDomain + 'task'
+export const tasksByUserId = urlDomain + 'tasks-by-user-id'
+
 export const rsvp = urlDomain + 'rsvp'
 export const user = urlDomain + 'user'
 export const acceptTagging_AddTask = urlDomain + 'accept-tagging-add-task'

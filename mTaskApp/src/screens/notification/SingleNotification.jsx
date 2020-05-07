@@ -34,7 +34,7 @@ export default function CardWithHeaderAndFooterShowcase (props){
         
 
     }
-    const fetchUser = async (id)=>{
+    const fetchUser = async (id)=>{user
         var resp = await axios.get(url.user + '/' + id)
         console.log('fetch user by  user id: ', resp.data)
 

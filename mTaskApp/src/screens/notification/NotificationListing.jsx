@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { FlatList, StyleSheet, View, AsyncStorage } from 'react-native';
+import React, { useEffect , useState, useCallback} from 'react'
+import { FlatList, StyleSheet, View, AsyncStorage, RefreshControl } from 'react-native';
 import {
   Layout,
   Text,
@@ -9,21 +9,34 @@ import * as url from '../../constants/url/url'
 import SingleNotification from './SingleNotification'
 
 export default function NotificationListing(props){
-    const [notifications, setNotifications] = React.useState([])
+    const [notifications, setNotifications] = useState([])
+    const [refreshing, setRefreshing] = useState(false)
+    const onRefresh = useCallback(() => {
+      setRefreshing(true);
+      fetchNotificationByUserId()
+  }, [refreshing]);
 
     const fetchNotificationByUserId = async ()=>{
       const userId = await AsyncStorage.getItem('userId')
       var resp = await axios.get(url.rsvp + '/' + userId)
       setNotifications(resp.data)
+      setRefreshing(false)
+
     }
 
     useEffect(async ()=>{
-       fetchNotificationByUserId()
-    },[])
+      const unsubscribe = props.navigation.addListener('focus', ()=>{
+        fetchNotificationByUserId()
+      })
+      return unsubscribe
+    },[props.navigation])
     return(
         <Layout style={styles.container}>
           <Text category='h1' style={styles.title}>Notifications</Text>
             <FlatList
+                refreshControl={
+                  <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+              }
                 data={notifications}
                 renderItem={({item}) => <SingleNotification key={item} item={item}/>}
             />        
@@ -45,3 +58,14 @@ const styles = StyleSheet.create({
       padding: 10
     }
   })
+
+
+
+
+
+  // useEffect(async ()=>{
+  //   const unsubscribe = props.navigation.addListener('focus', ()=>{
+  //     // fetchNotificationByUserId()
+  //   })
+  //   return unsubscribe
+  // },[props.navigation])
