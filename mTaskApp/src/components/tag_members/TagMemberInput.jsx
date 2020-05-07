@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import axios from 'axios'
 import * as url from '../../constants/url/url'
@@ -20,18 +20,13 @@ export default function TagMemberInput() {
   const searchMembers = async (searchTerm) => {
     setValue(searchTerm)
     try {
-      var resp = await axios.post(url.searchMembers, { searchTerm })
-      var data = resp.data
-      console.log(data)
-      setSearchResult(data)
-      // return data
+      var res = await axios.post(url.searchMembers, { searchTerm })
+      setSearchResult(res.data)
     } catch (err) {
       console.error(err)
     }
   }
-  const onIconPress = () => {
-    setValue('');
-  };
+
   const renderIcon = (style) => (
     <Icon {...style} name={value ? 'close-outline' : 'corner-down-left-outline'} />
   );
@@ -40,19 +35,40 @@ export default function TagMemberInput() {
   return (
     <View>
       {/* <SelectedMembers/> */}
-      <Input
-        value={value}
-        placeholder='search members'
-        icon={renderIcon}
-        onIconPress={onIconPress}
-        onChangeText={searchMembers}
-      />
+      <View style={styles.inputContainer}>
+        <Input
+          value={value}
+          placeholder='search members'
+          style={styles.input}
+          icon={renderIcon}
+          onIconPress={() => setValue('')}
+          onChangeText={searchMembers}
+        />
+      </View>
       <OptionListing data={searchResult} />
     </View>
   );
 
 }
 
+const styles = StyleSheet.create({
+  inputContainer: {
+    // borderTopWidth: 1.5,
+    borderTopColor: "#ccc",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    width: '100%'
+  },
+  input: {
+    flex: 1,
+    height: 36,
+    borderRadius: 36,
+    paddingHorizontal: 15,
+    backgroundColor: "#f1f1f1",
+    marginHorizontal: 10
+  },
+})
 
 // const [selectedItems, setSelectedItems] = React.useState([])
 //   const [searchResult, setSearchResult] = React.useState(items)

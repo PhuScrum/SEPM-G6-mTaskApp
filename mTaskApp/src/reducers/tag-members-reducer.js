@@ -1,4 +1,4 @@
-import {SET_ITEMS_TO_SELECTED, REMOVE_ITEMS_FROM_SELECTED} from '../actions/types'
+import {SET_ITEMS_TO_SELECTED, REMOVE_ITEMS_FROM_SELECTED, CLEAR_SELECTED} from '../actions/types'
 
 const initialState ={
     selectedItems: []
@@ -28,6 +28,8 @@ export default function tagMembers(state = initialState, action){
                 }
             }
             return {...state}
+        case CLEAR_SELECTED:
+            return {selectedItems:[]}
         default: 
             return state
     }

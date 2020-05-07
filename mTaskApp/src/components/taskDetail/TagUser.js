@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, TouchableHighlight } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -10,57 +10,57 @@ import {
     List, ListItem,
     Button
 } from '@ui-kitten/components';
-import SearchableDropdown from 'react-native-searchable-dropdown';
-import { searchUserAction } from '../../actions/UserActions';
-import axios from 'axios';
+import TagMemberInput from '../tag_members/TagMemberInput';
 
 MDIcon.loadFont();
 
-const TagUser = ({ propStyle, userList }) => {
+const TagUser = ({ propStyle, tagType }) => {
     const refRBSheet = useRef();
-    const dispatch = useDispatch()
-    const [name, setName] = useState('')
-    const [searchResult, setSearchResult] = useState([])
-    const [selectedItems, setSelectedItems] = useState([])
-    const [isChosen, setIsChosen] = useState(false)
+    const data = useSelector(state => state.tagMemberReducer.selectedItems, [])
 
-    const searchUser = async (term) => {
-        setName(term)
-        try {
-            var res = await axios.post('https://bigquery-project-medium.df.r.appspot.com/search-members', { searchTerm: term })
-            setSearchResult(res.data)
-        } catch (err) {
-            console.log(err)
+    const OpenTag = () => {
+        switch(tagType){
+            case 'input':
+                return (
+                    <View style={[styles.tagStyle, propStyle.borderStyle]}>
+                        <View style={styles.tagInputStyle}>
+                            <Text>Tagged Users:</Text>
+                            <TouchableOpacity
+                                style={{ paddingHorizontal: 5 }}
+                                onPress={() => {
+                                    refRBSheet.current.open()
+                                }}
+                            >
+                                <AntDesign name="adduser" size={propStyle.iconSize} />
+                            </TouchableOpacity>
+                        </View>
+                </View>
+                )
+            case 'button':
+                return (
+                <TouchableHighlight
+                style={styles.openButton}
+                onPress={()=>refRBSheet.current.open()}
+                >
+                    <Text style={styles.textStyle}>Tag members</Text>
+                </TouchableHighlight>
+                )
+                
+            default:
         }
     }
 
-    console.log('search: ', searchResult)
-
-    const renderIcon = (style) => (<Icon {...style} name={name ? 'close-outline' : 'corner-down-left-outline'} />)
-
     return (
         <>
-            <View style={[styles.tagStyle, propStyle.borderStyle]}>
-                <View style={styles.tagInputStyle}>
-                    <Text>Tagged Users:</Text>
-                    <TouchableOpacity
-                        style={{ paddingHorizontal: 5 }}
-                        onPress={() => {
-                            refRBSheet.current.open()
-                        }}
-                    >
-                        <AntDesign name="adduser" size={propStyle.iconSize} />
-                    </TouchableOpacity>
-                </View>
-            </View>
+            <OpenTag/>
             <RBSheet
-                height={600}
                 ref={refRBSheet}
                 closeOnDragDown
                 customStyles={{
                     container: {
                         borderTopLeftRadius: 10,
-                        borderTopRightRadius: 10
+                        borderTopRightRadius: 10,
+                        minHeight: 400
                     }
                 }}
             >
@@ -82,42 +82,7 @@ const TagUser = ({ propStyle, userList }) => {
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.inputContainer}>
-                    <Input
-                        value={name}
-                        style={styles.input}
-                        onIconPress={() => setName('')}
-                        icon={renderIcon}
-                        onChangeText={searchUser}
-                    />
-                    <MDIcon
-                        name="send"
-                        style={[styles.inputIcon, styles.inputIconSend]}
-                        onPress={() => refRBSheet.current.close()}
-                    />
-                </View>
-
-
-                <ScrollView>
-                    <View style={{
-                        padding: 10,
-                        marginBottom: 20
-                    }}>
-                        {searchResult.map(user => (
-                            <TouchableOpacity
-                                key={user._id}
-                                onPress={() => console.log(user.fName)}
-                                style={styles.searchUserItem}
-                            >
-                                <View style={{ flexDirection: 'row', justifyContent: "space-between", paddingLeft: 15 }}>
-                                    <Text style={{ fontSize: 16 }}>{user.fName} {user.lName}</Text>
-                                    {/* <Button size='tiny'>FOLLOW</Button> */}
-                                </View>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-
-                </ScrollView>
+                <TagMemberInput/>
 
             </RBSheet>
 
@@ -187,7 +152,19 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         marginVertical: 5,
         borderRadius: 25
-    }
+    },
+    openButton: {
+        backgroundColor: "#F194FF",
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+        width: 150
+      },
+      textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+      },
 })
 
 export default TagUser
