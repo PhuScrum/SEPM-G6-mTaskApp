@@ -72,6 +72,7 @@ export default function CardWithHeaderAndFooterShowcase (props){
         var creatorId = task.creatorId
         var rsvpId = props.item._id
         var resp = await axios.post(url, {taskId, userId, creatorId, rsvpId})
+        fetchData()
         if(url.includes('accept')){
             console.log('increase number of accept')
             setNumberOfAccept(numberOfAccept + 1)

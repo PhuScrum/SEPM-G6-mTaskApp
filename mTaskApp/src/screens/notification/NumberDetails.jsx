@@ -12,12 +12,14 @@ export default function NumberDetails (props){
         if(type==='isAccepted') props.setNumberOfAccept(num)
         else props.setNumberOfDecline(num)
 
+        return num
     }
 
     useEffect(()=>{
-        count('isAccepted')
-        count('isDeclined')
-        // props.setNumberOfAccept(props.numberOfAccept + 1)
+       
+        // props.setNumberOfAccept(props.numberOfAccept)
+
+        
     }, [props])
 
 
@@ -29,7 +31,7 @@ export default function NumberDetails (props){
                 </Text>
             <Text>
             <Icon name='checkmark-outline' width={20} height={20} fill='#3366FF'/>
-            {props.numberOfAccept}
+            {count('isAccepted')}
         </Text>
 
         <Text>
