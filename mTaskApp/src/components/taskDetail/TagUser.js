@@ -1,13 +1,16 @@
 import React, { useRef, useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import MDIcon from "react-native-vector-icons/MaterialIcons";
 import {
     Input,
-    Icon
-  } from '@ui-kitten/components';
+    Icon,
+    List, ListItem,
+    Button
+} from '@ui-kitten/components';
+import SearchableDropdown from 'react-native-searchable-dropdown';
 import { searchUserAction } from '../../actions/UserActions';
 import axios from 'axios';
 
@@ -15,16 +18,18 @@ MDIcon.loadFont();
 
 const TagUser = ({ propStyle, userList }) => {
     const refRBSheet = useRef();
-    const dispatch =useDispatch()
+    const dispatch = useDispatch()
     const [name, setName] = useState('')
     const [searchResult, setSearchResult] = useState([])
+    const [selectedItems, setSelectedItems] = useState([])
+    const [isChosen, setIsChosen] = useState(false)
 
     const searchUser = async (term) => {
         setName(term)
-        try{
-            var res = await axios.post('https://bigquery-project-medium.df.r.appspot.com/search-members', {searchTerm: term})
+        try {
+            var res = await axios.post('https://bigquery-project-medium.df.r.appspot.com/search-members', { searchTerm: term })
             setSearchResult(res.data)
-        } catch(err) {
+        } catch (err) {
             console.log(err)
         }
     }
@@ -49,6 +54,7 @@ const TagUser = ({ propStyle, userList }) => {
                 </View>
             </View>
             <RBSheet
+                height={600}
                 ref={refRBSheet}
                 closeOnDragDown
                 customStyles={{
@@ -75,13 +81,14 @@ const TagUser = ({ propStyle, userList }) => {
                         <Text style={styles.dateHeaderButtonDone}>Done</Text>
                     </TouchableOpacity>
                 </View>
+
                 <View style={styles.inputContainer}>
                     <Input
                         value={name}
-                       style={styles.input} 
-                       onIconPress={()=>setName('')} 
-                       icon={renderIcon}
-                       onChangeText={searchUser}
+                        style={styles.input}
+                        onIconPress={() => setName('')}
+                        icon={renderIcon}
+                        onChangeText={searchUser}
                     />
                     <MDIcon
                         name="send"
@@ -89,6 +96,29 @@ const TagUser = ({ propStyle, userList }) => {
                         onPress={() => refRBSheet.current.close()}
                     />
                 </View>
+
+
+                <ScrollView>
+                    <View style={{
+                        padding: 10,
+                        marginBottom: 20
+                    }}>
+                        {searchResult.map(user => (
+                            <TouchableOpacity
+                                key={user._id}
+                                onPress={() => console.log(user.fName)}
+                                style={styles.searchUserItem}
+                            >
+                                <View style={{ flexDirection: 'row', justifyContent: "space-between", paddingLeft: 15 }}>
+                                    <Text style={{ fontSize: 16 }}>{user.fName} {user.lName}</Text>
+                                    {/* <Button size='tiny'>FOLLOW</Button> */}
+                                </View>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+
+                </ScrollView>
+
             </RBSheet>
 
         </>
@@ -151,6 +181,13 @@ const styles = StyleSheet.create({
         backgroundColor: "#f1f1f1",
         marginHorizontal: 10
     },
+    searchUserItem: {
+        paddingVertical: 15,
+        backgroundColor: '#EEF7FA',
+        marginHorizontal: 20,
+        marginVertical: 5,
+        borderRadius: 25
+    }
 })
 
 export default TagUser
