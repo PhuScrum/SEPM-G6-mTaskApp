@@ -8,25 +8,28 @@ import { removeFromSelectedAction, sendToSelectedAction } from '../../actions/ta
 export default function SingleOption({ unit }) {
     const [checked, setChecked] = React.useState(false);
     const dispatch = useDispatch()
-    const selectedItems = useSelector(state => state.tagMemberReducer.selectedItems)
+    const selectedItems = useSelector(state => state.tagMemberReducer.selectedItems, [])
+    const task = useSelector(state => state.taskReducer.taskItem, []);
     var idArr = selectedItems.map(unit => unit = unit._id)
+    const idTagged = task.taggedUsers.map(unit => unit = unit._id)
+
+    console.log(idTagged)
 
     const sendToSelected = (items) => dispatch(sendToSelectedAction(items))
     const removeFromSelected = (items) => dispatch(removeFromSelectedAction(items))
 
     const onCheckedChange = (isChecked) => {
-        isChecked ? sendToSelected(punit) : removeFromSelected(unit)
+        isChecked ? sendToSelected(unit) : removeFromSelected(unit)
         setChecked(isChecked);
     };
 
     useEffect(() => {
         setChecked(false)
 
-        if (idArr.includes(unit._id)) {
+        if (idArr.includes(unit._id) || idTagged.includes(unit._id)) {
             setChecked(true)
         }
     }, [])
-
 
     // console.log('single option props: ', props)
     const { fName, lName } = unit
@@ -40,13 +43,14 @@ export default function SingleOption({ unit }) {
             >
                 <View style={{ flexDirection: 'row', justifyContent: "space-between", paddingLeft: 15 }}>
                     <Text style={{ fontSize: 16 }}>{fullName}</Text>
-                </View>
-            </TouchableOpacity>
-            {/* <CheckBox
-                    text={fullName}
+                    <CheckBox
+                    style={styles.checkbox}
                     checked={checked}
                     onChange={onCheckedChange}
-                    /> */}
+                    />
+                </View>
+            </TouchableOpacity>
+            
         </React.Fragment>
     )
 }
@@ -58,5 +62,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         marginVertical: 5,
         borderRadius: 25
-    }
+    },
+    checkbox: {
+        marginRight: 20,
+      }
 })

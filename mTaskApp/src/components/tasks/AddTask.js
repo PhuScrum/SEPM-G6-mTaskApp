@@ -5,6 +5,7 @@ import { Layout, Text, Input, Button, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import TagMembers from '../tag_members/TagMembers'
 import DateTimePickerComponent from '../dateTimePicker/DateTimePickerComponent'
+import TagUser from '../taskDetail/TagUser';
 
 const combineDateTime = (date, time) => {
     const datePick = moment(date).format('DD MMM YYYY ')
@@ -47,11 +48,11 @@ const AddTask = ({ submitHandler }) => {
         creatorId: userId
     }
 
-    const getUserId = async () =>{
-        try{
+    const getUserId = async () => {
+        try {
             let id = await AsyncStorage.getItem('userId')
             setUserId(id)
-        } catch(err) {
+        } catch (err) {
             console.log(err)
         }
     }
@@ -92,14 +93,11 @@ const AddTask = ({ submitHandler }) => {
             </View>
 
             <View style={{ paddingTop: 8, flex: 1 }}>
-                <TagMembers />
+                <TagUser tagType={'button'} />
             </View>
             <View style={{ paddingTop: 8, flex: 1 }}>
                 <Button style={styles.submitButton} onPress={() => submitHandler(taskData)}>Add</Button>
             </View>
-            {/* {os === 'android' && <DateTimePickerAndroid />}
-            {os === 'ios' && <DateTimePickerIOS />} */}
-
         </View>
     )
 }

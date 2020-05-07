@@ -99,6 +99,7 @@ const FiveDayScreen = (props) => {
         onRefresh()
     }
 
+
     const addTaskHandler = (data) => {
         if (data.name.length > 3) {
             dispatch(addTaskAction(data))

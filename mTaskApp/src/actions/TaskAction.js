@@ -1,4 +1,4 @@
-import { GET_TASKS, DELETE_TASK, ADD_TASK, EDIT_TASK, GET_MY_TASKS, GET_TASK_ITEM } from './types'
+import { GET_TASKS, DELETE_TASK, ADD_TASK, EDIT_TASK, GET_MY_TASKS, GET_TASK_ITEM, CLEAR_TASK_ITEM } from './types'
 import axios from 'axios';
 import _ from 'lodash'
 import moment from 'moment-timezone'
@@ -72,4 +72,11 @@ export const editTaskAction = (key, data) => async dispatch => {
         })
         // .then(res => dispatch(getTasksAction))
         .catch(err => console.log(err))
+}
+
+//clear task item
+export const clearTaskItemAction = () => dispatch => {
+    dispatch({
+        type: CLEAR_TASK_ITEM
+    })
 }

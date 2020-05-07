@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, TouchableHighlight } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -14,28 +14,46 @@ import TagMemberInput from '../tag_members/TagMemberInput';
 
 MDIcon.loadFont();
 
-const TagUser = ({ propStyle, userList }) => {
+const TagUser = ({ propStyle, tagType }) => {
     const refRBSheet = useRef();
     const data = useSelector(state => state.tagMemberReducer.selectedItems, [])
-    // console.log(data)
+
+    const OpenTag = () => {
+        switch(tagType){
+            case 'input':
+                return (
+                    <View style={[styles.tagStyle, propStyle.borderStyle]}>
+                        <View style={styles.tagInputStyle}>
+                            <Text>Tagged Users:</Text>
+                            <TouchableOpacity
+                                style={{ paddingHorizontal: 5 }}
+                                onPress={() => {
+                                    refRBSheet.current.open()
+                                }}
+                            >
+                                <AntDesign name="adduser" size={propStyle.iconSize} />
+                            </TouchableOpacity>
+                        </View>
+                </View>
+                )
+            case 'button':
+                return (
+                <TouchableHighlight
+                style={styles.openButton}
+                onPress={()=>refRBSheet.current.open()}
+                >
+                    <Text style={styles.textStyle}>Tag members</Text>
+                </TouchableHighlight>
+                )
+                
+            default:
+        }
+    }
 
     return (
         <>
-            <View style={[styles.tagStyle, propStyle.borderStyle]}>
-                <View style={styles.tagInputStyle}>
-                    <Text>Tagged Users:</Text>
-                    <TouchableOpacity
-                        style={{ paddingHorizontal: 5 }}
-                        onPress={() => {
-                            refRBSheet.current.open()
-                        }}
-                    >
-                        <AntDesign name="adduser" size={propStyle.iconSize} />
-                    </TouchableOpacity>
-                </View>
-            </View>
+            <OpenTag/>
             <RBSheet
-                
                 ref={refRBSheet}
                 closeOnDragDown
                 customStyles={{
@@ -134,7 +152,19 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         marginVertical: 5,
         borderRadius: 25
-    }
+    },
+    openButton: {
+        backgroundColor: "#F194FF",
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+        width: 150
+      },
+      textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+      },
 })
 
 export default TagUser

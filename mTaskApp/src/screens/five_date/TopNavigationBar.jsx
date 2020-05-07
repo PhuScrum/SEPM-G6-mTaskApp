@@ -5,6 +5,10 @@ import {
   TopNavigationAction,
 } from '@ui-kitten/components';
 import { withNavigation } from 'react-navigation';
+import { useSelector, useDispatch } from 'react-redux'
+
+// import {clearTaskItemAction} from '../../actions/TaskAction'
+// import {clearSelectedAction} from '../../actions/tag-members-actions'
 
 const BackIcon = (style) => (
   <Icon {...style} name='arrow-back' />
@@ -30,28 +34,29 @@ const CheckMarkAction = (props) => (
   <TopNavigationAction {...props} icon={CheckMarkIcon} />
 );
 
-class TopNavigationBar extends Component {
-  constructor(props, navigation) {
-    super(props, navigation)
-  }
-  navigateCalendar() {
-    // this.props.navigation.navigate('CalendarOverview')
-  }
-  navigateDoneList(){
-     // this.props.navigation.navigate('DoneList')
-  }
-
-    render() {
-      const renderRightControls = () => [
-        <CalendarAction onPress={() => { this.props.navigation.navigate('CalendarOverview') }}/>,
-        <CheckMarkAction onPress={() => {this.props.navigation.navigate('DoneListOverview')}}/>,
-      ];  
-        return (
-            <TopNavigation
-                title='mTask'
-                rightControls={renderRightControls()}
-            />
-        )
-    }
+const TopNavigationBar = ({ navigation, route, withBackControl }) => {
+  // console.log(props)
+  const renderRightControls = () => [
+    <CalendarAction onPress={() => { navigation.navigate('CalendarOverview') }} />,
+    <CheckMarkAction onPress={() => { navigation.navigate('DoneListOverview') }} />,
+  ];
+  const renderBackControls = () => [
+    <BackAction
+      onPress={() => {
+        navigation.goBack()
+      }}
+    />
+  ]
+  return withBackControl ? (<TopNavigation
+    title='mTask'
+    rightControls={renderRightControls()}
+    leftControl={renderBackControls()}
+  />) : (
+      <TopNavigation
+        title='mTask'
+        rightControls={renderRightControls()}
+      />
+    )
 }
+
 export default withNavigation(TopNavigationBar)

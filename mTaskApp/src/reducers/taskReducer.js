@@ -1,4 +1,4 @@
-import {GET_TASKS, DELETE_TASK, ADD_TASK, EDIT_TASK, GET_MY_TASKS, GET_TASK_ITEM} from '../actions/types'
+import {GET_TASKS, DELETE_TASK, ADD_TASK, EDIT_TASK, GET_MY_TASKS, GET_TASK_ITEM, CLEAR_TASK_ITEM} from '../actions/types'
 
 const initialState = {
     tasks: [],
@@ -19,6 +19,8 @@ const reducer = (state = initialState, action) => {
             return {...state}
         case EDIT_TASK:
             return {...state}
+        case CLEAR_TASK_ITEM:
+            return {taskItem:{}}
         default:
             return state
     }
