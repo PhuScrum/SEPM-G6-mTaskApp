@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema;
 const rsvpSchema = new Schema({
-  senderId: {type: String},
-  receiverId: {type: String},
+  senderId: {type: Schema.Types.ObjectId, ref: 'user'},
+  receiverId: {type: Schema.Types.ObjectId, ref: 'user'},
   text: {type: String},
   rsvpType: {type: String},
   
@@ -12,14 +12,15 @@ const rsvpSchema = new Schema({
   isOpened: {type: Boolean, default: false},
 
   //ref
-  taskId: {type: String},
+  taskId: {type: Schema.Types.ObjectId, ref: 'item'},
+
   listId: {type: String},
 
   dateCreated: { type: Date, default: Date.now },
 
 })
 
-const userModel = mongoose.model('rsvp', rsvpSchema)
+const rsvpModel = mongoose.model('rsvp', rsvpSchema)
 
 
-module.exports = userModel
+module.exports = rsvpModel

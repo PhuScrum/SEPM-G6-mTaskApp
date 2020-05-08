@@ -1,22 +1,32 @@
 const itemModel = require('../../../model/item')
+const mongoose = require('mongoose')
+
 const notifyUsers = require('../../rsvp/notify/add_tasks')
 const rsvp_API = require('../../rsvp')
-const postTask = (req, res)=>{
-    itemModel.create(req.body, (err, doc)=>{
-        if(!err){
-            if(req.body.taggedUsers){
+
+String.prototype.toObjectId = function () {
+    var ObjectId = (mongoose.Types.ObjectId);
+    return new ObjectId(this.toString());
+};
+
+const postTask = (req, res) => {
+    req.body.creatorId = req.body.creatorId.toObjectId()
+
+    itemModel.create(req.body, (err, doc) => {
+        if (!err) {
+            if (req.body.taggedUsers) {
                 var taskId = doc._id
                 req.body.taskId = taskId
                 rsvp_API.notify.addTask(req)
             }
             res.json(doc)
         }
-            
+
         else
             console.log(err)
     })
 
-    
+
 }
 
 module.exports = postTask

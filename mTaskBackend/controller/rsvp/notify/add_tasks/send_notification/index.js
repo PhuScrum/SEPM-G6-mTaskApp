@@ -1,6 +1,12 @@
 const rsvpModel = require('../../../../../model/rsvp')
 const findTaskById = require('../../../../../helper/find-task-by-id')
 const findUserById = require('../../../../../helper/find-user-by-id')
+
+String.prototype.toObjectId = function () {
+    var ObjectId = (mongoose.Types.ObjectId);
+    return new ObjectId(this.toString());
+};
+
 const sendNotification = async (receiverId, senderId, taskId)=>{
     var task = await findTaskById(taskId)
     var sender = await findUserById(senderId)
@@ -11,14 +17,14 @@ const sendNotification = async (receiverId, senderId, taskId)=>{
     console.log(text)
     
     const rsvp  = {
-        senderId,
-        receiverId,
+        senderId: senderId.toObjectId(),
+        receiverId: receiverId.toObjectId(),
         text,
         rsvpType: 'rsvp',
 
         isDeclined: false,
         isAccepted: false,
-        taskId
+        taskId: taskId.toObjectId()
     }
 
     rsvpModel.create(rsvp, (err, doc)=>{

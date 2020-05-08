@@ -123,7 +123,7 @@ const FiveDayScreen = (props) => {
         dispatch(getMyTasksAction(id))
     }
 
-    useEffect(async ()=>{
+    useEffect(()=>{
         const unsubscribe = props.navigation.addListener('focus', ()=>{
           getMyTasks()
         })

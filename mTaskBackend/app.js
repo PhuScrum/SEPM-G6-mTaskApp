@@ -5,8 +5,8 @@ var bodyParser = require('body-parser')
 const cors = require('cors')
 const path = require('path')
 
-app.use(bodyParser.json({ limit: '10mb', extended: true }))
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
+app.use(bodyParser.json({}))
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }))
 // app.use(cors())
 
 //Test Server
@@ -14,11 +14,8 @@ app.get('/', (req, res) => {
     res.status(200).send('Hello, world!').end();
   });
 
-const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://admin:123@cluster0-ym27l.mongodb.net/mtask-app?retryWrites=true";
-
-const client = new MongoClient(uri, { useNewUrlParser: true });
-mongoose.connect(uri, { useNewUrlParser: true })
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true , useCreateIndex: true, })
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
