@@ -6,10 +6,9 @@ String.prototype.toObjectId = function () {
     return new ObjectId(this.toString());
 };
 
-
 const editTask = (req, res)=>{
-    req.body.creatorId = req.body.creatorId.toObjectId()
-   itemModel.updateOne({_id: req.params.id}, {$set: req.body}, (err, doc)=>{
+    // req.body.creatorId = req.body.creatorId.toObjectId()
+   itemModel.findByIdAndUpdate(req.params.id, req.body, (err, doc)=>{
         if(!err)
             res.json(doc)
         else

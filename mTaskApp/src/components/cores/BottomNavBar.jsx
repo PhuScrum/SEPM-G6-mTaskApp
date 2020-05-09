@@ -7,6 +7,7 @@ import HomeScreen from '../../screens/home_screen/HomeScreen';
 import ProfileScreen from '../../screens/userProfile/Profile';
 import NotificationScreen from '../../screens/notification/NotificationScreen'
 import NotificationListing from '../../screens/notification/NotificationListing'
+import ListScreen from '../../screens/categoryList/ListScreen';
 const BottomTab = createBottomTabNavigator();
 
 const PersonIcon = (style) => (
@@ -15,8 +16,6 @@ const PersonIcon = (style) => (
 
 const BellIcon = (style) => (
         <Icon {...style} name='bell-outline' />
-      
-    
 );
 
 const HomeIcon = (style) => (
@@ -26,13 +25,6 @@ const HomeIcon = (style) => (
 const ListIcon = (style) => (
     <Icon {...style} name='list-outline' />
 );
-
-const ListScreen = () => (
-    <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text category='h1'>Hi</Text>
-    </Layout>
-);
-
 
 const BottomTabBar = ({ navigation, state }) => {
 

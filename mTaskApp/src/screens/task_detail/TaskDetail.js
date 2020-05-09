@@ -56,7 +56,7 @@ const TaskDetail = (props) => {
         return unMount
     }, [navigation])
 
-    console.log(task)
+    // console.log(task)
 
     return (
         <>

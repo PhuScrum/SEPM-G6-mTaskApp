@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { StyleSheet, View, TouchableOpacity, Platform, AsyncStorage } from 'react-native'
 import { Layout, Text, Input, Button, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
-import TagMembers from '../tag_members/TagMembers'
 import DateTimePickerComponent from '../dateTimePicker/DateTimePickerComponent'
 import TagUser from '../taskDetail/TagUser';
 
