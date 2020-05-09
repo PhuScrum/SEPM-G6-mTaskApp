@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import { SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -64,10 +64,13 @@ const TabNavigator = () => (
     </BottomTab.Navigator>
 );
 
-export default class BottomNavBar extends Component {
-    render() {
+export default function BottomNavBar() {
+
+        useEffect(()=>{
+
+        }, [])
+        
         return (
             <TabNavigator />
         )
-    }
 }

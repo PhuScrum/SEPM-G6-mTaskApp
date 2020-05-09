@@ -32,7 +32,7 @@ import moment from 'moment-timezone'
 
 import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction, getMyTasksAction, getTaskItemAction } from '../../actions/TaskAction'
 import { clearSelectedAction } from '../../actions/tag-members-actions';
-
+import TestPush from '../../components/push_notification/TestPush'
 FAIcon.loadFont();
 MDIcon.loadFont();
 
@@ -160,7 +160,8 @@ const FiveDayScreen = (props) => {
                 <Layout style={styles.container} >
                     <View style={styles.list} >
                         <Text style={styles.title}>Five Days List</Text>
-                        <SectionList
+                        <TestPush/>
+                        {/* <SectionList
                             stickySectionHeadersEnabled={false}
                             ref={scrollRef}
                             sections={sections}
@@ -170,7 +171,7 @@ const FiveDayScreen = (props) => {
                             refreshControl={
                                 <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                             }
-                        />
+                        /> */}
                     </View>
                     {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
                     <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()} />

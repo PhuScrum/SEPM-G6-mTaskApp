@@ -10,3 +10,5 @@ export const user = urlDomain + 'user'
 export const acceptTagging_AddTask = urlDomain + 'accept-tagging-add-task'
 export const declineTagging_AddTask = urlDomain + 'decline-tagging-add-task'
 
+export const saveExpoPushToken = urlDomain + 'save-expo-push-token'
+
