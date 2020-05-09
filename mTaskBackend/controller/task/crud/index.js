@@ -5,6 +5,7 @@ const deleteTask = require('./delete-task')
 const getTasksByUserId = require('./get-task-by-user-id')
 const getTasksSpecificDate = require('./get-task-specific-date')
 const getTaskById = require('./get-task-by-id')
+const deleteListItem = require('./delete-listItem')
 
 const CRUD = {
     getAll,
@@ -13,7 +14,8 @@ const CRUD = {
     deleteTask,
     getTasksSpecificDate,
     getTasksByUserId,
-    getTaskById
+    getTaskById,
+    deleteListItem
 }
 
 module.exports = CRUD

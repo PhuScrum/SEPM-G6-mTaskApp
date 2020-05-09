@@ -4,7 +4,7 @@ const tuIP = 'http://192.168.0.106:19003/'
 const huongIP = 'http://192.168.1.238:19003/'
 
 const globalVar = {
-    urlDomain: huongIP
+    urlDomain: tuIP
 }
 
 module.exports = globalVar

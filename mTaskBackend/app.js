@@ -36,6 +36,9 @@ app.route('/task/:id')
     .put(task_API.crud.editTask)
     .delete(task_API.crud.deleteTask)
 
+app.route('/del-list-from-task/:id')
+    .put(task_API.crud.deleteListItem)
+
 app.route('/tasks-by-user-id/:id')
     .get(task_API.crud.getTasksByUserId)
 
@@ -76,6 +79,10 @@ app.route('/list')
 app.route('/list/:id')
   .put(list_API.crud.editList)
   .delete(list_API.crud.deleteList)
+  .get(list_API.crud.listDetails)
+
+app.route('/del-task-from-list/:id')
+  .put(list_API.crud.deleteTaskItem)
 
 app.route('/get-lists-by-user-id/:id')
   .get(list_API.crud.getListsByUserId)

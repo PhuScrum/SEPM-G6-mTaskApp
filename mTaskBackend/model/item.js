@@ -16,7 +16,7 @@ const itemSchema = new Schema({
   repeat: {type: Object},
   location: {type: String},
   
-  listId: {type: Array},
+  listId: [{type: Schema.Types.ObjectId, ref: 'list'}],
   taggedUsers: {type: Array},
   dateCreated: { type: Date, default: Date.now },
 })
