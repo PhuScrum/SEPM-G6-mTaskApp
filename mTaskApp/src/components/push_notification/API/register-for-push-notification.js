@@ -1,6 +1,9 @@
 import savePushToken from './save-push-token-to-backend';
-
-const registerForPushNotificationsAsync = async () => {
+import { Notifications } from 'expo';
+import Constants from 'expo-constants';
+import {  View, Button, Vibration, Platform, SafeAreaView } from 'react-native';
+import * as Permissions from 'expo-permissions';
+const registerForPushNotificationsAsync = async (obj) => {
     // ask permission
     if (Constants.isDevice) {
       const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
@@ -16,9 +19,9 @@ const registerForPushNotificationsAsync = async () => {
       // get token
       token = await Notifications.getExpoPushTokenAsync();
       console.log(token);
-    //   this.setState({ expoPushToken: token });
+      obj.setState({ expoPushToken: token });
     // send push token to user backend
-       var save = await savePushToken(token)
+      savePushToken(token)
     } else {
       alert('Must use physical device for Push Notifications');
     }
@@ -33,4 +36,4 @@ const registerForPushNotificationsAsync = async () => {
     }
   };
 
-  export default registerForPushNotificationAsync
+  export default registerForPushNotificationsAsync

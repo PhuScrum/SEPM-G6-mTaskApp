@@ -53,6 +53,7 @@ export default class AppContainer extends React.Component {
   }
 
   _handleNotification = notification => {
+    alert('test push - notifications received.')
     Vibration.vibrate();
     console.log(notification);
     this.setState({ notification: notification });

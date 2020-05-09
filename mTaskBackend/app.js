@@ -84,7 +84,7 @@ app.route('/get-lists-by-user-id/:id')
   .get(list_API.crud.getListsByUserId)
 
 app.route('/save-expo-push-token/:userid')
-  .posh(useCase_API.pushNotification.savePushTokenToUser)
+  .post(useCase_API.pushNotification.savePushTokenToUser)
   
 var port = process.env.PORT || 19003
 app.listen(port, ()=>{

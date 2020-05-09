@@ -160,7 +160,7 @@ const FiveDayScreen = (props) => {
                 <Layout style={styles.container} >
                     <View style={styles.list} >
                         <Text style={styles.title}>Five Days List</Text>
-                        <TestPush/>
+                        {/* <TestPush/> */}
                         {/* <SectionList
                             stickySectionHeadersEnabled={false}
                             ref={scrollRef}
