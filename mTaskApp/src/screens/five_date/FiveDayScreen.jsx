@@ -32,7 +32,10 @@ import moment from 'moment-timezone'
 
 import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction, getMyTasksAction, getTaskItemAction } from '../../actions/TaskAction'
 import { clearSelectedAction } from '../../actions/tag-members-actions';
-
+import TestPush from '../../components/push_notification/TestPush'
+import sendPushNotification from '../../components/push_notification/API/send-push-notification'
+import setLocalNotification from '../../components/push_notification/API/set-local-notification'
+import {Notifications} from 'expo'
 FAIcon.loadFont();
 MDIcon.loadFont();
 
@@ -99,10 +102,27 @@ const FiveDayScreen = (props) => {
         dispatch(editTaskAction(id, data))
         onRefresh()
     }
+    
 
-    const addTaskHandler = (data) => {
-        if (data.name.length > 3) {
-            dispatch(addTaskAction(data))
+    const handlePushNoti = (taskObj)=>{
+        var taggedUsers = taskObj.taggedUsers
+        if(taggedUsers.length >=1){
+            for(let i=0; i < taggedUsers.length; i++){
+                var userObj = taggedUsers[i]
+                var expoPushToken = userObj.expoPushToken
+                sendPushNotification(userObj, taskObj)
+            }
+        }       
+    }
+
+   
+
+    const addTaskHandler = (taskObj) => {
+        console.log('addTAskHandler: ', taskObj)
+        handlePushNoti(taskObj)
+        setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
+        if (taskObj.name.length > 3) {
+            dispatch(addTaskAction(taskObj))
             dispatch(clearSelectedAction())
             onRefresh()
             refBottomSheet.current.close()
@@ -123,7 +143,7 @@ const FiveDayScreen = (props) => {
         dispatch(getMyTasksAction(id))
     }
 
-    useEffect(async ()=>{
+    useEffect( ()=>{
         const unsubscribe = props.navigation.addListener('focus', ()=>{
           getMyTasks()
         })
@@ -160,6 +180,7 @@ const FiveDayScreen = (props) => {
                 <Layout style={styles.container} >
                     <View style={styles.list} >
                         <Text style={styles.title}>Five Days List</Text>
+                        {/* <TestPush/> */}
                         <SectionList
                             stickySectionHeadersEnabled={false}
                             ref={scrollRef}
