@@ -19,7 +19,6 @@ const TagUser = ({ propStyle, tagType, saveTagUser, id, isSaveTag }) => {
     const refRBSheet = useRef();
     const data = useSelector(state => state.tagMemberReducer.selectedItems, [])
 
-    console.log(data)
     const OpenTag = () => {
         switch(tagType){
             case 'input':
