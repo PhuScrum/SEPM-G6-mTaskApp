@@ -71,7 +71,6 @@ app.route('/accept-tagging-add-task')
 app.route('/decline-tagging-add-task')
   .post(rsvp_API.responseAction.addTask.decline)
 
-
 app.route('/list')
   .get(list_API.crud.getAll)
   .post(list_API.crud.postList)
@@ -84,7 +83,7 @@ app.route('/list/:id')
 app.route('/del-task-from-list/:id')
   .put(list_API.crud.deleteTaskItem)
 
-app.route('/get-lists-by-user-id/:id')
+app.route('/lists-by-user-id/:id')
   .get(list_API.crud.getListsByUserId)
 
 var port = process.env.PORT || 19003

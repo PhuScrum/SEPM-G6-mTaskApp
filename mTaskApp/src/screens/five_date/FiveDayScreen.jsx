@@ -133,7 +133,6 @@ const FiveDayScreen = (props) => {
     // console.log(userId)
 
     //Define Swipeable Section Elements
-    
     // console.log(myTasks)
     const unDoneList = tasks.filter(task => task.completed !== true)
     const sections = getSections(unDoneList)
@@ -201,10 +200,8 @@ const FiveDayScreen = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // alignItems: "center",
         justifyContent: 'center',
         backgroundColor: '#EDF1F7',
-        // marginTop: 20,
         paddingBottom: 0
     },
     title: {
@@ -215,7 +212,7 @@ const styles = StyleSheet.create({
     },
     list: {
         flex: 1,
-        padding: 5
+        padding: 10
     },
     SectionHeaderStyle: {
         paddingTop: 20,
