@@ -4,6 +4,7 @@ import { Text, View, Image, TextInput, KeyboardAvoidingView,TouchableOpacity, As
 import Expo from 'expo';
 import * as Facebook from 'expo-facebook';
 import axios  from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 
@@ -111,7 +112,7 @@ export default class Login extends Component {
         console.log(this.state.userInfo.picture.data.url);
         console.log(this.state.userInfo.id)
 
-        Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+        Alert.alert('Welcome Back!', `Hi, ${(await response.json()).name}!`);
         this.props.navigation.navigate('MainApp')
         
       } else {
@@ -124,15 +125,30 @@ export default class Login extends Component {
   }
 
   
+  //get button_2(){
+  //  return(
+  //    <TouchableOpacity onPress={() => this.logInFB()}>
+  //      <View style={{width:'70%', borderRadius:4, padding: 24, backgroundColor:'#3b5998'}}> 
+  //       <Text style={{color:'white'}}>Login Via Facebook</Text>
+  //      </View>
+  //    </TouchableOpacity>
+//
+  // 
+  //  )
+ // }
   get button(){
     return(
-      <TouchableOpacity onPress={() => this.logInFB()}>
-        <View style={{width:'70%', borderRadius:4, padding: 24, backgroundColor:'#3b5998'}}> 
-         <Text style={{color:'white'}}>Login Via Facebook</Text>
-        </View>
-      </TouchableOpacity>
+       <Icon.Button
+       name="facebook"
+       backgroundColor="#3b5998"
+       onPress={() => this.logInFB()}
+       {...iconStyles}
+      >
+       Login with Facebook
+     </Icon.Button>
     )
   }
+
 
  
 
@@ -147,6 +163,7 @@ export default class Login extends Component {
           <Text style={styles.paragraph}>
             Welcome to mTask
           </Text>
+      
         {this.button}
         </View>
     );
@@ -155,6 +172,11 @@ export default class Login extends Component {
   
 
 }
+
+const iconStyles = {
+  borderRadius: 10,
+  iconStyle: { paddingVertical: 5 },
+};
 
 const styles =StyleSheet.create({
   wrapper:{
@@ -197,7 +219,7 @@ const styles =StyleSheet.create({
   },
   paragraph:{
     margin:24,
-    fontSize:18,
+    fontSize:22,
     fontWeight:'bold',
     textAlign:'center',
     color:'#34495e'
