@@ -1,5 +1,6 @@
   // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/dashboard/notifications
-  sendPushNotification = async (expoPushToken) => {
+  sendPushNotification = async (userObj, taskObj) => {
+    var {expoPushToken} = userObj
     const message = {
       to: expoPushToken,
       sound: 'default',

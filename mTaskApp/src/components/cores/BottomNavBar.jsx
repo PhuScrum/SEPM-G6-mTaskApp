@@ -83,10 +83,32 @@ export default class BottomNavBar extends React.Component {
         // this function will fire on the next tick after the app starts
         // with the notification data.
         this._notificationSubscription = Notifications.addListener(this._handleNotification);
+        
+
+
+        // let result = await   
+        // Permissions.askAsync(Permissions.NOTIFICATIONS);
+        // if (Constants.lisDevice && resut.status === 'granted') {
+        // console.log('Notification permissions granted.')
+        // }
+        // var localNotification ={
+        //     title: 'testing a scheduled local notification',
+        //     body: 'A body of notification.'
+        // }
+        // var schedulingOptions = {
+        //     time: (new Date()).getTime() + 3000,
+        //     repeat: 'minute'
+        // }
+        // var res = await Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+        // alert(res)
+        var cancelAllNotification = await Notifications.cancelAllScheduledNotificationsAsync()
+
+
+
       }
 
       _handleNotification = notification => {
-        alert('received notifications')
+        // alert('received notifications')
 
         Vibration.vibrate();
         console.log(notification);
