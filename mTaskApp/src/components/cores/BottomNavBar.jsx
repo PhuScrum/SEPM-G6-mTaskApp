@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-import { SafeAreaView } from 'react-native';
+import React, { Component, useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomNavigation, BottomNavigationTab, Layout, Text, Icon } from '@ui-kitten/components';
@@ -8,6 +7,11 @@ import ProfileScreen from '../../screens/userProfile/Profile';
 import NotificationScreen from '../../screens/notification/NotificationScreen'
 import NotificationListing from '../../screens/notification/NotificationListing'
 import ListScreen from '../../screens/categoryList/ListScreen';
+import registerForPushNotificationsAsync from '../push_notification/API/register-for-push-notification'
+import { Notifications } from 'expo';
+import Constants from 'expo-constants';
+import {  View, Button, Vibration, Platform, SafeAreaView } from 'react-native';
+import * as Permissions from 'expo-permissions';
 const BottomTab = createBottomTabNavigator();
 
 const PersonIcon = (style) => (
@@ -56,10 +60,60 @@ const TabNavigator = () => (
     </BottomTab.Navigator>
 );
 
-export default class BottomNavBar extends Component {
-    render() {
-        return (
-            <TabNavigator />
-        )
-    }
+export default class BottomNavBar extends React.Component {
+    state = {
+        expoPushToken: '',
+        notification: {},
+      };
+
+    async componentDidMount() {
+        await registerForPushNotificationsAsync(this);
+    
+        // Handle notifications that are received or selected while the app
+        // is open. If the app was closed and then opened by tapping the
+        // notification (rather than just tapping the app icon to open it),
+        // this function will fire on the next tick after the app starts
+        // with the notification data.
+        this._notificationSubscription = Notifications.addListener(this._handleNotification);
+        
+
+
+        // let result = await   
+        // Permissions.askAsync(Permissions.NOTIFICATIONS);
+        // if (Constants.lisDevice && resut.status === 'granted') {
+        // console.log('Notification permissions granted.')
+        // }
+        // var localNotification ={
+        //     title: 'testing a scheduled local notification',
+        //     body: 'A body of notification.'
+        // }
+        // var schedulingOptions = {
+        //     time: (new Date()).getTime() + 3000,
+        //     repeat: 'minute'
+        // }
+        // var res = await Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+        // alert(res)
+        var cancelAllNotification = await Notifications.cancelAllScheduledNotificationsAsync()
+
+
+
+      }
+
+      _handleNotification = notification => {
+        // alert('received notifications')
+
+        Vibration.vibrate();
+        console.log(notification);
+        this.setState({ notification: notification });
+      };
+
+        render(){
+            return (
+                <React.Fragment>
+                    <TabNavigator />
+                   
+                </React.Fragment>
+            )
+        }
+        
 }

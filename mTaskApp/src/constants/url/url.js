@@ -14,4 +14,5 @@ export const declineTagging_AddTask = urlDomain + 'decline-tagging-add-task'
 export const list = urlDomain + 'list'
 export const listByUserId = urlDomain + 'lists-by-user-id'
 export const delTaskFromList = urlDomain + 'del-task-from-list'
+export const saveExpoPushToken = urlDomain + 'save-expo-push-token'
 
