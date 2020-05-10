@@ -4,17 +4,15 @@ const mongoose = require('mongoose')
 const notifyUsers = require('../../rsvp/notify/add_tasks')
 const rsvp_API = require('../../rsvp')
 
-String.prototype.toObjectId = function () {
-    var ObjectId = (mongoose.Types.ObjectId);
-    return new ObjectId(this.toString());
-};
+const convertToObjectId = require('../../../helper/convert-to-objectid')
 
 const postTask = (req, res) => {
-    req.body.creatorId = req.body.creatorId.toObjectId()
+    req.body.creatorId = convertToObjectId(req.body.creatorId)
 
     itemModel.create(req.body, (err, doc) => {
         if (!err) {
             if (req.body.taggedUsers) {
+                console.log('taggging members...')
                 var taskId = doc._id
                 req.body.taskId = taskId
                 rsvp_API.notify.addTask(req)

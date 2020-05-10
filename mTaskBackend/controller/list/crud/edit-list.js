@@ -1,12 +1,5 @@
 const listModel = require('../../../model/list')
 const itemModel = require('../../../model/item')
-// const mongoose = require('mongoose')
-
-// String.prototype.toObjectId = function () {
-//     var ObjectId = (mongoose.Types.ObjectId);
-//     return new ObjectId(this.toString());
-// };
-
 
 const editList = (req, res)=>{
     listModel.findById(req.params.id, (err, doc)=>{

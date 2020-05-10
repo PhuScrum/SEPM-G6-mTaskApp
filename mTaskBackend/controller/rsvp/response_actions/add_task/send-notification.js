@@ -1,25 +1,22 @@
 const rsvpModel = require('../../../../model/rsvp')
 const findUserById = require('../../../../helper/find-user-by-id')
 
-String.prototype.toObjectId = function () {
-    var ObjectId = (mongoose.Types.ObjectId);
-    return new ObjectId(this.toString());
-};
+const convertToObjectId = require('../../../../helper/convert-to-objectid')
 
 const sendNotification = async (req, type)=>{
     var {creatorId, userId, taskId} = req.body
-
+    console.log(taskId)
     var user = await findUserById(req.body.userId)
     var userName = user.fName + ' ' + user.lName
     var str = 'declined' 
 
     if(type && type==='accept') str = 'accepted'
     var responseRSVP = {
-        senderId: userId.toObjectId(),
-        receiverId: creatorId.toObjectId(),
+        senderId: convertToObjectId(userId.toString()),
+        receiverId:  convertToObjectId(creatorId.toString()),
         text: userName + ' has just ' + str + ' your task tagging.',        // 2 ways, server fetch project name and link, or client fetch project name and link
         rsvpType: 'system-notification',
-        taskId: taskId.toObjectId()
+        taskId: convertToObjectId(taskId.toString())
     }
 
     rsvpModel.create(responseRSVP, function (err, doc) {

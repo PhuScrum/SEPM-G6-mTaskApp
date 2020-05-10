@@ -84,19 +84,31 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail}) => 
         </View>
     )
 
-    const renderRightAction = (text, color, x, progress) => {
+    const renderMoreAction = (text, color, x, progress) => {
         const trans = progress.interpolate({
             inputRange: [0, 1],
             outputRange: [x, 0],
         });
         const pressHandler = () => {
-            switch (text) {
-                case 'Done':
-                    editTaskHandler(item._id, { completed: !item.completed })
-                case 'More':
-                    onNavigateDetail(item)
-                default:
-            }
+            onNavigateDetail(item)
+        };
+        return (
+            <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
+                <RectButton
+                    style={[styles.rightAction, { backgroundColor: color }]}
+                    onPress={pressHandler}>
+                    <Text style={styles.actionText}>{text}</Text>
+                </RectButton>
+            </Animated.View>
+        );
+    };
+    const renderDoneAction = (text, color, x, progress) => {
+        const trans = progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [x, 0],
+        });
+        const pressHandler = () => {
+            editTaskHandler(item._id, { completed: !item.completed })
         };
         return (
             <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
@@ -110,8 +122,8 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail}) => 
     };
     const renderRightActions = progress => (
         <View style={{ width: 192, flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row' }}>
-            {renderRightAction('More', '#65AEE0', 192, progress)}
-            {renderRightAction('Done', '#4CBB87', 128, progress)}
+            {renderMoreAction('More', '#65AEE0', 192, progress)}
+            {renderDoneAction('Done', '#4CBB87', 128, progress)}
         </View>
     );
 
@@ -124,7 +136,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail}) => 
                     ref={scrollRef}
                     friction={2}
                     leftThreshold={40}
-                    rightThreshold={40}
+                    // rightThreshold={40}
                     renderLeftActions={renderLeftActions}
                     renderRightActions={renderRightActions}
                 >

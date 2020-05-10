@@ -1,26 +1,7 @@
 const itemModel = require('../../../model/item')
 const listModel = require('../../../model/list')
 const mongoose = require('mongoose')
-
-String.prototype.toObjectId = function () {
-    var ObjectId = (mongoose.Types.ObjectId);
-    return new ObjectId(this.toString());
-};
-
 const editTask = (req, res)=>{
-    // req.body.creatorId = req.body.creatorId.toObjectId()
-//    itemModel.findByIdAndUpdate(req.params.id, req.body, (err, doc)=>{
-//         if(!err){
-//             if (req.body.taggedUsers) {
-//                 var taskId = doc._id
-//                 req.body.taskId = taskId
-//                 rsvp_API.notify.addTask(req)
-//             }
-//                 res.json(doc)
-//         }
-//         else
-//             console.log(err)
-//     })
     itemModel.findById(req.params.id, (err, task)=>{
         if (err) console.log(err)
         else{
@@ -38,6 +19,8 @@ const editTask = (req, res)=>{
                     i++
                 }
             }
+
+            
 
             itemModel.updateOne({_id: req.params.id}, req.body, (err,doc)=>{
                 if(err) console.log(err)

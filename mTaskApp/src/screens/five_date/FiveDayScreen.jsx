@@ -236,5 +236,5 @@ const styles = StyleSheet.create({
     }
 })
 
-export default withNavigation(FiveDayScreen)
+export default FiveDayScreen
 
