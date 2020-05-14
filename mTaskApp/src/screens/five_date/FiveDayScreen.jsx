@@ -118,7 +118,7 @@ const FiveDayScreen = (props) => {
    
 
     const addTaskHandler = (taskObj) => {
-        console.log('addTAskHandler: ', taskObj)
+        // console.log('addTAskHandler: ', taskObj)
         handlePushNoti(taskObj)
         setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
         if (taskObj.name.length > 3) {

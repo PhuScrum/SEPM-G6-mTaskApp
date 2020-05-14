@@ -17,6 +17,7 @@ const postTask = (req, res) => {
                 req.body.taskId = taskId
                 rsvp_API.notify.addTask(req)
             }
+            
             res.json(doc)
         }
 

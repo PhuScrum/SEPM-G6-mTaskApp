@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback, createRef, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { StyleSheet, View, AsyncStorage, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, RefreshControl } from 'react-native'
-
+import { StyleSheet, View, AsyncStorage, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, RefreshControl, TouchableOpacity } from 'react-native'
+import RBSheet from "react-native-raw-bottom-sheet";
 import { Layout, Text } from '@ui-kitten/components'
-import { getMyListsAction } from '../../actions/ListActions';
+import { getMyListsAction, addListAction, clearListItemAction } from '../../actions/ListActions';
 import TopNavigationBar from '../five_date/TopNavigationBar';
 import CategoryItem from '../../components/categoryList/CategoryItem';
+import AddList from '../../components/categoryList/AddList';
 
 function wait(timeout) {
     return new Promise(resolve => {
@@ -15,6 +16,7 @@ function wait(timeout) {
 
 const ListScreen = (props) => {
     const dispatch = useDispatch()
+    const refBtnSheet = useRef()
     const lists = useSelector(state => state.listReducer.lists, [])
     const [refreshing, setRefreshing] = useState(false)
 
@@ -30,6 +32,13 @@ const ListScreen = (props) => {
     const getMyLists = async () => {
         let id = await AsyncStorage.getItem('userId')
         dispatch(getMyListsAction(id))
+    }
+
+    const addListHandler = async (listData) =>{
+        await dispatch(addListAction(listData))
+        dispatch(clearListItemAction())
+        onRefresh()
+        refBtnSheet.current.close()
     }
 
     useEffect(() => {
@@ -67,8 +76,33 @@ const ListScreen = (props) => {
                                     <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                                 }
                             />
+
+                            <TouchableOpacity onPress={()=> {
+                                console.log('add list')
+                                refBtnSheet.current.open()
+                            }}>
+                                <View style={styles.btnContainer}>
+                                    <Text style={styles.btnTextStyle}>Add List</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
                     </View>
+                    <RBSheet
+                        ref = {refBtnSheet}
+                        closeOnDragDown
+                        height={350}
+                        customStyles={{
+                            container: {
+                                borderTopLeftRadius: 10,
+                                borderTopRightRadius: 10
+                            }
+                        }}
+                    >
+                         <View style={styles.bottomSheetContainer}>
+                            <Text style={styles.bottomSheetTitle}>Create a new List</Text>
+                            <AddList submitHandler={addListHandler}/>
+                        </View>
+                    </RBSheet>
                 </Layout>
             </>
         </TouchableWithoutFeedback>
@@ -93,4 +127,34 @@ const styles = StyleSheet.create({
         flex: 3,
         padding: 10
     },
+    btnContainer: {
+        marginVertical: 5,
+        paddingVertical: 20,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+        // flex: 1,
+        borderColor: 'black',
+        borderStyle: 'dashed',
+        borderWidth: 1,
+        alignItems: 'center'
+    },
+    btnTextStyle:{
+        fontSize: 16
+
+    },
+    bottomSheetContainer: {
+        flex: 1,
+        paddingVertical: 5,
+        paddingHorizontal: 10
+    },
+    bottomSheetTitle: {
+        fontFamily: 'Lato-Regular',
+        fontWeight: 'bold',
+        fontSize: 18,
+        marginBottom: 5,
+        color: "#666",
+        alignSelf: 'center',
+        padding:10,
+        borderBottomWidth: 1
+    }
 })
