@@ -79,6 +79,7 @@ app.route('/list')
 app.route('/list/:id')
   .put(list_API.crud.editList)
   .delete(list_API.crud.deleteList)
+  .get(list_API.crud.listDetails)
 
 app.route('/get-lists-by-user-id/:id')
   .get(list_API.crud.getListsByUserId)
