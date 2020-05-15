@@ -16,8 +16,10 @@ export default class OnboardingScreen extends Component {
   render() {
     return (
         <Onboarding
-        onSkip={() => this.props.navigation.navigate('Login')}
+        skipToPage={3}
+        //onSkip={() => this.props.navigation.navigate('Login')}
         onDone={() => this.props.navigation.navigate('Login')}
+        transitionAnimationDuration = {300}
         pages={[
           {
             backgroundColor: '#659dea',
