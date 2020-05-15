@@ -24,6 +24,10 @@ const TaskDetail = (props) => {
     const {navigation} = props
     const dispatch = useDispatch()
     const task = useSelector(state => state.taskReducer.taskItem, []);
+
+    const lists = useSelector(state => state.listReducer.lists, [])
+    const [displayLists, setDisplayLists] = useState(false)
+
     const [desc, setDesc] = useState('')
 
     const [refreshing, setRefreshing] = useState(false)
@@ -56,7 +60,8 @@ const TaskDetail = (props) => {
         return unMount
     }, [navigation])
 
-    // console.log(task)
+    console.log(task)
+
 
     return (
         <>
@@ -87,7 +92,10 @@ const TaskDetail = (props) => {
                         <Feather name="sun" size={iconSize} />
                         <TouchableOpacity
                             style={styles.touchableStyle}
-                            onPress={() => console.log('My List')}
+                            onPress={() => {
+                                console.log('My List')
+                                setDisplayLists(!displayLists)
+                            }}
                         >
                             <Text style={styles.textStyle}>Add to My Lists</Text>
                         </TouchableOpacity>
