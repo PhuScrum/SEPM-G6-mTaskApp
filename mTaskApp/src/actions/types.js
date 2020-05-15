@@ -6,6 +6,7 @@ export const ADD_TASK = "ADD_TASK"
 export const EDIT_TASK = "EDIT_TASK"
 export const GET_TASK_ITEM = "GET_TASK_ITEM"
 export const CLEAR_TASK_ITEM = "CLEAR_TASK_ITEM"
+export const DELETE_LIST_FROM_ITEM = "DELETE_LIST_FROM_ITEM"
 
 //Calendar
 export const STORE_DATEHASHMAP = 'STORE_DATEHASHMAP'
