@@ -31,6 +31,7 @@ const ListScreen = (props) => {
 
     const getMyLists = async () => {
         let id = await AsyncStorage.getItem('userId')
+        console.log(id)
         dispatch(getMyListsAction(id))
     }
 
