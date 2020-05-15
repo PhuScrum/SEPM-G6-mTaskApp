@@ -1,25 +1,18 @@
 import {Notifications} from 'expo'
-
+var moment = require('moment')
 const setLocalNotification = async (title, body, time, repeat)=>{
-    var halfAnHour = 1000 * 60 * 30
-    var oneMiniute = 1000 * 60
-    var anHour = 1000* 60
+    var anHour = 1000* 60 * 60
     var remindTime = time - anHour
-    var dateNow = (new Date()).getTime()
-    console.log(time, dateNow)
-    console.log(time.toString().length, dateNow.toString().length)
-    // time must greater than datenow
-    if(time> dateNow)console.log('true')
+    let displayTime = moment(time).format('H:mm a'); 
     var localNotification ={
-            title,
-            body,
+            title: 'A reminder for your task: ' + title,
+            body: 'At ' + displayTime +  '\nClick here to see more',
         }
         var schedulingOptions = {
-            time: time,
+            time: remindTime,
             // repeat,
         }
     var res = await Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
-    console.log(res)
 }
 
 export default setLocalNotification
