@@ -1,11 +1,22 @@
+import { AsyncStorage } from "react-native";
+const moment = require('moment')
   // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/dashboard/notifications
+  /**
+   * userObj: tagged users
+   * taskObj: task data creating.
+   */
   sendPushNotification = async (userObj, taskObj) => {
     var {expoPushToken} = userObj
+    let creator = await AsyncStorage.getItem('user')
+    creator = JSON.parse(creator)
+    console.log('sendPushnotification: ', creator, creator.name)
+    let displayTime = moment(taskObj.dateTime).format('H:mm a')
+
     const message = {
       to: expoPushToken,
       sound: 'default',
-      title: 'Someone tag you in a task.',
-      body: 'Click here to find out!',
+      title: creator.name + ' tag you in a task: ' + taskObj.name,
+      body:  'At ' + displayTime + '\nClick here to find out!',
       data: { data: 'goes here' },
       _displayInForeground: true,
     };

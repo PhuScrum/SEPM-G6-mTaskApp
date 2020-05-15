@@ -119,9 +119,11 @@ const FiveDayScreen = (props) => {
 
     const addTaskHandler = (taskObj) => {
         console.log('addTAskHandler: ', taskObj)
-        handlePushNoti(taskObj)
-        setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
+       
         if (taskObj.name.length > 3) {
+            handlePushNoti(taskObj)
+            setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
+            
             dispatch(addTaskAction(taskObj))
             dispatch(clearSelectedAction())
             onRefresh()
