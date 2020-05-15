@@ -104,12 +104,11 @@ const FiveDayScreen = (props) => {
     }
     
     const setUpSendingPush = async (userObj, taskObj)=>{
-        var {expoPushToken} = userObj
         let creator = await AsyncStorage.getItem('user')
         creator = JSON.parse(creator)
-        console.log('sendPushnotification: ', creator, creator.name)
         let displayTime = moment(taskObj.dateTime).format('H:mm a')
         
+        var {expoPushToken} = userObj
         let title = creator.name + ' tag you in a task: ' + taskObj.name
         let body = 'At ' + displayTime + '\nClick here to find out!'
         sendPushNotification(expoPushToken, title, body)
