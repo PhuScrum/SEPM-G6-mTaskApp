@@ -3,6 +3,9 @@ import { StyleSheet, Text, View, AsyncStorage, ActivityIndicator } from 'react-n
 import BottomNavBar from './BottomNavBar'
 import Login from '../../screens/loginPage/Login'
 import { createStackNavigator } from '@react-navigation/stack';
+import OnboardingScreen from '../../screens/loginPage/Onboarding'
+
+
 const Stack = createStackNavigator();
 
 export default class MTaskApp extends Component {
@@ -41,9 +44,10 @@ export default class MTaskApp extends Component {
         
         
         return (
-            <Stack.Navigator headerMode='none' initialRouteName={this.state.isLoggedIn !== 'true'? "Login" : "MainApp"} >
+            <Stack.Navigator headerMode='none' initialRouteName={this.state.isLoggedIn !== 'true'? "Onboarding" : "MainApp"} >
                     <Stack.Screen name="Login" component={Login} />
                     <Stack.Screen name="MainApp" component={BottomNavBar} />
+                    <Stack.Screen name="Onboarding" component={OnboardingScreen} />
              </Stack.Navigator>
             // <BottomNavBar/>
         )
