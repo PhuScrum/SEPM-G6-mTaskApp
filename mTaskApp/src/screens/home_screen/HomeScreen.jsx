@@ -3,7 +3,8 @@ import FiveDayScreen from '../five_date/FiveDayScreen'
 import CalendarOverviewScreen from '../calendar_overview/CalendarOverviewScreen'
 import { createStackNavigator } from '@react-navigation/stack';
 import DoneListScreen from '../doneList/DoneListScreen';
-import TaskDetail from '../task_detail/TaskDetail';
+import TaskDetail from '../five_date/TaskDetail';
+import ListDetail from '../categoryList/ListDetail';
 const Stack = createStackNavigator();
 
 export default class HomeScreen extends Component {

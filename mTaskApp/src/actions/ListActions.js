@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as url from '../constants/url/url'
-import { GET_LIST, GET_MY_LIST, GET_LIST_ITEM, DELETE_LIST, ADD_LIST, EDIT_LIST, CLEAR_LIST_ITEM } from './types';
+import { GET_LIST, GET_MY_LIST, GET_LIST_ITEM, DELETE_LIST, ADD_LIST, EDIT_LIST, CLEAR_LIST_ITEM, DELETE_TASK_FROM_LIST } from './types';
 
 //get all lists
 export const getListAction = () => async dispatch => {
@@ -71,4 +71,16 @@ export const clearListItemAction = () => dispatch => {
     dispatch({
         type: CLEAR_LIST_ITEM
     })
+}
+
+//remove task from list
+export const deleteTaskFromListAction = (id,data) => async dispatch => {
+    axios.put(url.delTaskFromList + '/' + id, data)
+        .then(res=>{
+            dispatch({
+                type: DELETE_TASK_FROM_LIST,
+                payload: res.data
+            })
+        })
+        .catch(err => console.log(err))
 }

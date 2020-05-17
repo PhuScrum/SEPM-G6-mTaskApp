@@ -1,4 +1,4 @@
-import { GET_LIST, GET_MY_LIST, GET_LIST_ITEM, DELETE_LIST, ADD_LIST, EDIT_LIST, CLEAR_LIST_ITEM } from "../actions/types"
+import { GET_LIST, GET_MY_LIST, GET_LIST_ITEM, DELETE_LIST, ADD_LIST, EDIT_LIST, CLEAR_LIST_ITEM, DELETE_TASK_FROM_LIST } from "../actions/types"
 
 const initialState = {
     lists: [],
@@ -19,6 +19,8 @@ const reducer = (state = initialState, action) => {
             return {...state}
         case EDIT_LIST:
             return {...state}
+        case DELETE_TASK_FROM_LIST:
+            return {...state, listItem: action.payload}
         case CLEAR_LIST_ITEM:
             return {...state, listItem:{}}
         default:

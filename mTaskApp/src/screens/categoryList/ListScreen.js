@@ -3,10 +3,16 @@ import { useSelector, useDispatch } from 'react-redux'
 import { StyleSheet, View, AsyncStorage, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, RefreshControl, TouchableOpacity } from 'react-native'
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Layout, Text } from '@ui-kitten/components'
-import { getMyListsAction, addListAction, clearListItemAction } from '../../actions/ListActions';
+import { getMyListsAction, addListAction, clearListItemAction, deleteListAction, getListItemAction } from '../../actions/ListActions';
 import TopNavigationBar from '../five_date/TopNavigationBar';
 import CategoryItem from '../../components/categoryList/CategoryItem';
 import AddList from '../../components/categoryList/AddList';
+
+import { withNavigation } from 'react-navigation';
+import { createStackNavigator } from '@react-navigation/stack';
+import ListDetail from './ListDetail';
+
+const Stack = createStackNavigator();
 
 function wait(timeout) {
     return new Promise(resolve => {
@@ -42,6 +48,23 @@ const ListScreen = (props) => {
         refBtnSheet.current.close()
     }
 
+    const editListHandler = (id, data) => {
+        console.log('Edit')
+        console.log(id)
+        
+    }
+
+    const onNavigateDetail = async (id) => {
+        console.log('Navigate to: ' + id)
+        await dispatch(getListItemAction(id))
+        props.navigation.navigate('ListDetail')
+    }
+
+    const onDeleteHandler = async (id) => {
+        await dispatch(deleteListAction(id))
+        onRefresh()
+    }
+
     useEffect(() => {
         const unsubscribe = props.navigation.addListener('focus', () => {
             getMyLists()
@@ -51,7 +74,7 @@ const ListScreen = (props) => {
 
     //Define List Elems
     const renderItem = ({ item }) => (
-        <CategoryItem item={item} />
+        <CategoryItem item={item} onNavigateDetail={onNavigateDetail} onDeleteHandler={onDeleteHandler} editListHandler={editListHandler}  />
     )
 
     // console.log(lists)
@@ -109,6 +132,8 @@ const ListScreen = (props) => {
         </TouchableWithoutFeedback>
     )
 }
+
+
 
 export default ListScreen
 

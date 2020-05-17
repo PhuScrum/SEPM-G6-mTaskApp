@@ -1,20 +1,80 @@
-import React, {createRef} from 'react'
-import { StyleSheet, View } from 'react-native'
+import React, { createRef } from 'react'
+import { StyleSheet, View, I18nManager, Animated } from 'react-native'
+import { RectButton, TouchableOpacity } from 'react-native-gesture-handler';
 import { Layout, Text } from '@ui-kitten/components'
 import { Ionicons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
-const CategoryItem = ({ item }) => {
+const CategoryItem = ({ item, onNavigateDetail, onDeleteHandler, editListHandler }) => {
     const scrollRef = createRef()
 
-    const renderLeftAction = () => {
+    // const renderLeftActions = () => {
+    //     return (
+    //         <>
+    //         </>
+    //     )
+    // }
 
+    const renderRightActions = (progress) => {
+        const renderMoreAction = (text, color, x, progress) => {
+            const trans = progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [x, 0],
+            });
+            const pressHandler = () => {
+                onNavigateDetail(item._id)
+            };
+            return (
+                <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
+                    <RectButton
+                        style={[styles.rightAction, { backgroundColor: color }]}
+                        onPress={pressHandler}>
+                        <Text style={styles.actionText}>{text}</Text>
+                    </RectButton>
+                </Animated.View>
+            );
+        }
+
+        const renderDelAction = (text, color, x, progress) => {
+            const trans = progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [x, 0],
+            });
+            const pressHandler = () => {
+                onDeleteHandler(item._id)
+            };
+            return (
+                <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
+                    <RectButton
+                        style={[styles.rightAction, { backgroundColor: color }]}
+                        onPress={pressHandler}>
+                        <Text style={styles.actionText}>{text}</Text>
+                    </RectButton>
+                </Animated.View>
+            );
+        }
+
+        return (
+            <View style={{ width: 192, flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row' }}>
+                {renderMoreAction('More', '#65AEE0', 192, progress)}
+                {renderDelAction('Delete', '#EE001D', 128, progress)}
+            </View>
+        )
     }
+
 
     return (
         <Swipeable
             ref={scrollRef}
+            friction={2}
+            leftThreshold={40}
+            // rightThreshold={40}
+            // renderLeftActions={renderLeftActions}
+            renderRightActions={renderRightActions}
         >
+            <TouchableOpacity
+                onPress={()=>onNavigateDetail(item._id)}
+            >
             <Layout style={styles.container}>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -26,6 +86,7 @@ const CategoryItem = ({ item }) => {
 
                 </View>
             </Layout>
+            </TouchableOpacity>
         </Swipeable>
     )
 }
@@ -39,5 +100,20 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 5,
         flex: 1
-    }
+    },
+    actionText: {
+        color: 'white',
+        fontSize: 16,
+        backgroundColor: 'transparent',
+        padding: 10,
+    },
+    rightAction: {
+        marginVertical: 5,
+        paddingVertical: 15,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
+    },
 })

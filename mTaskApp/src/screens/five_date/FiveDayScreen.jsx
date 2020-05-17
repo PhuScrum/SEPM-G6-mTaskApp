@@ -103,7 +103,6 @@ const FiveDayScreen = (props) => {
         onRefresh()
     }
     
-
     const handlePushNoti = (taskObj)=>{
         var taggedUsers = taskObj.taggedUsers
         if(taggedUsers.length >=1){
@@ -113,9 +112,7 @@ const FiveDayScreen = (props) => {
                 sendPushNotification(userObj, taskObj)
             }
         }       
-    }
-
-   
+    }  
 
     const addTaskHandler = (taskObj) => {
         console.log('addTAskHandler: ', taskObj)
@@ -133,8 +130,8 @@ const FiveDayScreen = (props) => {
         }
     }
 
-    const onNavigateDetail = (item) => {
-        dispatch(getTaskItemAction(item._id))
+    const onNavigateDetail = (id) => {
+        dispatch(getTaskItemAction(id))
         .then(()=>props.navigation.navigate('TaskDetail'))
     }
 

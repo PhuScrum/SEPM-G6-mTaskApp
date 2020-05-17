@@ -6,12 +6,12 @@ import HomeScreen from '../../screens/home_screen/HomeScreen';
 import ProfileScreen from '../../screens/userProfile/Profile';
 import NotificationScreen from '../../screens/notification/NotificationScreen'
 import NotificationListing from '../../screens/notification/NotificationListing'
-import ListScreen from '../../screens/categoryList/ListScreen';
 import registerForPushNotificationsAsync from '../push_notification/API/register-for-push-notification'
 import { Notifications } from 'expo';
 import Constants from 'expo-constants';
 import {  View, Button, Vibration, Platform, SafeAreaView } from 'react-native';
 import * as Permissions from 'expo-permissions';
+import ListScreenStack from '../../screens/categoryList/ListScreenStack';
 const BottomTab = createBottomTabNavigator();
 
 const PersonIcon = (style) => (
@@ -51,7 +51,7 @@ const BottomTabBar = ({ navigation, state }) => {
 
 const TabNavigator = () => (
     <BottomTab.Navigator tabBar={props => <BottomTabBar {...props} />}>
-        <BottomTab.Screen name='List' component={ListScreen} />
+        <BottomTab.Screen name='List' component={ListScreenStack} />
         <BottomTab.Screen name='Home' component={HomeScreen} />
 
         <BottomTab.Screen name='Notifications' component={NotificationListing} />
