@@ -12,9 +12,9 @@ const TaskLists = ({ propStyle, saveList, id, taskLists, removeList }) => {
     const refRBSheet = useRef();
     const lists = useSelector(state => state.listReducer.lists, [])
 
-    const listId = (taskLists && taskLists.length !==0) ? taskLists.map(list=>list._id) : []
+    const listId = (taskLists && taskLists.length !== 0) ? taskLists.map(list => list._id) : []
 
-    const displayTitle = (taskLists && taskLists.length !==0) ? 'Added to My Lists' : 'Add to My Lists'
+    const displayTitle = (taskLists && taskLists.length !== 0) ? 'Added to My Lists' : 'Add to My Lists'
 
     const RenderItem = ({ item }) => {
         const listData = {
@@ -22,7 +22,7 @@ const TaskLists = ({ propStyle, saveList, id, taskLists, removeList }) => {
         }
 
         const removeListData = {
-            listId : item._id
+            listId: item._id
         }
 
         return (
@@ -34,16 +34,16 @@ const TaskLists = ({ propStyle, saveList, id, taskLists, removeList }) => {
                             <TouchableOpacity
                                 onPress={() => {
                                     console.log(removeListData)
-                                    removeList(id,removeListData)
+                                    removeList(id, removeListData)
                                 }}
                             >
                                 <Feather name="check" size={24} color="black" />
                             </TouchableOpacity>
-                            ) : (
+                        ) : (
                                 <TouchableOpacity
                                     onPress={() => {
                                         console.log(listData)
-                                        saveList(id,listData)
+                                        saveList(id, listData)
                                     }}
                                 >
                                     <Feather name="plus" size={24} color="black" />
@@ -72,7 +72,7 @@ const TaskLists = ({ propStyle, saveList, id, taskLists, removeList }) => {
             <RBSheet
                 ref={refRBSheet}
                 closeOnDragDown={false}
-                // closeOnPressBack
+                closeOnPressBack
                 height={350}
                 customStyles={{
                     container: {
@@ -90,19 +90,14 @@ const TaskLists = ({ propStyle, saveList, id, taskLists, removeList }) => {
                         <Text style={headerStyle.headerButtonCancel}>Cancel</Text>
                     </TouchableOpacity>
                 </View>
-                {/* <View style={styles.listContainer}>
-                    <FlatList
-                        data={lists}
-                        renderItem={renderItem}
-                        keyExtractor={list => list._id}
-                    />
-                </View> */}
-                <ScrollView 
-                alwaysBounceVertical={true}
+
+                <ScrollView
+                    alwaysBounceVertical={true}
                     style={styles.listContainer}
                     nestedScrollEnabled={true}
+                    contentContainerStyle={styles.contentContainer}
                 >
-                    {lists.map(item => <RenderItem key={item._id} item={item}/>)}
+                    {lists.map(item => <RenderItem key={item._id} item={item} />)}
                 </ScrollView>
 
             </RBSheet>
@@ -122,9 +117,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
     listContainer: {
-        padding: 25,
+        paddingHorizontal: 25,
         // flexWrap:'wrap'
-        
+
     },
     itemContainerStyle: {
         backgroundColor: '#EDF1F7',
@@ -132,5 +127,9 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 15,
         borderRadius: 15
+    },
+    contentContainer: {
+        paddingTop: 5,
+        paddingBottom: 30
     }
 })

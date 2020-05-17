@@ -11,6 +11,7 @@ import AddList from '../../components/categoryList/AddList';
 import { withNavigation } from 'react-navigation';
 import { createStackNavigator } from '@react-navigation/stack';
 import ListDetail from './ListDetail';
+import TopNavigationBarList from './TopNavigationBarList';
 
 const Stack = createStackNavigator();
 
@@ -87,7 +88,7 @@ const ListScreen = (props) => {
             }}
         >
             <>
-                <TopNavigationBar {...props} />
+                <TopNavigationBarList {...props} isDisplayDoneButton={false} />
                 <Layout style={styles.container}>
                     <View style={styles.list}>
                         <Text category='h1'>My Lists</Text>

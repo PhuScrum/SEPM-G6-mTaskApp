@@ -7,7 +7,7 @@ import { list } from '../../constants/url/url'
 import { FlatList } from 'react-native-gesture-handler'
 import { getListItemAction, deleteTaskFromListAction } from '../../actions/ListActions'
 import TaskItem from '../../components/tasks/TaskItem'
-import { getTaskItemAction, addTaskAction } from '../../actions/TaskAction'
+import { getTaskItemAction, addTaskAction, editTaskAction } from '../../actions/TaskAction'
 import AddToDoButton from '../../components/tasks/AddTaskButton'
 import sendPushNotification from '../../components/push_notification/API/send-push-notification'
 import setLocalNotification from '../../components/push_notification/API/set-local-notification'
@@ -15,6 +15,7 @@ import { clearSelectedAction } from '../../actions/tag-members-actions'
 
 import RBSheet from "react-native-raw-bottom-sheet";
 import AddTask from '../../components/tasks/AddTask'
+import TopNavigationBarList from './TopNavigationBarList'
 
 function wait(timeout) {
     return new Promise(resolve => {
@@ -27,6 +28,7 @@ const ListDetail = (props) => {
     const dispatch = useDispatch()
     const listItem = useSelector(state => state.listReducer.listItem)
     const tasks = listItem.items ? listItem.items : []
+    const completedTasks = tasks.filter(task=>task.completed === false)
     const [refreshing, setRefreshing] = useState(false)
 
     const onRefresh = useCallback(() => {
@@ -44,7 +46,7 @@ const ListDetail = (props) => {
             taskId: id
         }
         await dispatch(deleteTaskFromListAction(listID, removeTaskData))
-        // onRefresh()
+        onRefresh()
     }
 
     const editTaskHandler = (id, data) => {
@@ -96,15 +98,21 @@ const ListDetail = (props) => {
         />
     )
 
+    const onNavigateDoneDetail = () => {
+        console.log('Navigate')
+        props.navigation.navigate('DoneTasksByList')
+
+    }
+
     return (
         <>
-            <TopNavigationBar {...props} withBackControl={true} />
+            <TopNavigationBarList {...props} withBackControl={true} isDisplayDoneButton={true} onNavigateDoneDetail={onNavigateDoneDetail}/>
             <Layout style={styles.container}>
                 <View style={styles.list}>
                     <Text category='h1'>{listItem.name}</Text>
                     <View style={styles.gridView}>
                         <FlatList
-                            data={tasks}
+                            data={completedTasks}
                             keyExtractor={task=>task._id}
                             renderItem={renderItem}
                             refreshControl = {

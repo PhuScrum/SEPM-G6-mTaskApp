@@ -143,12 +143,7 @@ export default class DoneListScreen extends Component {
             return acc
         }, [])
 
-
-
-
-
         return (
-
 
             <Layout style={{ paddingTop: 16, paddingBottom: 0 }}>
                 <View style={{ marginVertical: 10, borderBottomColor: 'black' }}>
