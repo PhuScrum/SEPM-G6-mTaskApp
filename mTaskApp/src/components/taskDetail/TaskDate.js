@@ -16,6 +16,7 @@ const combineDateTime = (date, time) => {
 }
 
 const TaskDate = ({dateTime, id, saveDateTime, propStyle}) => {
+    const {headerStyle} = propStyle
     const refRBSheet = useRef();
 
     const [showDatePicker, setShowDatePicker] = useState(false)
@@ -56,21 +57,21 @@ const TaskDate = ({dateTime, id, saveDateTime, propStyle}) => {
                     height={300}
                     ref={refRBSheet}
                 >
-                    <View style={styles.dateHeaderContainer}>
+                    <View style={headerStyle.headerContainer}>
                         <TouchableOpacity
                             onPress={() => refRBSheet.current.close()}
-                            style={styles.dateHeaderButton}
+                            style={headerStyle.headerButton}
                         >
-                            <Text style={styles.dateHeaderButtonCancel}>Cancel</Text>
+                            <Text style={headerStyle.headerButtonCancel}>Cancel</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => {
                                 refRBSheet.current.close()
                                 saveDateTime(id, taskDateTime)
                             }}
-                            style={[styles.dateHeaderButton]}
+                            style={[headerStyle.headerButton]}
                         >
-                            <Text style={styles.dateHeaderButtonDone}>Done</Text>
+                            <Text style={headerStyle.headerButtonDone}>Done</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={[styles.inputGroup, { flexDirection: 'row', flex: 1}]}>

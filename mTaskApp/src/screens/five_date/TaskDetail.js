@@ -1,9 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { View, StyleSheet, TouchableHighlight, TouchableOpacity, AsyncStorage } from 'react-native'
 import { Layout, Text, Icon, TopNavigation, TopNavigationAction } from '@ui-kitten/components';
-import TopNavigationBar from '../five_date/TopNavigationBar'
+import TopNavigationBar from './TopNavigationBar'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons';
+// import ModalDropdown from 'react-native-modal-dropdown';
 
 import moment from 'moment-timezone'
 
@@ -11,8 +12,9 @@ import TaskDate from '../../components/taskDetail/TaskDate'
 import TagUser from '../../components/taskDetail/TagUser';
 
 import {clearSelectedAction} from '../../actions/tag-members-actions'
-import {clearTaskItemAction} from '../../actions/TaskAction'
+import {clearTaskItemAction, deleteListFromItemAction} from '../../actions/TaskAction'
 import { editTaskAction, getTaskItemAction, getMyTasksAction } from '../../actions/TaskAction';
+import TaskLists from '../../components/taskDetail/TaskLists';
 
 function wait(timeout) {
     return new Promise(resolve => {
@@ -48,6 +50,11 @@ const TaskDetail = (props) => {
         .then(onRefresh)
     }
 
+    const removeListHandler = (id, data) => {
+        dispatch(deleteListFromItemAction(id, data))
+        .then(onRefresh)
+    }
+
     useEffect(() => {
         const unMount = navigation.addListener('blur',() => {
             dispatch(clearSelectedAction())
@@ -56,11 +63,12 @@ const TaskDetail = (props) => {
         return unMount
     }, [navigation])
 
-    console.log(task)
+    // console.log(task.listId)
+
 
     return (
         <>
-            <TopNavigationBar {...props} withBackControl={'true'}/>
+            <TopNavigationBar {...props} withBackControl={true}/>
             <Layout style={styles.container} >
                 <View style={{ marginBottom: 60 }}>
                     <View style={styles.headerStyle}>
@@ -80,17 +88,11 @@ const TaskDetail = (props) => {
                     </View>
                 </View>
 
-                <TaskDate dateTime={task.dateTime} saveDateTime={editTaskHandler} id={task._id} propStyle={{borderStyle: borderStyle, iconSize: iconSize}} />
+                <TaskDate dateTime={task.dateTime} saveDateTime={editTaskHandler} id={task._id} propStyle={propStyle} />
 
                 <View style={[styles.otherStyle, styles.borderStyle]}>
                     <View style={styles.itemStyle}>
-                        <Feather name="sun" size={iconSize} />
-                        <TouchableOpacity
-                            style={styles.touchableStyle}
-                            onPress={() => console.log('My List')}
-                        >
-                            <Text style={styles.textStyle}>Add to My Lists</Text>
-                        </TouchableOpacity>
+                        <TaskLists taskLists = {task.listId} propStyle={propStyle} saveList={editTaskHandler} removeList={removeListHandler} id={task._id}/>
                     </View>
                     <View style={styles.itemStyle}>
                         <Feather name="repeat" size={iconSize} />
@@ -112,7 +114,7 @@ const TaskDetail = (props) => {
                     </View>
                 </View>
                 
-                <TagUser isSaveTag={true} propStyle={{borderStyle: borderStyle, iconSize: iconSize}} tagType={'input'} id={task._id} saveTagUser={editTaskHandler} />
+                <TagUser isSaveTag={true} propStyle={propStyle} tagType={'input'} id={task._id} saveTagUser={editTaskHandler} />
 
                 <View style={[styles.descStyle, styles.borderStyle]}>
                     <View style={styles.descInputStyle}>
@@ -132,6 +134,33 @@ const borderStyle = {
     borderBottomColor: '#D1D5D8',
     borderBottomWidth: 1
 }
+const headerStyle = {
+    headerContainer: {
+        height: 45,
+        borderBottomWidth: 1,
+        borderColor: "#ccc",
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    headerButton: {
+        height: "100%",
+        paddingHorizontal: 20,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    headerButtonCancel: {
+        fontSize: 18,
+        color: "#666",
+        fontWeight: "400"
+    },
+    headerButtonDone: {
+        fontSize: 18,
+        color: "#006BFF",
+        fontWeight: "500"
+    },
+}
+
+const propStyle={borderStyle: borderStyle, iconSize: iconSize, headerStyle: headerStyle}
 
 const styles = StyleSheet.create({
     container: {

@@ -84,13 +84,11 @@ const FiveDayScreen = (props) => {
     const dispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false)
 
-    const onRefresh = useCallback(() => {
+    const onRefresh = useCallback( () => {
         setRefreshing(true);
-        wait(600)
-        .then(() => {
-            getMyTasks()
+             getMyTasks()
             setRefreshing(false)
-        })
+        
     }, [refreshing]);
 
     const deleteHandler = (id) => {
@@ -122,9 +120,7 @@ const FiveDayScreen = (props) => {
                 setUpSendingPush(userObj, taskObj)
             }
         }       
-    }
-
-   
+    }  
 
     const addTaskHandler = async (taskObj) => {
         console.log('addTAskHandler: ', taskObj)
@@ -145,8 +141,8 @@ const FiveDayScreen = (props) => {
         }
     }
 
-    const onNavigateDetail = (item) => {
-        dispatch(getTaskItemAction(item._id))
+    const onNavigateDetail = (id) => {
+        dispatch(getTaskItemAction(id))
         .then(()=>props.navigation.navigate('TaskDetail'))
     }
 

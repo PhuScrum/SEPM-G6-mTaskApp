@@ -1,4 +1,4 @@
-import { GET_TASKS, DELETE_TASK, ADD_TASK, EDIT_TASK, GET_MY_TASKS, GET_TASK_ITEM, CLEAR_TASK_ITEM } from './types'
+import { GET_TASKS, DELETE_TASK, ADD_TASK, EDIT_TASK, GET_MY_TASKS, GET_TASK_ITEM, CLEAR_TASK_ITEM, DELETE_LIST_FROM_ITEM } from './types'
 import axios from 'axios';
 import _ from 'lodash'
 import moment from 'moment-timezone'
@@ -50,15 +50,9 @@ export const deleteTaskAction = (id) => async dispatch => {
 
 //add new Task
 export const addTaskAction = (data) => async dispatch => {
-    axios.post(url.tasks, data)
-        .then(res => {
-            dispatch({
-                type: ADD_TASK,
-                payload: res.data
-            })
-        })
-        // .then(res=>dispatch(getTasksAction))
-        .catch(err => console.log(err))
+    var resp = await axios.post(url.tasks, data)
+    dispatch({type: ADD_TASK, payload: resp.data})
+       
 }
 
 //edit Task
@@ -72,6 +66,20 @@ export const editTaskAction = (id, data) => async dispatch => {
         })
         // .then(res => dispatch(getTasksAction))
         .catch(err => console.log(err))
+}
+
+//delete list from task
+export const deleteListFromItemAction = (id, data) => async dispatch => {
+    axios.put(url.delListFromTask + '/' + id, data)
+        .then(res=>{
+            dispatch({
+                type: DELETE_LIST_FROM_ITEM,
+                payload: res.data
+            })
+        })
+        .catch(err => console.log(err))
+    // console.log(url.delListFromTask + '/' + id)
+    // console.log(data)
 }
 
 //clear task item
