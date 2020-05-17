@@ -63,7 +63,7 @@ const TaskDetail = (props) => {
         return unMount
     }, [navigation])
 
-    console.log(task.listId)
+    // console.log(task.listId)
 
 
     return (

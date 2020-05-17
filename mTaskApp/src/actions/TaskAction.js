@@ -76,7 +76,7 @@ export const editTaskAction = (id, data) => async dispatch => {
 
 //delete list from task
 export const deleteListFromItemAction = (id, data) => async dispatch => {
-    axios.put(url.delListFromTask + '/', data)
+    axios.put(url.delListFromTask + '/' + id, data)
         .then(res=>{
             dispatch({
                 type: DELETE_LIST_FROM_ITEM,
@@ -84,6 +84,8 @@ export const deleteListFromItemAction = (id, data) => async dispatch => {
             })
         })
         .catch(err => console.log(err))
+    // console.log(url.delListFromTask + '/' + id)
+    // console.log(data)
 }
 
 //clear task item

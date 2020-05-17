@@ -1,21 +1,32 @@
-import React from 'react'
+import React, {createRef} from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Layout, Text } from '@ui-kitten/components'
 import { Ionicons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 const CategoryItem = ({ item }) => {
-    return (
-        <Layout style={styles.container}>
-            <View style={{ flexDirection: 'row' }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                    <Feather name="list" size={24} />
-                    <View style={{ paddingHorizontal: 12 }}>
-                        <Text category="h6">{item.name}</Text>
-                    </View>
-                </View>
+    const scrollRef = createRef()
 
-            </View>
-        </Layout>
+    const renderLeftAction = () => {
+
+    }
+
+    return (
+        <Swipeable
+            ref={scrollRef}
+        >
+            <Layout style={styles.container}>
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                        <Feather name="list" size={24} />
+                        <View style={{ paddingHorizontal: 12 }}>
+                            <Text category="h6">{item.name}</Text>
+                        </View>
+                    </View>
+
+                </View>
+            </Layout>
+        </Swipeable>
     )
 }
 

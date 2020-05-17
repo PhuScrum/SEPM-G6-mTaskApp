@@ -93,13 +93,39 @@ const AddTask = ({ submitHandler }) => {
             </View>
 
             <View style={{ paddingTop: 8, flex: 1 }}>
-                <TagUser tagType={'button'} isSaveTag={false} />
+                <TagUser propStyle={{headerStyle: headerStyle}} tagType={'button'} isSaveTag={false} />
             </View>
             <View style={{ paddingTop: 8, flex: 1 }}>
                 <Button style={styles.submitButton} onPress={() => submitHandler(taskData)}>Add</Button>
             </View>
         </View>
     )
+}
+
+const headerStyle = {
+    headerContainer: {
+        height: 45,
+        borderBottomWidth: 1,
+        borderColor: "#ccc",
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    headerButton: {
+        height: "100%",
+        paddingHorizontal: 20,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    headerButtonCancel: {
+        fontSize: 18,
+        color: "#666",
+        fontWeight: "400"
+    },
+    headerButtonDone: {
+        fontSize: 18,
+        color: "#006BFF",
+        fontWeight: "500"
+    },
 }
 
 const styles = StyleSheet.create({
