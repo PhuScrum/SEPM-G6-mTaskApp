@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import ListScreen from './ListScreen';
 import ListDetail from './ListDetail';
+import TaskDetail from '../five_date/TaskDetail';
 
 const Stack = createStackNavigator();
 
@@ -11,6 +12,7 @@ export default class ListScreenStack extends Component {
             <Stack.Navigator headerMode='none' initialRouteName='Home'>
                 <Stack.Screen name="Home" component={ListScreen}/>
                 <Stack.Screen name="ListDetail" component={ListDetail}/>
+                <Stack.Screen name="TaskDetail" component={TaskDetail}/>
             </Stack.Navigator>
         )
     }

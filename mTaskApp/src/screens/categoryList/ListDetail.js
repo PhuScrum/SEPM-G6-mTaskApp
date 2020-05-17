@@ -7,6 +7,7 @@ import { list } from '../../constants/url/url'
 import { FlatList } from 'react-native-gesture-handler'
 import { getListItemAction, deleteTaskFromListAction } from '../../actions/ListActions'
 import TaskItem from '../../components/tasks/TaskItem'
+import { getTaskItemAction } from '../../actions/TaskAction'
 
 function wait(timeout) {
     return new Promise(resolve => {
@@ -38,12 +39,14 @@ const ListDetail = (props) => {
         onRefresh()
     }
 
-    const editTaskHandler = () => {
-
+    const editTaskHandler = (id, data) => {
+        dispatch(editTaskAction(id, data))
+        onRefresh()
     }
 
-    const onNavigateDetail = () => {
-
+    const onNavigateDetail = (id) => {
+        dispatch(getTaskItemAction(id))
+        .then(()=>props.navigation.navigate('TaskDetail'))
     }
     
     const renderItem = ({item, index}) => (
