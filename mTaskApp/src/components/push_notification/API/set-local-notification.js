@@ -12,7 +12,8 @@ const setLocalNotification = async (title, body, time, repeat)=>{
             time: remindTime,
             // repeat,
         }
-    var res = await Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+    var notificationId = await Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+    return notificationId
 }
 
 export default setLocalNotification
