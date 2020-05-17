@@ -50,15 +50,9 @@ export const deleteTaskAction = (id) => async dispatch => {
 
 //add new Task
 export const addTaskAction = (data) => async dispatch => {
-    axios.post(url.tasks, data)
-        .then(res => {
-            dispatch({
-                type: ADD_TASK,
-                payload: res.data
-            })
-        })
-        // .then(res=>dispatch(getTasksAction))
-        .catch(err => console.log(err))
+    var resp = await axios.post(url.tasks, data)
+    dispatch({type: ADD_TASK, payload: resp.data})
+       
 }
 
 //edit Task

@@ -26,26 +26,24 @@ function wait(timeout) {
 const ListDetail = (props) => {
     const refBottomSheet = useRef();
     const dispatch = useDispatch()
-    const listItem = useSelector(state => state.listReducer.listItem)
+    const listItem = useSelector(state => state.listReducer.listItem, [])
     const tasks = listItem.items ? listItem.items : []
     const completedTasks = tasks.filter(task=>task.completed === false)
     const [refreshing, setRefreshing] = useState(false)
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        wait(600)
-            .then(() => {
                 dispatch(getListItemAction(listItem._id))
-                .then(setRefreshing(false))
-            })
+                setRefreshing(false)
+            
     }, [refreshing])
 
-    const deleteHandler = async (id) => {
+    const deleteHandler =  (id) => {
         const listID = listItem._id
         const removeTaskData = {
             taskId: id
         }
-        await dispatch(deleteTaskFromListAction(listID, removeTaskData))
+        dispatch(deleteTaskFromListAction(listID, removeTaskData))
         onRefresh()
     }
 

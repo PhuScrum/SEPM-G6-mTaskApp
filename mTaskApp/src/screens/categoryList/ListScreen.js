@@ -29,11 +29,10 @@ const ListScreen = (props) => {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        wait(600)
-            .then(() => {
+        
                 getMyLists()
                 setRefreshing(false)
-            })
+        
     }, [refreshing]);
 
     const getMyLists = async () => {

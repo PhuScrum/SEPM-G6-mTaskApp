@@ -84,13 +84,11 @@ const FiveDayScreen = (props) => {
     const dispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false)
 
-    const onRefresh = useCallback(() => {
+    const onRefresh = useCallback( () => {
         setRefreshing(true);
-        wait(600)
-        .then(() => {
-            getMyTasks()
+             getMyTasks()
             setRefreshing(false)
-        })
+        
     }, [refreshing]);
 
     const deleteHandler = (id) => {
