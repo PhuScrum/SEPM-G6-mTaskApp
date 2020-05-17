@@ -26,12 +26,10 @@ export default class MTaskApp extends Component {
           this.setState({isLoadding: false});
     
           //alert(status)
-         
         }catch(error){
           alert(error);
         }
       }
-
     
     render() {
         if(this.state.isLoadding) {
@@ -41,15 +39,17 @@ export default class MTaskApp extends Component {
               </View>
             )
           }else{
-        
-        
         return (
-            <Stack.Navigator headerMode='none' initialRouteName={this.state.isLoggedIn !== 'true'? "Onboarding" : "MainApp"} >
+          
+            <Stack.Navigator screenOptions={({ route, navigation }) => ({
+              gestureEnabled: false,
+            })}headerMode='none' initialRouteName={this.state.isLoggedIn !== 'true'? "Onboarding" : "MainApp"} >
                     <Stack.Screen name="Login" component={Login} />
                     <Stack.Screen name="MainApp" component={BottomNavBar} />
                     <Stack.Screen name="Onboarding" component={OnboardingScreen} />
              </Stack.Navigator>
             // <BottomNavBar/>
+           
         )
         } 
     }
