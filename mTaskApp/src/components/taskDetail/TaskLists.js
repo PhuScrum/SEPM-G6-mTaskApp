@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { Ionicons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons';
 
 import RBSheet from "react-native-raw-bottom-sheet";
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, ScrollView } from 'react-native-gesture-handler';
 
 const TaskLists = ({ propStyle, saveList, id, taskLists, removeList }) => {
     const { headerStyle } = propStyle
@@ -16,7 +16,7 @@ const TaskLists = ({ propStyle, saveList, id, taskLists, removeList }) => {
 
     const displayTitle = (taskLists && taskLists.length !==0) ? 'Added to My Lists' : 'Add to My Lists'
 
-    const renderItem = ({ item }) => {
+    const RenderItem = ({ item }) => {
         const listData = {
             listId: [item._id]
         }
@@ -71,9 +71,9 @@ const TaskLists = ({ propStyle, saveList, id, taskLists, removeList }) => {
             </TouchableOpacity>
             <RBSheet
                 ref={refRBSheet}
-                closeOnDragDown
-                closeOnPressBack
-                height={330}
+                closeOnDragDown={false}
+                // closeOnPressBack
+                height={350}
                 customStyles={{
                     container: {
                         borderTopLeftRadius: 10,
@@ -90,13 +90,20 @@ const TaskLists = ({ propStyle, saveList, id, taskLists, removeList }) => {
                         <Text style={headerStyle.headerButtonCancel}>Cancel</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.listContainer}>
+                {/* <View style={styles.listContainer}>
                     <FlatList
                         data={lists}
                         renderItem={renderItem}
                         keyExtractor={list => list._id}
                     />
-                </View>
+                </View> */}
+                <ScrollView 
+                alwaysBounceVertical={true}
+                    style={styles.listContainer}
+                    nestedScrollEnabled={true}
+                >
+                    {lists.map(item => <RenderItem key={item._id} item={item}/>)}
+                </ScrollView>
 
             </RBSheet>
         </>
@@ -115,7 +122,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
     listContainer: {
-        padding: 25
+        padding: 25,
+        // flexWrap:'wrap'
+        
     },
     itemContainerStyle: {
         backgroundColor: '#EDF1F7',

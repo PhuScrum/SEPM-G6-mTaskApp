@@ -102,7 +102,6 @@ const ListScreen = (props) => {
                             />
 
                             <TouchableOpacity onPress={()=> {
-                                console.log('add list')
                                 refBtnSheet.current.open()
                             }}>
                                 <View style={styles.btnContainer}>

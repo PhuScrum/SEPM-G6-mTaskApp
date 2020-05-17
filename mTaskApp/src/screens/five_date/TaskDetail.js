@@ -68,7 +68,7 @@ const TaskDetail = (props) => {
 
     return (
         <>
-            <TopNavigationBar {...props} withBackControl={'true'}/>
+            <TopNavigationBar {...props} withBackControl={true}/>
             <Layout style={styles.container} >
                 <View style={{ marginBottom: 60 }}>
                     <View style={styles.headerStyle}>

@@ -1,4 +1,5 @@
 const itemModel = require('../../../model/item')
+const listModel = require('../../../model/list')
 const mongoose = require('mongoose')
 
 const notifyUsers = require('../../rsvp/notify/add_tasks')
@@ -16,6 +17,13 @@ const postTask = (req, res) => {
                 var taskId = doc._id
                 req.body.taskId = taskId
                 rsvp_API.notify.addTask(req)
+            }
+
+            if(req.body.listId){
+                listModel.findById(req.body.listId, (err, list)=>{
+                    list.items.push({_id: doc._id})
+                    list.save()
+                })
             }
             
             res.json(doc)

@@ -18,18 +18,18 @@ const combineDateTime = (date, time) => {
 
 const os = Platform.OS
 
-const RowItem = ({ item }) => (
+const RowItem = ({ item, isShowDate }) => (
     <RectButton >
         <ListItem
             style={styles.item}
             title={item.name}
-            description={moment(item.dateTime).format('LT')}
+            description={isShowDate? moment(item.dateTime).format('LLL') : moment(item.dateTime).format('LT')}
             // onPress={() => console.log(item.name)}
         />
     </RectButton>
 )
 
-const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, onDelayAction}) => {
+const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isShowDate}) => {
     const scrollRef = createRef()
     const refRBSheet = useRef();
 
@@ -143,7 +143,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, onDe
                     renderLeftActions={renderLeftActions}
                     renderRightActions={renderRightActions}
                 >
-                    <RowItem item={item} />
+                    <RowItem item={item} isShowDate={isShowDate} />
                 </Swipeable>
 
                 <RBSheet
