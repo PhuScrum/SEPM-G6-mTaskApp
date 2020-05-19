@@ -54,12 +54,12 @@ export default function CardWithHeaderAndFooterShowcase (props){
 
     const handlePushNoti = async (type)=>{
       // setup
-      let creatorResp = await axios.get(url.user + '/'+ task.creatorId)
-      let creator = creatorResp.data
+      // let creatorResp = await axios.get(url.user + '/'+ task.creatorId)
+      // let creator = creatorResp.data
       let user = await AsyncStorage.getItem('user')
       user = JSON.parse(user)
       
-      let expoPushToken = creator.expoPushToken
+      let expoPushToken = task.creatorId.expoPushToken
       let title = user.name + ' ' + type + ' in a task: ' + task.name
       let body = 'Click here to see more!'
       sendPushNotification(expoPushToken, title, body)
