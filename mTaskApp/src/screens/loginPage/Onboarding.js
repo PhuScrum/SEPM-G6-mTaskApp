@@ -24,8 +24,8 @@ export default class OnboardingScreen extends Component {
           {
             backgroundColor: '#659dea',
             image: <Image style = {styles.logo1} source={require('../../../assets/easier_life.png')} />,
-            title: 'Make Your Life Easier',
-            subtitle: 'Let mTask help you manage your task with a fancy five day view schedule',
+            title: 'Five Day Schedule',
+            subtitle: 'Manage your task with a fancy five day view schedule',
           },
           {
             backgroundColor: '#5a5aff',
@@ -37,7 +37,7 @@ export default class OnboardingScreen extends Component {
             backgroundColor: '#366bf2',
             image: <Image style = {styles.logo3} source={require('../../../assets/tag_friend.png')} />,
             title: 'Share With Your Friend',
-            subtitle: 'Go ahead and invite your friend to your task !',
+            subtitle: 'You can invite your friend to your task !',
           },
           {
             backgroundColor: '#659dea',
@@ -79,7 +79,7 @@ const styles =StyleSheet.create({
     },
     logo3:{
         resizeMode: "contain",
-        height: 300,
+        height: 280,
         width: 300,
         //marginBottom:10,
     },
