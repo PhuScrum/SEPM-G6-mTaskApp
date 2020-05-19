@@ -5,6 +5,7 @@ import { Layout, Text, Input, Button, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import TagMembers from '../tag_members/TagMembers'
 import DateTimePickerComponent from '../dateTimePicker/DateTimePickerComponent'
+import TagUser from '../taskDetail/TagUser';
 
 const combineDateTime = (date, time) => {
     const datePick = moment(date).format('DD MMM YYYY ')
@@ -14,10 +15,10 @@ const combineDateTime = (date, time) => {
 }
 
 const AddTask = ({ submitHandler }) => {
-    const [userId, setUserId] = useState('')
     const os = Platform.OS
     const tag = useSelector(state => state.tagMemberReducer.selectedItems, [])
 
+    const [userId, setUserId] = useState('')
     const [name, setName] = useState('')
     const [desc, setDesc] = useState('')
 
@@ -47,11 +48,11 @@ const AddTask = ({ submitHandler }) => {
         creatorId: userId
     }
 
-    const getUserId = async () =>{
-        try{
+    const getUserId = async () => {
+        try {
             let id = await AsyncStorage.getItem('userId')
             setUserId(id)
-        } catch(err) {
+        } catch (err) {
             console.log(err)
         }
     }
@@ -92,16 +93,39 @@ const AddTask = ({ submitHandler }) => {
             </View>
 
             <View style={{ paddingTop: 8, flex: 1 }}>
-                <TagMembers />
+                <TagUser propStyle={{headerStyle: headerStyle}} tagType={'button'} isSaveTag={false} />
             </View>
             <View style={{ paddingTop: 8, flex: 1 }}>
                 <Button style={styles.submitButton} onPress={() => submitHandler(taskData)}>Add</Button>
             </View>
-            {/* {os === 'android' && <DateTimePickerAndroid />}
-            {os === 'ios' && <DateTimePickerIOS />} */}
-
         </View>
     )
+}
+
+const headerStyle = {
+    headerContainer: {
+        height: 45,
+        borderBottomWidth: 1,
+        borderColor: "#ccc",
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    headerButton: {
+        height: "100%",
+        paddingHorizontal: 20,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    headerButtonCancel: {
+        fontSize: 18,
+        color: "#666",
+        fontWeight: "400"
+    },
+    headerButtonDone: {
+        fontSize: 18,
+        color: "#006BFF",
+        fontWeight: "500"
+    },
 }
 
 const styles = StyleSheet.create({

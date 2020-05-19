@@ -7,7 +7,7 @@ const sendNotification = async (req, type)=>{
     var user = await findUserById(req.body.userId)
     var userName = user.fName + ' ' + user.lName
     var str = 'declined' 
-    if(type==='accept') str = 'accepted'
+    if(type && type==='accept') str = 'accepted'
     var responseRSVP = {
         senderId: userId,
         receiverId: creatorId,

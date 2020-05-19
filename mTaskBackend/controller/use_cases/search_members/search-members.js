@@ -12,7 +12,7 @@ const searchMembers = (req, res) => {
     if (searchTerm !== '') {
         var query = { $or: [{ fName: new RegExp(searchTerm, "i") }, { lName: new RegExp(searchTerm, "i") }] }
         console.log('search ' + searchTerm)
-        var returnField = ' fName lName email displayPhoto '
+        var returnField = ' fName lName email displayPhoto expoPushToken '
         userModel.find(query, returnField, function (err, doc) {
             if (err) {
                 console.log(err)

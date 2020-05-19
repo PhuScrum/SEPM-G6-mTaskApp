@@ -8,6 +8,8 @@ const userSchema = new Schema({
   displayPhoto: {type: String},
   dateCreated: { type: Date, default: Date.now },
 
+  expoPushToken: {type: String}
+
 })
 
 const userModel = mongoose.model('user', userSchema)
