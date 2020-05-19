@@ -3,6 +3,7 @@ import {
   Icon,
   TopNavigation,
   TopNavigationAction,
+  Layout,
 } from '@ui-kitten/components';
 import { withNavigation } from 'react-navigation';
 
@@ -25,7 +26,7 @@ const CheckMarkAction = (props) => (
 const TopNavigationBarList = ({ navigation, route, withBackControl, isDisplayDoneButton, onNavigateDoneDetail }) => {
   const renderRightControls = () => {
     return isDisplayDoneButton ? [
-      <CheckMarkAction onPress={() => { 
+      <CheckMarkAction onPress={() => {
         onNavigateDoneDetail()
       }} />
     ] : []
@@ -37,15 +38,22 @@ const TopNavigationBarList = ({ navigation, route, withBackControl, isDisplayDon
       }}
     />
   ]
-  return withBackControl ? (<TopNavigation
-    title='Back'
-    rightControls={renderRightControls()}
-    leftControl={renderBackControls()}
-  />) : (
+  return withBackControl ? (
+    <Layout style={{ paddingTop: 21, paddingBottom: 0 }}>
       <TopNavigation
-        title='mTask'
+        
         rightControls={renderRightControls()}
+        leftControl={renderBackControls()}
       />
+    </Layout>
+  ) : (
+      <Layout style={{ paddingTop: 21, paddingBottom: 0 }}>
+        <TopNavigation
+          
+          rightControls={renderRightControls()}
+        // leftControl={renderBackControls()}
+        />
+      </Layout>
     )
 }
 

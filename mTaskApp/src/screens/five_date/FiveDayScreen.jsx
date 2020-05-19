@@ -31,12 +31,14 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import _ from 'lodash'
 import moment from 'moment-timezone'
 
+import globalVar from '../../constants/global_variables/global-variables'
 import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction, getMyTasksAction, getTaskItemAction, clearTaskItemAction } from '../../actions/TaskAction'
 import { clearSelectedAction } from '../../actions/tag-members-actions';
 import TestPush from '../../components/push_notification/TestPush'
 import sendPushNotification from '../../components/push_notification/API/send-push-notification'
 import setLocalNotification from '../../components/push_notification/API/set-local-notification'
 import { Notifications } from 'expo'
+
 FAIcon.loadFont();
 MDIcon.loadFont();
 
@@ -167,62 +169,57 @@ const FiveDayScreen = (props) => {
             deleteHandler={deleteHandler}
             editTaskHandler={editTaskHandler}
             onNavigateDetail={onNavigateDetail}
+            isShowTime={true}
         />
     )
-    const renderSectionHeader = ({ section }) => <Text style={styles.SectionHeaderStyle}>{section.title}</Text>
+    const renderSectionHeader = ({ section }) => <Text style={styles.SectionHeaderStyle} >{section.title}</Text>
     return (
-        <TouchableWithoutFeedback
-            onPress={() => {
-                Keyboard.dismiss()
-                onRefresh()
-            }}
-        >
-            <>
-                <TopNavigationBar {...props} />
+        <>  
+            <TopNavigationBar {...props} />
 
-                <Layout style={styles.container} >
-                    <View style={styles.list} >
-                        <Text style={styles.title}>Five Days List</Text>
-                        {/* <TestPush/> */}
-                        {isLoading ? <ActivityIndicator /> : (
-                            <SectionList
-                                stickySectionHeadersEnabled={false}
-                                ref={scrollRef}
-                                sections={sections}
-                                renderSectionHeader={renderSectionHeader}
-                                renderItem={renderItem}
-                                keyExtractor={item => item._id}
-                                refreshControl={
-                                    <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
-                                }
-                            />
-                        )}
-                    </View>
-                    {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
-                    <AddToDoButton toggleBottomSheet={() => {
-                        refBottomSheet.current.open()
-                    }
-                    } />
-                    <RBSheet
-                        ref={refBottomSheet}
-                        closeOnDragDown
-                        height={500}
-                        customStyles={{
-                            container: {
-                                borderTopLeftRadius: 10,
-                                borderTopRightRadius: 10
+
+            <Layout style={styles.container} >
+                <View style={styles.list} >
+                    <Text style={styles.title} category='h1'>Five Days List</Text>
+                    {/* <TestPush/> */}
+                    {isLoading ? <ActivityIndicator /> : (
+                        <SectionList
+                            stickySectionHeadersEnabled={false}
+                            ref={scrollRef}
+                            sections={sections}
+                            renderSectionHeader={renderSectionHeader}
+                            renderItem={renderItem}
+                            keyExtractor={item => item._id}
+                            refreshControl={
+                                <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                             }
-                        }}
-                    >
-                        <View style={styles.bottomSheetContainer}>
-                            <Text style={styles.bottomSheetTitle}>Create a new task</Text>
-                            <AddTask submitHandler={addTaskHandler} />
-                        </View>
-                    </RBSheet>
-                </Layout>
-            </>
+                        />
+                    )}
+                </View>
+                {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
+                <AddToDoButton toggleBottomSheet={() => {
+                    refBottomSheet.current.open()
+                }
+                } />
+                <RBSheet
+                    ref={refBottomSheet}
+                    closeOnDragDown
+                    height={500}
+                    customStyles={{
+                        container: {
+                            borderTopLeftRadius: 10,
+                            borderTopRightRadius: 10
+                        }
+                    }}
+                >
+                    <View style={styles.bottomSheetContainer}>
+                        <Text style={styles.bottomSheetTitle}>Create a new task</Text>
+                        <AddTask submitHandler={addTaskHandler} />
+                    </View>
+                </RBSheet>
+            </Layout>
+        </>
 
-        </TouchableWithoutFeedback>
     )
 
 }
@@ -232,27 +229,31 @@ const styles = StyleSheet.create({
         flex: 1,
         // alignItems: "center",
         justifyContent: 'center',
-        backgroundColor: '#EDF1F7',
+        // backgroundColor: '#EDF1F7',
         // marginTop: 20,
         paddingBottom: 0
     },
     title: {
-        fontFamily: 'Lato-Regular',
-        fontSize: 36,
-        paddingTop: 32,
-        color: '#1E262C'
+        // fontFamily: 'Lato-Regular',
+        // fontSize: 36,
+        // paddingTop: 10,
+        paddingBottom: 22,
+        color: '#1E262C',
+        fontWeight: 'bold'
     },
     list: {
         flex: 1,
+        paddingTop: 0,
         padding: 5
     },
     SectionHeaderStyle: {
-        paddingTop: 20,
+        paddingTop: 24,
+        paddingBottom: 8,
         // backgroundColor: '#CDDC89',
-        fontSize: 20,
-        padding: 5,
-        color: 'black',
-        paddingBottom: 2
+        fontSize: 18,
+        paddingHorizontal: 8,
+        color: globalVar.defaultColor,
+        fontWeight: 'bold'
     },
     bottomSheetContainer: {
         flex: 1,

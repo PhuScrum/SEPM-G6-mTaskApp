@@ -93,7 +93,6 @@ const ListDetail = (props) => {
 
     const renderItem = ({ item, index }) => (
         <TaskItem
-            isShowDate={true}
             item={item}
             index={index}
             deleteHandler={deleteHandler}
@@ -108,14 +107,14 @@ const ListDetail = (props) => {
 
     }
 
-    
+
 
     return (
         <>
             <TopNavigationBarList {...props} withBackControl={true} isDisplayDoneButton={true} onNavigateDoneDetail={onNavigateDoneDetail} />
             <Layout style={styles.container}>
                 <View style={styles.list}>
-                    <Text category='h1'>{listItem.name}</Text>
+                    <Text category='h1' style={{fontWeight: 'bold'}}>{listItem.name}</Text>
                     <View style={styles.gridView}>
                         <FlatList
                             data={completedTasks}

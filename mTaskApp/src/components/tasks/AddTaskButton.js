@@ -4,6 +4,8 @@ import { clearSelectedAction } from '../../actions/tag-members-actions';
 import { clearTaskItemAction } from '../../actions/TaskAction';
 import { useDispatch } from 'react-redux';
 
+import globalVar from '../../constants/global_variables/global-variables'
+
 const AddToDoButton = ({toggleBottomSheet}) =>{
 
   const dispatch = useDispatch()
@@ -29,13 +31,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         right: 25,
         bottom: 25,
-        backgroundColor: '#36D1DC',
+        backgroundColor: globalVar.defaultColor,
         borderRadius: 30,
         elevation: 10
       },
       fabIcon: {
         fontSize: 40,
-        color: '#24243e',
+        color: 'white',
         marginBottom:4
       }
 

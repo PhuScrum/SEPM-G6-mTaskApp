@@ -92,10 +92,10 @@ const ListScreen = (props) => {
             }}
         >
             <>
-                <TopNavigationBarList {...props} isDisplayDoneButton={false} />
+                {/* <TopNavigationBarList {...props} isDisplayDoneButton={false} /> */}
                 <Layout style={styles.container}>
                     <View style={styles.list}>
-                        <Text category='h1'>My Lists</Text>
+                        <Text category='h1' style={{fontWeight: 'bold'}}>My Lists</Text>
                         <View style={styles.gridView}>
                             <FlatList
                                 ref={scrollRef}
@@ -146,7 +146,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: '#EDF1F7',
+        // backgroundColor: '#EDF1F7',
+        paddingTop: 20
         // alignItems: 'center'
     },
     gridView: {

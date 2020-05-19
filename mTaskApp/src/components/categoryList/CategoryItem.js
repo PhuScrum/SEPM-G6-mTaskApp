@@ -75,7 +75,7 @@ const CategoryItem = ({ item, onNavigateDetail, onDeleteHandler, editListHandler
             <TouchableOpacity
                 onPress={()=>onNavigateDetail(item._id)}
             >
-            <Layout style={styles.container}>
+            <Layout style={[styles.container, styles.shadowContainer]}>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                         <Feather name="list" size={24} />
@@ -116,4 +116,15 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
     },
+    shadowContainer: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+
+        elevation: 3,
+    }
 })
