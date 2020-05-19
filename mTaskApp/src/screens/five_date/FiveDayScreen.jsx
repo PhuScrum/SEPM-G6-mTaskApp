@@ -104,23 +104,36 @@ const FiveDayScreen = (props) => {
         await dispatch(editTaskAction(id, data))
         onRefresh()
     }
+    
+    const setUpSendingPush = async (userObj, taskObj)=>{
+        let creator = await AsyncStorage.getItem('user')
+        creator = JSON.parse(creator)
+        let displayTime = moment(taskObj.dateTime).format('H:mm a')
+        
+        var {expoPushToken} = userObj
+        let title = creator.name + ' tag you in a task: ' + taskObj.name
+        let body = 'At ' + displayTime + '\nClick here to find out!'
+        sendPushNotification(expoPushToken, title, body)
+    }
 
-    const handlePushNoti = (taskObj) => {
+    const handlePushNoti = (taskObj)=>{
         var taggedUsers = taskObj.taggedUsers
         if (taggedUsers.length >= 1) {
             for (let i = 0; i < taggedUsers.length; i++) {
                 var userObj = taggedUsers[i]
-                var expoPushToken = userObj.expoPushToken
-                sendPushNotification(userObj, taskObj)
+                setUpSendingPush(userObj, taskObj)
             }
         }
     }
 
-    const addTaskHandler = (taskObj) => {
+    const addTaskHandler = async (taskObj) => {
         console.log('addTAskHandler: ', taskObj)
-        handlePushNoti(taskObj)
-        setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
+       
         if (taskObj.name.length > 3) {
+            handlePushNoti(taskObj)
+            let reminderId = await setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
+            taskObj.reminderId = reminderId
+            console.log('reminderId: ', reminderId)
             dispatch(addTaskAction(taskObj))
             onRefresh()
             refBottomSheet.current.close()

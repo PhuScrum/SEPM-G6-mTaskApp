@@ -15,16 +15,14 @@ import {
 import axios from 'axios'
 import * as url from '../../constants/url/url'
 import NumberDetails from './NumberDetails'
-
-
-
-export default function CardWithHeaderAndFooterShowcase(props) {
-  const [user, setUser] = useState({ fName: '' }, [])
-  const [task, setTask] = useState({ taggedUsers: [] }, [])
-  const [numberOfAccept, setNumberOfAccept] = useState(0)
-  const [numberOfDecline, setNumberOfDecline] = useState(0)
-  const [isAccepted, setIsAccepted] = useState(props.item.isAccepted)
-  const [isDeclined, setIsDeclined] = useState(props.item.isDeclined)
+import sendPushNotification from '../../components/push_notification/API/send-push-notification'
+export default function CardWithHeaderAndFooterShowcase (props){
+    const [user, setUser] = useState({fName: ''},[])
+    const [task, setTask] = useState({taggedUsers: []}, [])
+    const [numberOfAccept, setNumberOfAccept] = useState(0)
+    const [numberOfDecline, setNumberOfDecline] = useState(0)
+    const [isAccepted, setIsAccepted] =useState(props.item.isAccepted)
+    const [isDeclined, setIsDeclined] = useState(props.item.isDeclined)
 
   const fetchData = async () => {
     const userId = props.item.senderId
@@ -54,36 +52,39 @@ export default function CardWithHeaderAndFooterShowcase(props) {
     setIsDeclined(props.item.isDeclined)
   }, [props.item])
 
-  //   const count = (type)=>{
-  //     var num = 0
-  //     for(let i =0; i < task.taggedUsers.length; i++){
-  //         var userObj = task.taggedUsers[i]
-  //         if(userObj[type] === true){
-  //             num +=1
-  //         }
-  //     }
-  //     if(type==='isAccepted') setNumberOfAccept(num)
-  //     else setNumberOfDecline(num)
-
-  // }
-
-  const acceptDeclineTagging = async (url) => {
-    var taskId = task._id
-    var userId = await AsyncStorage.getItem('userId')
-    var creatorId = task.creatorId
-    var rsvpId = props.item._id
-    var resp = await axios.post(url, { taskId, userId, creatorId, rsvpId })
-    fetchData()
-    if (url.includes('accept')) {
-      console.log('increase number of accept')
-      setNumberOfAccept(numberOfAccept + 1)
-      setIsAccepted(true)
-      // count('isAccepted')
+    const handlePushNoti = async (type)=>{
+      // setup
+      let creatorResp = await axios.get(url.user + '/'+ task.creatorId)
+      let creator = creatorResp.data
+      let user = await AsyncStorage.getItem('user')
+      user = JSON.parse(user)
+      
+      let expoPushToken = creator.expoPushToken
+      let title = user.name + ' ' + type + ' in a task: ' + task.name
+      let body = 'Click here to see more!'
+      sendPushNotification(expoPushToken, title, body)
     }
-    else {
-      setNumberOfDecline(numberOfDecline + 1)
-      setIsDeclined(true)
-    }
+
+    const acceptDeclineTagging = async (url)=>{
+        var taskId = task._id
+        var userId = await AsyncStorage.getItem('userId')
+        var creatorId = task.creatorId
+        var rsvpId = props.item._id
+        var resp = await axios.post(url, {taskId, userId, creatorId, rsvpId})
+        fetchData()
+        if(url.includes('accept')){
+            console.log('increase number of accept')
+            setNumberOfAccept(numberOfAccept + 1)
+            setIsAccepted(true)
+            handlePushNoti('accepted')
+        } 
+        else {
+            setNumberOfDecline(numberOfDecline + 1)
+            setIsDeclined(true)
+
+            handlePushNoti('declined')
+        }
+    
   }
 
   const Footer = () => (

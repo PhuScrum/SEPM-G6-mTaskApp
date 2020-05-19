@@ -10,6 +10,7 @@ const itemSchema = new Schema({
   dateTime: {type: Date},
   priority: {type: String},
   color: {type: String},
+  reminderId : {type: String},
 
   completed: {type: Boolean, default: false},
 
