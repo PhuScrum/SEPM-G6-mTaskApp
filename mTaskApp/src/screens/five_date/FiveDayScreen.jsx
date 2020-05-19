@@ -31,7 +31,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import _ from 'lodash'
 import moment from 'moment-timezone'
 
-import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction, getMyTasksAction, getTaskItemAction } from '../../actions/TaskAction'
+import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction, getMyTasksAction, getTaskItemAction, clearTaskItemAction } from '../../actions/TaskAction'
 import { clearSelectedAction } from '../../actions/tag-members-actions';
 import TestPush from '../../components/push_notification/TestPush'
 import sendPushNotification from '../../components/push_notification/API/send-push-notification'
@@ -82,7 +82,7 @@ const FiveDayScreen = (props) => {
     const [isLoading, setLoading] = useState(true);
     const scrollRef = createRef()
     const refBottomSheet = useRef();
-    const tasks = useSelector(state => state.taskReducer.tasks, []);
+    const tasks = useSelector(state => state.taskReducer.tasks, [tasks]);
     const dispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false)
 
@@ -93,8 +93,8 @@ const FiveDayScreen = (props) => {
 
     }, [refreshing]);
 
-    const deleteHandler = (id) => {
-        dispatch(deleteTaskAction(id))
+    const deleteHandler = async (id) => {
+        await dispatch(deleteTaskAction(id))
         onRefresh()
     }
 
@@ -119,7 +119,6 @@ const FiveDayScreen = (props) => {
         handlePushNoti(taskObj)
         setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
         if (taskObj.name.length > 3) {
-            dispatch(clearSelectedAction())
             dispatch(addTaskAction(taskObj))
             onRefresh()
             refBottomSheet.current.close()
@@ -137,6 +136,7 @@ const FiveDayScreen = (props) => {
 
     const getMyTasks = async () => {
         let id = await AsyncStorage.getItem('userId')
+        console.log(id)
         dispatch(getMyTasksAction(id))
     }
 
@@ -199,7 +199,10 @@ const FiveDayScreen = (props) => {
                         )}
                     </View>
                     {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
-                    <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()} />
+                    <AddToDoButton toggleBottomSheet={() => {
+                        refBottomSheet.current.open()
+                    }
+                    } />
                     <RBSheet
                         ref={refBottomSheet}
                         closeOnDragDown

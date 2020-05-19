@@ -1,9 +1,20 @@
 import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import { clearSelectedAction } from '../../actions/tag-members-actions';
+import { clearTaskItemAction } from '../../actions/TaskAction';
+import { useDispatch } from 'react-redux';
 
 const AddToDoButton = ({toggleBottomSheet}) =>{
+
+  const dispatch = useDispatch()
+
+  const onPressHandle = () => {
+    toggleBottomSheet()
+    dispatch(clearSelectedAction())
+    dispatch(clearTaskItemAction())
+  }
    return(
-    <TouchableOpacity onPress={() => toggleBottomSheet()} style={styles.fab}>
+    <TouchableOpacity onPress={() => onPressHandle()} style={styles.fab}>
     <Text style={styles.fabIcon}>+</Text>
     </TouchableOpacity>
 );

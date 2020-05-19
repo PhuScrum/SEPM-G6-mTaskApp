@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { StyleSheet, View, RefreshControl, AsyncStorage } from 'react-native'
+import { StyleSheet, View, RefreshControl, AsyncStorage, ActivityIndicator } from 'react-native'
 import TopNavigationBar from '../five_date/TopNavigationBar'
 import { Layout, Text, } from '@ui-kitten/components'
 import { list } from '../../constants/url/url'
@@ -44,17 +44,17 @@ const ListDetail = (props) => {
         dispatch(getMyListsAction(id))
     }
 
-    const deleteHandler = (id) => {
+    const deleteHandler = async (id) => {
         const listID = listItem._id
         const removeTaskData = {
             taskId: id
         }
-        dispatch(deleteTaskFromListAction(listID, removeTaskData))
+        await dispatch(deleteTaskFromListAction(listID, removeTaskData))
         onRefresh()
     }
 
-    const editTaskHandler = (id, data) => {
-        dispatch(editTaskAction(id, data))
+    const editTaskHandler = async (id, data) => {
+        await dispatch(editTaskAction(id, data))
         onRefresh()
     }
 
@@ -107,6 +107,8 @@ const ListDetail = (props) => {
         props.navigation.navigate('DoneTasksByList')
 
     }
+
+    
 
     return (
         <>

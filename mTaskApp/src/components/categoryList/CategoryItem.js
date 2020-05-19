@@ -1,6 +1,6 @@
 import React, { createRef } from 'react'
-import { StyleSheet, View, I18nManager, Animated } from 'react-native'
-import { RectButton, TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet, View, I18nManager, Animated, TouchableOpacity } from 'react-native'
+import { RectButton,  } from 'react-native-gesture-handler';
 import { Layout, Text } from '@ui-kitten/components'
 import { Ionicons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -26,11 +26,11 @@ const CategoryItem = ({ item, onNavigateDetail, onDeleteHandler, editListHandler
             };
             return (
                 <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
-                    <RectButton
+                    <TouchableOpacity
                         style={[styles.rightAction, { backgroundColor: color }]}
                         onPress={pressHandler}>
                         <Text style={styles.actionText}>{text}</Text>
-                    </RectButton>
+                    </TouchableOpacity>
                 </Animated.View>
             );
         }
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         backgroundColor: 'transparent',
-        padding: 10,
+        // padding: 10,
     },
     rightAction: {
         marginVertical: 5,

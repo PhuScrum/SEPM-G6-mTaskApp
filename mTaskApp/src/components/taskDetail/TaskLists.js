@@ -64,7 +64,7 @@ const TaskLists = ({ propStyle, saveList, id, taskLists, removeList }) => {
             <TouchableOpacity
                 style={styles.touchableStyle}
                 onPress={() => {
-                    console.log('My List')
+                    // console.log('My List')
                     refRBSheet.current.open()
                     // setDisplayLists(!displayLists)
                 }}

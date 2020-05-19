@@ -15,6 +15,7 @@ import { clearSelectedAction } from '../../actions/tag-members-actions'
 import { clearTaskItemAction, deleteListFromItemAction } from '../../actions/TaskAction'
 import { editTaskAction, getTaskItemAction, getMyTasksAction } from '../../actions/TaskAction';
 import TaskLists from '../../components/taskDetail/TaskLists';
+import { getMyListsAction } from '../../actions/ListActions';
 
 function wait(timeout) {
     return new Promise(resolve => {
@@ -32,6 +33,7 @@ const TaskDetail = (props) => {
     const getMyTasks = async () => {
         let id = await AsyncStorage.getItem('userId')
         dispatch(getMyTasksAction(id))
+        dispatch(getMyListsAction(id))
     }
 
     const onRefresh = useCallback(async () => {
@@ -53,13 +55,13 @@ const TaskDetail = (props) => {
         onRefresh()
     }
 
-    useEffect(() => {
-        const unMount = navigation.addListener('blur', () => {
-            dispatch(clearSelectedAction())
-            dispatch(clearTaskItemAction())
-        })
-        return unMount
-    }, [navigation])
+    // useEffect(() => {
+    //     const unMount = navigation.addListener('blur', () => {
+    //         dispatch(clearSelectedAction())
+    //         // dispatch(clearTaskItemAction())
+    //     })
+    //     return unMount
+    // }, [navigation])
 
     // console.log(task.listId)
 
