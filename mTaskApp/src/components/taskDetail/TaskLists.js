@@ -8,13 +8,13 @@ import { FlatList, ScrollView } from 'react-native-gesture-handler';
 
 const TaskLists = ({ propStyle, saveList, id, taskLists, removeList }) => {
     const { headerStyle } = propStyle
-
     const refRBSheet = useRef();
     const lists = useSelector(state => state.listReducer.lists, [])
+    const task = useSelector(state => state.taskReducer.taskItem, []);
 
-    const listId = (taskLists && taskLists.length !== 0) ? taskLists.map(list => list._id) : []
+    const listId = (task.listId && task.listId.length !== 0) ? task.listId.map(list => list._id) : []
 
-    const displayTitle = (taskLists && taskLists.length !== 0) ? 'Added to My Lists' : 'Add to My Lists'
+    const displayTitle = (task.listId && task.listId.length !== 0) ? 'Added to My Lists' : 'Add to My Lists'
 
     const RenderItem = ({ item }) => {
         const listData = {
@@ -55,6 +55,8 @@ const TaskLists = ({ propStyle, saveList, id, taskLists, removeList }) => {
             </>
         )
     }
+
+
 
     return (
         <>

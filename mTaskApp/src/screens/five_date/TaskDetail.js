@@ -11,8 +11,8 @@ import moment from 'moment-timezone'
 import TaskDate from '../../components/taskDetail/TaskDate'
 import TagUser from '../../components/taskDetail/TagUser';
 
-import {clearSelectedAction} from '../../actions/tag-members-actions'
-import {clearTaskItemAction, deleteListFromItemAction} from '../../actions/TaskAction'
+import { clearSelectedAction } from '../../actions/tag-members-actions'
+import { clearTaskItemAction, deleteListFromItemAction } from '../../actions/TaskAction'
 import { editTaskAction, getTaskItemAction, getMyTasksAction } from '../../actions/TaskAction';
 import TaskLists from '../../components/taskDetail/TaskLists';
 
@@ -23,11 +23,10 @@ function wait(timeout) {
 }
 
 const TaskDetail = (props) => {
-    const {navigation} = props
+    const { navigation } = props
     const dispatch = useDispatch()
     const task = useSelector(state => state.taskReducer.taskItem, []);
     const [desc, setDesc] = useState('')
-
     const [refreshing, setRefreshing] = useState(false)
 
     const getMyTasks = async () => {
@@ -35,31 +34,30 @@ const TaskDetail = (props) => {
         dispatch(getMyTasksAction(id))
     }
 
-    const onRefresh = useCallback(() => {
+    const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        getMyTasks()
         // wait(600)
-        dispatch(getTaskItemAction(task._id))
-            .then(() => {
-                setRefreshing(false)
-            })
+        await dispatch(getTaskItemAction(task._id))
+        setRefreshing(false)
+        getMyTasks()
     }, [refreshing]);
 
-    const editTaskHandler = (id, data) => {
-        dispatch(editTaskAction(id, data))
-        .then(onRefresh)
+    const editTaskHandler = async (id, data) => {
+        await dispatch(editTaskAction(id, data))
+        onRefresh()
     }
 
-    const removeListHandler = (id, data) => {
-        dispatch(deleteListFromItemAction(id, data))
-        .then(onRefresh)
+    const removeListHandler = async (id, data) => {
+        await dispatch(deleteListFromItemAction(id, data))
+            // .then(onRefresh)
+        onRefresh()
     }
 
     useEffect(() => {
-        const unMount = navigation.addListener('blur',() => {
+        const unMount = navigation.addListener('blur', () => {
             dispatch(clearSelectedAction())
             dispatch(clearTaskItemAction())
-          })
+        })
         return unMount
     }, [navigation])
 
@@ -68,7 +66,7 @@ const TaskDetail = (props) => {
 
     return (
         <>
-            <TopNavigationBar {...props} withBackControl={true}/>
+            <TopNavigationBar {...props} withBackControl={true} />
             <Layout style={styles.container} >
                 <View style={{ marginBottom: 60 }}>
                     <View style={styles.headerStyle}>
@@ -92,7 +90,7 @@ const TaskDetail = (props) => {
 
                 <View style={[styles.otherStyle, styles.borderStyle]}>
                     <View style={styles.itemStyle}>
-                        <TaskLists taskLists = {task.listId} propStyle={propStyle} saveList={editTaskHandler} removeList={removeListHandler} id={task._id}/>
+                        <TaskLists taskLists={task.listId} propStyle={propStyle} saveList={editTaskHandler} removeList={removeListHandler} id={task._id} />
                     </View>
                     <View style={styles.itemStyle}>
                         <Feather name="repeat" size={iconSize} />
@@ -113,7 +111,7 @@ const TaskDetail = (props) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                
+
                 <TagUser isSaveTag={true} propStyle={propStyle} tagType={'input'} id={task._id} saveTagUser={editTaskHandler} />
 
                 <View style={[styles.descStyle, styles.borderStyle]}>
@@ -160,7 +158,7 @@ const headerStyle = {
     },
 }
 
-const propStyle={borderStyle: borderStyle, iconSize: iconSize, headerStyle: headerStyle}
+const propStyle = { borderStyle: borderStyle, iconSize: iconSize, headerStyle: headerStyle }
 
 const styles = StyleSheet.create({
     container: {

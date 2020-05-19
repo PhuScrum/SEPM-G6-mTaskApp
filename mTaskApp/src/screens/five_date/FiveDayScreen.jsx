@@ -8,6 +8,7 @@ import {
     Keyboard,
     SafeAreaView,
     RefreshControl,
+    ActivityIndicator,
     TouchableHighlight,
     TouchableOpacity,
     Dimensions,
@@ -35,7 +36,7 @@ import { clearSelectedAction } from '../../actions/tag-members-actions';
 import TestPush from '../../components/push_notification/TestPush'
 import sendPushNotification from '../../components/push_notification/API/send-push-notification'
 import setLocalNotification from '../../components/push_notification/API/set-local-notification'
-import {Notifications} from 'expo'
+import { Notifications } from 'expo'
 FAIcon.loadFont();
 MDIcon.loadFont();
 
@@ -78,17 +79,18 @@ const getSections = (tasks) => {
 }
 
 const FiveDayScreen = (props) => {
+    const [isLoading, setLoading] = useState(true);
     const scrollRef = createRef()
     const refBottomSheet = useRef();
     const tasks = useSelector(state => state.taskReducer.tasks, []);
     const dispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false)
 
-    const onRefresh = useCallback( () => {
+    const onRefresh = useCallback(async () => {
         setRefreshing(true);
-             getMyTasks()
-            setRefreshing(false)
-        
+        await getMyTasks()
+        setRefreshing(false)
+
     }, [refreshing]);
 
     const deleteHandler = (id) => {
@@ -96,29 +98,29 @@ const FiveDayScreen = (props) => {
         onRefresh()
     }
 
-    const editTaskHandler = (id, data) => {
-        dispatch(editTaskAction(id, data))
+    const editTaskHandler = async (id, data) => {
+        await dispatch(editTaskAction(id, data))
         onRefresh()
     }
-    
-    const handlePushNoti = (taskObj)=>{
+
+    const handlePushNoti = (taskObj) => {
         var taggedUsers = taskObj.taggedUsers
-        if(taggedUsers.length >=1){
-            for(let i=0; i < taggedUsers.length; i++){
+        if (taggedUsers.length >= 1) {
+            for (let i = 0; i < taggedUsers.length; i++) {
                 var userObj = taggedUsers[i]
                 var expoPushToken = userObj.expoPushToken
                 sendPushNotification(userObj, taskObj)
             }
-        }       
-    }  
+        }
+    }
 
     const addTaskHandler = (taskObj) => {
         console.log('addTAskHandler: ', taskObj)
         handlePushNoti(taskObj)
         setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
         if (taskObj.name.length > 3) {
-            dispatch(addTaskAction(taskObj))
             dispatch(clearSelectedAction())
+            dispatch(addTaskAction(taskObj))
             onRefresh()
             refBottomSheet.current.close()
         } else {
@@ -130,7 +132,7 @@ const FiveDayScreen = (props) => {
 
     const onNavigateDetail = (id) => {
         dispatch(getTaskItemAction(id))
-        .then(()=>props.navigation.navigate('TaskDetail'))
+            .then(() => props.navigation.navigate('TaskDetail'))
     }
 
     const getMyTasks = async () => {
@@ -138,17 +140,23 @@ const FiveDayScreen = (props) => {
         dispatch(getMyTasksAction(id))
     }
 
-    useEffect( ()=>{
-        const unsubscribe = props.navigation.addListener('focus', ()=>{
-          getMyTasks()
-        })
-        return unsubscribe
-      },[props.navigation])
+    // useEffect(() => {
+    //     const unsubscribe = props.navigation.addListener('focus', async () => {
+    //         await getMyTasks()
+    //         setLoading(false)
+    //     })
+    //     return unsubscribe
+    // }, [props.navigation])
+    useEffect(() => {
+        getMyTasks()
+            .catch(err => console.log(err))
+            .finally(() => setLoading(false))
+    }, [])
 
     // console.log(userId)
 
     //Define Swipeable Section Elements
-    
+
     // console.log(myTasks)
     const unDoneList = tasks.filter(task => task.completed !== true)
     const sections = getSections(unDoneList)
@@ -176,17 +184,19 @@ const FiveDayScreen = (props) => {
                     <View style={styles.list} >
                         <Text style={styles.title}>Five Days List</Text>
                         {/* <TestPush/> */}
-                        <SectionList
-                            stickySectionHeadersEnabled={false}
-                            ref={scrollRef}
-                            sections={sections}
-                            renderSectionHeader={renderSectionHeader}
-                            renderItem={renderItem}
-                            keyExtractor={item => item._id}
-                            refreshControl={
-                                <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
-                            }
-                        />
+                        {isLoading ? <ActivityIndicator /> : (
+                            <SectionList
+                                stickySectionHeadersEnabled={false}
+                                ref={scrollRef}
+                                sections={sections}
+                                renderSectionHeader={renderSectionHeader}
+                                renderItem={renderItem}
+                                keyExtractor={item => item._id}
+                                refreshControl={
+                                    <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+                                }
+                            />
+                        )}
                     </View>
                     {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
                     <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()} />

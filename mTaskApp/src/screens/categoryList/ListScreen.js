@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, createRef, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { StyleSheet, View, AsyncStorage, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, RefreshControl, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, AsyncStorage, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, RefreshControl, TouchableOpacity, ActivityIndicator } from 'react-native'
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Layout, Text } from '@ui-kitten/components'
 import { getMyListsAction, addListAction, clearListItemAction, deleteListAction, getListItemAction } from '../../actions/ListActions';
@@ -22,26 +22,25 @@ function wait(timeout) {
 }
 
 const ListScreen = (props) => {
+    const [isLoading, setLoading] = useState(true);
+    const scrollRef = createRef()
     const dispatch = useDispatch()
     const refBtnSheet = useRef()
     const lists = useSelector(state => state.listReducer.lists, [])
     const [refreshing, setRefreshing] = useState(false)
 
-    const onRefresh = useCallback(() => {
+    const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        
-                getMyLists()
-                setRefreshing(false)
-        
+        await getMyLists()
+        setRefreshing(false)
     }, [refreshing]);
 
     const getMyLists = async () => {
         let id = await AsyncStorage.getItem('userId')
-        console.log(id)
         dispatch(getMyListsAction(id))
     }
 
-    const addListHandler = async (listData) =>{
+    const addListHandler = async (listData) => {
         await dispatch(addListAction(listData))
         dispatch(clearListItemAction())
         onRefresh()
@@ -51,7 +50,7 @@ const ListScreen = (props) => {
     const editListHandler = (id, data) => {
         console.log('Edit')
         console.log(id)
-        
+
     }
 
     const onNavigateDetail = async (id) => {
@@ -65,16 +64,22 @@ const ListScreen = (props) => {
         onRefresh()
     }
 
-    useEffect(() => {
-        const unsubscribe = props.navigation.addListener('focus', () => {
-            getMyLists()
-        })
-        return unsubscribe
-    }, [props.navigation])
+    // useEffect(() => {
+    //     const unsubscribe = props.navigation.addListener('focus', async () => {
+    //         await getMyLists()
+    //         setLoading(false)
+    //     })
+    //     return unsubscribe
+    // }, [props.navigation])
+    useEffect(()=>{
+        getMyLists()
+        .catch(err=>console.log(err))
+        .finally(()=>setLoading(false))
+    }, [])
 
     //Define List Elems
     const renderItem = ({ item }) => (
-        <CategoryItem item={item} onNavigateDetail={onNavigateDetail} onDeleteHandler={onDeleteHandler} editListHandler={editListHandler}  />
+        <CategoryItem item={item} onNavigateDetail={onNavigateDetail} onDeleteHandler={onDeleteHandler} editListHandler={editListHandler} />
     )
 
     // console.log(lists)
@@ -93,6 +98,7 @@ const ListScreen = (props) => {
                         <Text category='h1'>My Lists</Text>
                         <View style={styles.gridView}>
                             <FlatList
+                                ref={scrollRef}
                                 data={lists}
                                 keyExtractor={list => list._id}
                                 renderItem={renderItem}
@@ -101,7 +107,7 @@ const ListScreen = (props) => {
                                 }
                             />
 
-                            <TouchableOpacity onPress={()=> {
+                            <TouchableOpacity onPress={() => {
                                 refBtnSheet.current.open()
                             }}>
                                 <View style={styles.btnContainer}>
@@ -111,7 +117,7 @@ const ListScreen = (props) => {
                         </View>
                     </View>
                     <RBSheet
-                        ref = {refBtnSheet}
+                        ref={refBtnSheet}
                         closeOnDragDown
                         height={350}
                         customStyles={{
@@ -121,9 +127,9 @@ const ListScreen = (props) => {
                             }
                         }}
                     >
-                         <View style={styles.bottomSheetContainer}>
+                        <View style={styles.bottomSheetContainer}>
                             <Text style={styles.bottomSheetTitle}>Create a new List</Text>
-                            <AddList submitHandler={addListHandler}/>
+                            <AddList submitHandler={addListHandler} />
                         </View>
                     </RBSheet>
                 </Layout>
@@ -134,7 +140,7 @@ const ListScreen = (props) => {
 
 
 
-export default ListScreen
+export default withNavigation(ListScreen)
 
 const styles = StyleSheet.create({
     container: {
@@ -163,7 +169,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         alignItems: 'center'
     },
-    btnTextStyle:{
+    btnTextStyle: {
         fontSize: 16
 
     },
@@ -179,7 +185,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         color: "#666",
         alignSelf: 'center',
-        padding:10,
+        padding: 10,
         borderBottomWidth: 1
     }
 })

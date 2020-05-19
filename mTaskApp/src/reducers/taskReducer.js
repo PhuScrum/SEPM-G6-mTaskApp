@@ -20,7 +20,7 @@ const reducer = (state = initialState, action) => {
         case EDIT_TASK:
             return { ...state }
         case DELETE_LIST_FROM_ITEM:
-            return { ...state, taskItem: action.payload }
+            return { ...state}
         case CLEAR_TASK_ITEM:
             return { ...state, taskItem: {} }
         default:

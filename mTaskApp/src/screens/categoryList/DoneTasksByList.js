@@ -18,7 +18,7 @@ function wait(timeout) {
 
 const DoneTasksByList = (props) => {
     const dispatch = useDispatch()
-    const listItem = useSelector(state => state.listReducer.listItem)
+    const listItem = useSelector(state => state.listReducer.listItem, [])
     const tasks = listItem.items ? listItem.items : []
     const [show, setShow] = useState(false)
     const [refreshing, setRefreshing] = useState(false)
