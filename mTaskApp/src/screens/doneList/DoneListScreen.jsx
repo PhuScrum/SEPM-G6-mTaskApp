@@ -54,7 +54,7 @@ export default class DoneListScreen extends Component {
     renderHeader = ({ section }) => {
         return (
             <View style={styles.header} >
-                <Text style={{ fontSize: 20, color: '#6375df' }}>{section.title}</Text>
+                <Text style={{ fontSize: 20, color: '#6375df', fontWeight:'bold' }}>{section.title}</Text>
             </View>
         )
     }
@@ -150,7 +150,7 @@ export default class DoneListScreen extends Component {
                     <TopNavigationBarBackButton {...this.props} title='Back' />
 
                 </View>
-                <Text style={{ textAlign: "center" }} category='h1'>Done List</Text>
+                <Text style={{ textAlign: "center", fontWeight:'bold' }} category='h1'>Done List</Text>
 
                 <View style={{ paddingBottom: '22%' }}>
 

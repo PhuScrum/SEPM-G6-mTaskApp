@@ -19,13 +19,15 @@ const postTask = (req, res) => {
                 rsvp_API.notify.addTask(req)
             }
 
-            if(req.body.listId){
-                listModel.findById(req.body.listId, (err, list)=>{
-                    list.items.push({_id: doc._id})
-                    list.save()
+            if (req.body.listId && req.body.listId.length !== 0) {
+                listModel.findById(req.body.listId, (err, list) => {
+                    if (!err) {
+                        list.items.push({ _id: doc._id })
+                        list.save()
+                    } else console.log(err)
                 })
             }
-            
+
             res.json(doc)
         }
 

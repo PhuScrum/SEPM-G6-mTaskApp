@@ -12,7 +12,7 @@ const postList = (req, res) => {
     listModel.create(req.body, (err, doc) => {
         if (err) console.log(err)
         else {
-            if (req.body.items) {
+            if (req.body.items && req.body.items !== 0) {
                 var added = req.body.items
                 var i = 0
                 while (added[i]) {

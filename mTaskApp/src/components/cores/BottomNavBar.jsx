@@ -50,7 +50,7 @@ const BottomTabBar = ({ navigation, state }) => {
 };
 
 const TabNavigator = () => (
-    <BottomTab.Navigator tabBar={props => <BottomTabBar {...props} />}>
+    <BottomTab.Navigator initialRouteName='Home' tabBar={props => <BottomTabBar {...props} />}>
         <BottomTab.Screen name='List' component={ListScreenStack} />
         <BottomTab.Screen name='Home' component={HomeScreen} />
 

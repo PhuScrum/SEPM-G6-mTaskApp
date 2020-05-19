@@ -1,11 +1,11 @@
-import React,  {useState, useCallback, useRef} from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { StyleSheet,  View, RefreshControl } from 'react-native'
+import { StyleSheet, View, RefreshControl, AsyncStorage, ActivityIndicator } from 'react-native'
 import TopNavigationBar from '../five_date/TopNavigationBar'
 import { Layout, Text, } from '@ui-kitten/components'
 import { list } from '../../constants/url/url'
 import { FlatList } from 'react-native-gesture-handler'
-import { getListItemAction, deleteTaskFromListAction } from '../../actions/ListActions'
+import { getListItemAction, deleteTaskFromListAction, getMyListsAction } from '../../actions/ListActions'
 import TaskItem from '../../components/tasks/TaskItem'
 import { getTaskItemAction, addTaskAction, editTaskAction } from '../../actions/TaskAction'
 import AddToDoButton from '../../components/tasks/AddTaskButton'
@@ -24,52 +24,58 @@ function wait(timeout) {
 }
 
 const ListDetail = (props) => {
+    const [isLoading, setLoading] = useState(true);
     const refBottomSheet = useRef();
     const dispatch = useDispatch()
     const listItem = useSelector(state => state.listReducer.listItem, [])
     const tasks = listItem.items ? listItem.items : []
-    const completedTasks = tasks.filter(task=>task.completed === false)
+    const completedTasks = tasks.filter(task => task.completed === false)
     const [refreshing, setRefreshing] = useState(false)
 
-    const onRefresh = useCallback(() => {
+    const onRefresh = useCallback(async () => {
         setRefreshing(true);
-                dispatch(getListItemAction(listItem._id))
-                setRefreshing(false)
-            
+        await dispatch(getListItemAction(listItem._id))
+        setRefreshing(false)
+        getMyLists()
     }, [refreshing])
 
-    const deleteHandler =  (id) => {
+    const getMyLists = async () => {
+        let id = await AsyncStorage.getItem('userId')
+        dispatch(getMyListsAction(id))
+    }
+
+    const deleteHandler = async (id) => {
         const listID = listItem._id
         const removeTaskData = {
             taskId: id
         }
-        dispatch(deleteTaskFromListAction(listID, removeTaskData))
+        await dispatch(deleteTaskFromListAction(listID, removeTaskData))
         onRefresh()
     }
 
-    const editTaskHandler = (id, data) => {
-        dispatch(editTaskAction(id, data))
+    const editTaskHandler = async (id, data) => {
+        await dispatch(editTaskAction(id, data))
         onRefresh()
     }
 
     const onNavigateDetail = (id) => {
         dispatch(getTaskItemAction(id))
-        .then(()=>props.navigation.navigate('TaskDetail'))
+            .then(() => props.navigation.navigate('TaskDetail'))
     }
 
-    const handlePushNoti = (taskObj)=>{
+    const handlePushNoti = (taskObj) => {
         var taggedUsers = taskObj.taggedUsers
-        if(taggedUsers.length >=1){
-            for(let i=0; i < taggedUsers.length; i++){
+        if (taggedUsers.length >= 1) {
+            for (let i = 0; i < taggedUsers.length; i++) {
                 var userObj = taggedUsers[i]
                 var expoPushToken = userObj.expoPushToken
                 sendPushNotification(userObj, taskObj)
             }
-        }       
-    }  
+        }
+    }
 
     const addTaskHandler = async (taskObj) => {
-        const data = {...taskObj, listId: listItem._id}
+        const data = { ...taskObj, listId: listItem._id }
         console.log('addTAskHandler: ', data)
         handlePushNoti(taskObj)
         setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
@@ -84,10 +90,9 @@ const ListDetail = (props) => {
             ])
         }
     }
-    
-    const renderItem = ({item, index}) => (
+
+    const renderItem = ({ item, index }) => (
         <TaskItem
-            isShowDate={true}
             item={item}
             index={index}
             deleteHandler={deleteHandler}
@@ -102,41 +107,43 @@ const ListDetail = (props) => {
 
     }
 
+
+
     return (
         <>
-            <TopNavigationBarList {...props} withBackControl={true} isDisplayDoneButton={true} onNavigateDoneDetail={onNavigateDoneDetail}/>
+            <TopNavigationBarList {...props} withBackControl={true} isDisplayDoneButton={true} onNavigateDoneDetail={onNavigateDoneDetail} />
             <Layout style={styles.container}>
                 <View style={styles.list}>
-                    <Text category='h1'>{listItem.name}</Text>
+                    <Text category='h1' style={{fontWeight: 'bold'}}>{listItem.name}</Text>
                     <View style={styles.gridView}>
                         <FlatList
                             data={completedTasks}
-                            keyExtractor={task=>task._id}
+                            keyExtractor={task => task._id}
                             renderItem={renderItem}
-                            refreshControl = {
-                                <RefreshControl onRefresh={onRefresh} refreshing={refreshing}/>
+                            refreshControl={
+                                <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                             }
                         />
                     </View>
                 </View>
             </Layout>
             <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()} />
-                    <RBSheet
-                        ref={refBottomSheet}
-                        closeOnDragDown
-                        height={500}
-                        customStyles={{
-                            container: {
-                                borderTopLeftRadius: 10,
-                                borderTopRightRadius: 10
-                            }
-                        }}
-                    >
-                        <View style={styles.bottomSheetContainer}>
-                            <Text style={styles.bottomSheetTitle}>Create a new task</Text>
-                            <AddTask submitHandler={addTaskHandler} />
-                        </View>
-                    </RBSheet>
+            <RBSheet
+                ref={refBottomSheet}
+                closeOnDragDown
+                height={500}
+                customStyles={{
+                    container: {
+                        borderTopLeftRadius: 10,
+                        borderTopRightRadius: 10
+                    }
+                }}
+            >
+                <View style={styles.bottomSheetContainer}>
+                    <Text style={styles.bottomSheetTitle}>Create a new task</Text>
+                    <AddTask submitHandler={addTaskHandler} />
+                </View>
+            </RBSheet>
 
         </>
     )
