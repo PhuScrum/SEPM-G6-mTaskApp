@@ -157,7 +157,8 @@ const styles = StyleSheet.create({
     },
     list: {
         flex: 3,
-        padding: 10
+        margin: 5,
+        padding: 5
     },
     btnContainer: {
         marginVertical: 5,

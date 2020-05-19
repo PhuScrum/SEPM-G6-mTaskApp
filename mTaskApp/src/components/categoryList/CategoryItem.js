@@ -96,6 +96,7 @@ export default CategoryItem
 const styles = StyleSheet.create({
     container: {
         marginVertical: 5,
+        marginHorizontal:3,
         paddingVertical: 15,
         paddingHorizontal: 10,
         borderRadius: 5,
