@@ -152,7 +152,7 @@ export default class DoneListScreen extends Component {
                 </View>
                 <Text style={{ textAlign: "center" }} category='h1'>Done List</Text>
 
-                <View style={{ paddingBottom: 260 }}>
+                <View style={{ paddingBottom: '22%' }}>
 
                     {/* <FlatList 
                 //Try to sort the data by date
