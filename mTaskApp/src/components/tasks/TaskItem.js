@@ -201,7 +201,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
                 backdropColor='black'
                 backdropOpacity={0.5}
             // hasBackdrop={false}
-            onBackdropPress={()=>setModalVisible(false)}
+                onBackdropPress={()=>setModalVisible(false)}
 
             >
                 <View style={{ marginVertical: 20 }}>
@@ -219,7 +219,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
                                                     uri: item.displayPhoto,
                                                 }}
                                             />
-                                            <Text style={{ fontSize: 16, fontWeight: '600', paddingHorizontal: 3 }}>{`${item.fName} ${item.lName}`}</Text>
+                                            <Text style={{ fontSize: 16, fontWeight: '600', paddingHorizontal: 8 }}>{`${item.fName} ${item.lName}`}</Text>
                                         </View>
                                     )
                                 }}
@@ -229,8 +229,8 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
                         <TouchableOpacity style={{
                             alignSelf: 'center',
                             borderRadius: 20,
-                            padding: 10,
-                            elevation: 2
+                            padding: 10
+                            // elevation: 2
                         }} onPress={() => setModalVisible(false)}>
                             <Text category='s1' style={{ color: defaultColor }}>Hide Modal</Text>
                         </TouchableOpacity>

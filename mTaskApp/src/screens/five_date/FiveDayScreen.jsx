@@ -225,11 +225,6 @@ const FiveDayScreen = (props) => {
                             borderTopLeftRadius: 10,
                             borderTopRightRadius: 10,
                             
-                        },
-                        wrapper:{
-                            // backgroundColor: 'black',
-                            // backfaceVisibility: 'hidden'
-                            
                         }
                     }}
                 >
