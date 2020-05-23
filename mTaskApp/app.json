@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Blank Template",
+    "name": "mTask",
     "slug": "SEPMG6-mTaskApp",
     "privacy": "public",
     "sdkVersion": "36.0.0",
@@ -31,7 +31,8 @@
     },
     "android": {
       "package": "com.SEPMG6.mTaskApp",
-      "versionCode": 1
+      "versionCode": 1,
+      "googleServicesFile": "./google-services.json"
     },
     "notification": {
       "icon": "./assets/build_icon.png"    }
