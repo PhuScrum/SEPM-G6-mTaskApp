@@ -13,6 +13,7 @@ export default function SingleOption({ unit }) {
     var idArr = selectedItems.map(unit => unit = unit._id)
     const idTagged = task.taggedUsers ? task.taggedUsers.map(unit => unit = unit._id) : []
 
+    console.log(checked)
     const sendToSelected = (items) => dispatch(sendToSelectedAction(items))
     const removeFromSelected = (items) => dispatch(removeFromSelectedAction(items))
 
@@ -22,12 +23,12 @@ export default function SingleOption({ unit }) {
     };
 
     useEffect(() => {
-        setChecked(false)
+        // setChecked(false)
 
         if (idArr.includes(unit._id) || idTagged.includes(unit._id)) {
             setChecked(true)
-        }
-    }, [])
+        } else {setChecked(false)}
+    }, [unit])
 
     // console.log('single option props: ', props)
     const { fName, lName } = unit

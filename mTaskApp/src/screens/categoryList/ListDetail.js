@@ -114,7 +114,7 @@ const ListDetail = (props) => {
             <TopNavigationBarList {...props} withBackControl={true} isDisplayDoneButton={true} onNavigateDoneDetail={onNavigateDoneDetail} />
             <Layout style={styles.container}>
                 <View style={styles.list}>
-                    <Text category='h1' style={{fontWeight: 'bold'}}>{listItem.name}</Text>
+                    <Text category='h1' style={{ fontWeight: 'bold' }}>{listItem.name}</Text>
                     <View style={styles.gridView}>
                         <FlatList
                             data={completedTasks}
@@ -129,18 +129,22 @@ const ListDetail = (props) => {
             </Layout>
             <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()} />
             <RBSheet
+                animationType='slide'
                 ref={refBottomSheet}
                 closeOnDragDown
-                height={500}
+                height={200}
                 customStyles={{
                     container: {
                         borderTopLeftRadius: 10,
                         borderTopRightRadius: 10
+                    },
+                    wrapper:{
+                        backgroundColor: 'white'
                     }
                 }}
             >
                 <View style={styles.bottomSheetContainer}>
-                    <Text style={styles.bottomSheetTitle}>Create a new task</Text>
+                    {/* <Text style={styles.bottomSheetTitle}>Create a new task</Text> */}
                     <AddTask submitHandler={addTaskHandler} />
                 </View>
             </RBSheet>

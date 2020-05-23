@@ -215,18 +215,26 @@ const FiveDayScreen = (props) => {
                 }
                 } />
                 <RBSheet
+
                     ref={refBottomSheet}
+                    animationType='slide'
                     closeOnDragDown
-                    height={500}
+                    height={220}
                     customStyles={{
                         container: {
                             borderTopLeftRadius: 10,
-                            borderTopRightRadius: 10
+                            borderTopRightRadius: 10,
+                            
+                        },
+                        wrapper:{
+                            // backgroundColor: 'black',
+                            // backfaceVisibility: 'hidden'
+                            
                         }
                     }}
                 >
                     <View style={styles.bottomSheetContainer}>
-                        <Text style={styles.bottomSheetTitle}>Create a new task</Text>
+                        {/* <Text style={styles.bottomSheetTitle}>Create a new task</Text> */}
                         <AddTask submitHandler={addTaskHandler} />
                     </View>
                 </RBSheet>
@@ -270,7 +278,7 @@ const styles = StyleSheet.create({
     },
     bottomSheetContainer: {
         flex: 1,
-        padding: 15
+        padding: 10
     },
     bottomSheetTitle: {
         fontFamily: 'Lato-Regular',

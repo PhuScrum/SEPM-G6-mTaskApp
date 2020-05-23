@@ -1,6 +1,6 @@
 import React, { createRef, useState, useRef } from 'react'
-import { StyleSheet, View, TouchableOpacity, TouchableHighlight, Animated, I18nManager, Platform } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import { StyleSheet, View, TouchableOpacity, TouchableHighlight, Animated, I18nManager, Platform, Alert, Image } from 'react-native';
+import { RectButton, FlatList } from 'react-native-gesture-handler';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Ionicons, AntDesign, Feather, Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -8,6 +8,9 @@ import { Layout, Text, Button, Icon } from '@ui-kitten/components';
 import { ListItem } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import DateTimePickerComponent from '../dateTimePicker/DateTimePickerComponent';
+import Modal from 'react-native-modal';
+
+import { defaultColor } from '../../constants/global_variables/global-variables'
 
 const combineDateTime = (date, time) => {
     const datePick = moment(date).format('DD MMM YYYY ')
@@ -16,7 +19,7 @@ const combineDateTime = (date, time) => {
     return finalTime
 }
 
-const RowItem = ({ item, isShowTime }) => {
+const RowItem = ({ item, isShowTime, toggleModal }) => {
     const nUsers = item.taggedUsers.length
 
     return (
@@ -27,10 +30,12 @@ const RowItem = ({ item, isShowTime }) => {
                     <View style={{ paddingHorizontal: 12 }}>
                         <Text category="h5" style={{ fontWeight: 'bold' }}>{item.name}</Text>
                         {nUsers !== 0 && (
-                            <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                                <Icon name='people-outline' width={18} height={18} fill='#659dea' />
-                                <Text style={{ paddingHorizontal: 5 }} category="s1">{nUsers}</Text>
-                            </View>
+                            <TouchableOpacity onPress={toggleModal}>
+                                <View style={{ flexDirection: 'row', alignItems: "center" }}>
+                                    <Icon name='people-outline' width={18} height={18} fill='#659dea' />
+                                    <Text style={{ paddingHorizontal: 5 }} category="s1">{nUsers}</Text>
+                                </View>
+                            </TouchableOpacity>
                         )}
                     </View>
                 </View>
@@ -54,6 +59,8 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
     const [showTimePicker, setShowTimePicker] = useState(false)
     const [date, setDate] = useState(new Date(item.dateTime))
     const [time, setTime] = useState(new Date(item.dateTime))
+
+    const [modalVisible, setModalVisible] = useState(false)
 
     const onChangeDate = (selectedDate) => {
         const currentDate = selectedDate
@@ -170,6 +177,11 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
         </View>
     );
 
+    const toggleModal = () => {
+        setModalVisible(true)
+        console.log(item.taggedUsers)
+    }
+
     return (
 
         <View>
@@ -181,8 +193,51 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
                 renderLeftActions={renderLeftActions}
                 renderRightActions={renderRightActions}
             >
-                <RowItem item={item} isShowTime={isShowTime} />
+                <RowItem item={item} isShowTime={isShowTime} toggleModal={toggleModal} />
             </Swipeable>
+
+            <Modal
+                isVisible={modalVisible}
+                backdropColor='black'
+                backdropOpacity={0.5}
+            // hasBackdrop={false}
+            onBackdropPress={()=>setModalVisible(false)}
+
+            >
+                <View style={{ marginVertical: 20 }}>
+                    <View style={[styles.modalView, styles.shadowContainer]} >
+                        <View style={styles.modalList}>
+                            <FlatList
+                                data={item.taggedUsers}
+                                keyExtractor={item => item._id}
+                                renderItem={({ item }) => {
+                                    return (
+                                        <View style={{ flexDirection: 'row', paddingBottom: 2, alignItems: 'center' }}>
+                                            <Image
+                                                style={styles.tinyLogo}
+                                                source={{
+                                                    uri: item.displayPhoto,
+                                                }}
+                                            />
+                                            <Text style={{ fontSize: 16, fontWeight: '600', paddingHorizontal: 3 }}>{`${item.fName} ${item.lName}`}</Text>
+                                        </View>
+                                    )
+                                }}
+                            />
+                        </View>
+
+                        <TouchableOpacity style={{
+                            alignSelf: 'center',
+                            borderRadius: 20,
+                            padding: 10,
+                            elevation: 2
+                        }} onPress={() => setModalVisible(false)}>
+                            <Text category='s1' style={{ color: defaultColor }}>Hide Modal</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                </View>
+            </Modal>
 
             <RBSheet
                 height={300}
@@ -321,7 +376,21 @@ const styles = StyleSheet.create({
         shadowRadius: 2.22,
 
         elevation: 3,
-    }
+    },
+    modalView: {
+        backgroundColor: 'white',
+        paddingBottom: 5,
+        paddingTop: 10,
+        paddingHorizontal: 15,
+        borderRadius: 8
+    },
+    tinyLogo: {
+        width: 45,
+        height: 45,
+        margin: 2,
+        borderRadius: 5
+    },
+
 })
 
 export default TaskItem

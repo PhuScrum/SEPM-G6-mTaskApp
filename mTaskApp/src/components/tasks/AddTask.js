@@ -63,7 +63,7 @@ const AddTask = ({ submitHandler }) => {
 
     return (
         <View style={styles.containter}>
-            <View style={styles.inputGroup, { flex: 1 }}>
+            <View style={styles.inputGroup}>
                 <Input
                     style={styles.input}
                     value={name}
@@ -71,15 +71,9 @@ const AddTask = ({ submitHandler }) => {
                     placeholder='New Task ...'
                 />
             </View>
-            <View style={styles.inputGroup, { flex: 1 }}>
-                <Input
-                    style={styles.input}
-                    value={desc}
-                    onChangeText={setDesc}
-                    placeholder='Description'
-                />
-            </View>
-            <View style={styles.inputGroup, { flexDirection: 'row', flex: 1, marginHorizontal: 10 }}>
+
+
+            <View style={styles.inputGroup}>
                 <DateTimePickerComponent
                     dateVisible={showDatePicker}
                     timeVisible={showTimePicker}
@@ -92,10 +86,11 @@ const AddTask = ({ submitHandler }) => {
                 />
             </View>
 
-            <View style={{ paddingTop: 8, flex: 1 }}>
+            {/* <View style={{ paddingTop: 8 }}>
                 <TagUser propStyle={{headerStyle: headerStyle}} tagType={'button'} isSaveTag={false} />
-            </View>
-            <View style={{ paddingTop: 8, flex: 1 }}>
+            </View> */}
+
+            <View style={{ paddingTop: 8}}>
                 <Button style={styles.submitButton} onPress={() => submitHandler(taskData)}>Add</Button>
             </View>
         </View>
@@ -137,8 +132,8 @@ const styles = StyleSheet.create({
     },
     input: {
         marginVertical: 3,
-        marginHorizontal: 10,
-        flex: 1
+        // marginHorizontal: 10,
+        // flex: 1
     },
     submitButton: {
         justifyContent: 'center',
@@ -147,8 +142,10 @@ const styles = StyleSheet.create({
         borderStartColor: "transparent"
     },
     inputGroup: {
-        width: '100%',
-        paddingBottom: 8,
+        // width: '100%',
+        // paddingBottom: 8,
+        marginHorizontal: 10
+        // flex: 1
         // position: 'relative'
     },
     dateTimeText: {
