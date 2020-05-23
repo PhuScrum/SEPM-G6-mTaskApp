@@ -16,10 +16,10 @@ import { editTaskAction } from '../../actions/TaskAction';
 MDIcon.loadFont();
 
 const TagUser = ({ propStyle, tagType, saveTagUser, id, isSaveTag }) => {
+    const {headerStyle} = propStyle
     const refRBSheet = useRef();
     const data = useSelector(state => state.tagMemberReducer.selectedItems, [])
 
-    console.log(data)
     const OpenTag = () => {
         switch(tagType){
             case 'input':
@@ -66,24 +66,23 @@ const TagUser = ({ propStyle, tagType, saveTagUser, id, isSaveTag }) => {
                     }
                 }}
             >
-                <View style={styles.dateHeaderContainer}>
-                    <TouchableOpacity
-                        onPress={() => refRBSheet.current.close()}
-                        style={styles.dateHeaderButton}
-                    >
-                        <Text style={styles.dateHeaderButtonCancel}>Cancel</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            refRBSheet.current.close()
-                        
-                            {isSaveTag && saveTagUser(id, {taggedUsers: data})}
-                        }}
-                        style={[styles.dateHeaderButton]}
-                    >
-                        <Text style={styles.dateHeaderButtonDone}>Done</Text>
-                    </TouchableOpacity>
-                </View>
+                <View style={headerStyle.headerContainer}>
+                        <TouchableOpacity
+                            onPress={() => refRBSheet.current.close()}
+                            style={headerStyle.headerButton}
+                        >
+                            <Text style={headerStyle.headerButtonCancel}>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                refRBSheet.current.close()
+                                {isSaveTag && saveTagUser(id, {taggedUsers: data})}
+                            }}
+                            style={[headerStyle.headerButton]}
+                        >
+                            <Text style={headerStyle.headerButtonDone}>Done</Text>
+                        </TouchableOpacity>
+                    </View>
 
                 <TagMemberInput/>
 

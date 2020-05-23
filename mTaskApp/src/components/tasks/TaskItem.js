@@ -3,8 +3,8 @@ import { StyleSheet, View, TouchableOpacity, TouchableHighlight, Animated, I18nM
 import { RectButton } from 'react-native-gesture-handler';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
-import { Layout, Text, Button } from '@ui-kitten/components';
+import { Ionicons, AntDesign, Feather, Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Layout, Text, Button, Icon } from '@ui-kitten/components';
 import { ListItem } from '@ui-kitten/components';
 import moment from 'moment-timezone'
 import DateTimePickerComponent from '../dateTimePicker/DateTimePickerComponent';
@@ -16,20 +16,37 @@ const combineDateTime = (date, time) => {
     return finalTime
 }
 
-const os = Platform.OS
+const RowItem = ({ item, isShowTime }) => {
+    const nUsers = item.taggedUsers.length
 
-const RowItem = ({ item }) => (
-    <RectButton >
-        <ListItem
-            style={styles.item}
-            title={item.name}
-            description={moment(item.dateTime).format('LT')}
-            // onPress={() => console.log(item.name)}
-        />
-    </RectButton>
-)
+    return (
+        <Layout style={[styles.container, styles.shadowContainer]}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={{ justifyContent: 'flex-start' }}>
+                    {/* <Feather name="list" size={24} /> */}
+                    <View style={{ paddingHorizontal: 12 }}>
+                        <Text category="h5" style={{ fontWeight: 'bold' }}>{item.name}</Text>
+                        {nUsers !== 0 && (
+                            <View style={{ flexDirection: 'row', alignItems: "center" }}>
+                                <Icon name='people-outline' width={18} height={18} fill='#659dea' />
+                                <Text style={{ paddingHorizontal: 5 }} category="s1">{nUsers}</Text>
+                            </View>
+                        )}
+                    </View>
+                </View>
 
-const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail}) => {
+                {isShowTime && (
+                    <View style={{ justifyContent: 'center', paddingHorizontal: 5 }}>
+                        <Text appearance='hint'> {moment(item.dateTime).format('LT')}</Text>
+                    </View>
+                )}
+
+            </View>
+        </Layout>
+    )
+}
+
+const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isShowTime }) => {
     const scrollRef = createRef()
     const refRBSheet = useRef();
 
@@ -54,120 +71,154 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail}) => 
         dateTime: combineDateTime(date, time)
     }
 
-    const renderLeftAction = (text, color, x, progress) => {
-        const trans = progress.interpolate({
-            inputRange: [0, 1],
-            outputRange: [x, 0],
-        });
-        const pressHandler = () => {
-            switch (text) {
-                case 'Delete':
-                    deleteHandler(item._id)
-                    refRBSheet.current.close()
-                case 'Delay':
-                    refRBSheet.current.open()
-                default:
-            }
-        }
-        return (
-            <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
-                <RectButton style={[styles.leftAction, { backgroundColor: color }]} onPress={pressHandler}>
-                    <Text style={styles.actionText}>{text}</Text>
-                </RectButton>
-            </Animated.View>
-        );
-    }
-    const renderLeftActions = (progress) => (
-        <View style={{ width: 192, flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse' }}>
-            {renderLeftAction('Delay', '#394F68', -64, progress)}
-            {renderLeftAction('Delete', '#EE001D', -32, progress)}
-        </View>
-    )
 
-    const renderRightAction = (text, color, x, progress) => {
+    const renderLeftActions = (progress) => {
+
+        const renderDeleteAction = (text, color, x, progress) => {
+            const trans = progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [x, 0],
+            });
+            const pressHandler = () => {
+                deleteHandler(item._id)
+                refRBSheet.current.close()
+            }
+            return (
+                <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
+                    <RectButton style={[styles.btnAction, { backgroundColor: color }]} onPress={pressHandler}>
+                        <Text style={styles.actionText}>
+                            <Octicons name="trashcan" size={20} />
+                        </Text>
+                    </RectButton>
+                </Animated.View>
+            );
+        }
+
+        const renderDelayAction = (text, color, x, progress) => {
+            const trans = progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [x, 0],
+            });
+            const pressHandler = () => {
+                refRBSheet.current.open()
+            }
+            return (
+                <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
+                    <RectButton style={[styles.btnAction, { backgroundColor: color }]} onPress={pressHandler}>
+                        <Text style={styles.actionText}>
+                            {text}
+                            {/* <MaterialCommunityIcons name="clock-fast" size={24}  /> */}
+                        </Text>
+                    </RectButton>
+                </Animated.View>
+            );
+        }
+
+        return (
+            <View style={{ width: 192, flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse' }}>
+                {renderDelayAction('Delay', '#394F68', -64, progress)}
+                {renderDeleteAction('Delete', '#EE001D', -32, progress)}
+            </View>
+        )
+    }
+
+    const renderMoreAction = (text, color, x, progress) => {
         const trans = progress.interpolate({
             inputRange: [0, 1],
             outputRange: [x, 0],
         });
         const pressHandler = () => {
-            switch (text) {
-                case 'Done':
-                    editTaskHandler(item._id, { completed: !item.completed })
-                case 'More':
-                    onNavigateDetail(item)
-                default:
-            }
+            onNavigateDetail(item._id)
         };
         return (
             <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
                 <RectButton
-                    style={[styles.rightAction, { backgroundColor: color }]}
+                    style={[styles.btnAction, { backgroundColor: color }]}
                     onPress={pressHandler}>
-                    <Text style={styles.actionText}>{text}</Text>
+                    <Text style={styles.actionText}>
+                        {text}
+                        {/* <Feather name="more-horizontal" size={24} /> */}
+                    </Text>
+                </RectButton>
+            </Animated.View>
+        );
+    };
+    const renderDoneAction = (text, color, x, progress) => {
+        const trans = progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [x, 0],
+        });
+        const pressHandler = () => {
+            editTaskHandler(item._id, { completed: !item.completed })
+        };
+        return (
+            <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
+                <RectButton
+                    style={[styles.btnAction, { backgroundColor: color }]}
+                    onPress={pressHandler}>
+                    <Text style={styles.actionText}>
+                        <Feather name="check-circle" size={20} />
+                    </Text>
                 </RectButton>
             </Animated.View>
         );
     };
     const renderRightActions = progress => (
         <View style={{ width: 192, flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row' }}>
-            {renderRightAction('More', '#65AEE0', 192, progress)}
-            {renderRightAction('Done', '#4CBB87', 128, progress)}
+            {renderMoreAction('More', '#65AEE0', 192, progress)}
+            {renderDoneAction('Done', '#4CBB87', 128, progress)}
         </View>
     );
 
     return (
-        <TouchableHighlight
-            style={styles.rowFront}
-        >
-            <View>
-                <Swipeable
-                    ref={scrollRef}
-                    friction={2}
-                    leftThreshold={40}
-                    rightThreshold={40}
-                    renderLeftActions={renderLeftActions}
-                    renderRightActions={renderRightActions}
-                >
-                    <RowItem item={item} />
-                </Swipeable>
 
-                <RBSheet
-                    height={300}
-                    ref={refRBSheet}
-                >
-                    <View style={styles.dateHeaderContainer}>
-                        <TouchableOpacity
-                            onPress={() => refRBSheet.current.close()}
-                            style={styles.dateHeaderButton}
-                        >
-                            <Text style={styles.dateHeaderButtonCancel}>Cancel</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                refRBSheet.current.close()
-                                editTaskHandler(item._id, taskDateTime)
-                            }}
-                            style={[styles.dateHeaderButton]}
-                        >
-                            <Text style={styles.dateHeaderButtonDone}>Done</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.inputGroup, { flexDirection: 'row', flex: 1, marginHorizontal: 10 }}>
-                        <DateTimePickerComponent
-                            dateVisible={showDatePicker}
-                            timeVisible={showTimePicker}
-                            onChangeDate={onChangeDate}
-                            onChangeTime={onChangeTime}
-                            setDatePickerVisible={setShowDatePicker}
-                            setTimePickerVisible={setShowTimePicker}
-                            dateValue={date}
-                            timeValue={time}
-                        />
-                    </View>
-                </RBSheet>           
-            </View>
+        <View>
+            <Swipeable
+                ref={scrollRef}
+                friction={2}
+                leftThreshold={40}
+                // rightThreshold={40}
+                renderLeftActions={renderLeftActions}
+                renderRightActions={renderRightActions}
+            >
+                <RowItem item={item} isShowTime={isShowTime} />
+            </Swipeable>
 
-        </TouchableHighlight>
+            <RBSheet
+                height={300}
+                ref={refRBSheet}
+            >
+                <View style={styles.dateHeaderContainer}>
+                    <TouchableOpacity
+                        onPress={() => refRBSheet.current.close()}
+                        style={styles.dateHeaderButton}
+                    >
+                        <Text style={styles.dateHeaderButtonCancel}>Cancel</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            refRBSheet.current.close()
+                            editTaskHandler(item._id, taskDateTime)
+                        }}
+                        style={[styles.dateHeaderButton]}
+                    >
+                        <Text style={styles.dateHeaderButtonDone}>Done</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.inputGroup, { flexDirection: 'row', flex: 1, marginHorizontal: 10 }}>
+                    <DateTimePickerComponent
+                        dateVisible={showDatePicker}
+                        timeVisible={showTimePicker}
+                        onChangeDate={onChangeDate}
+                        onChangeTime={onChangeTime}
+                        setDatePickerVisible={setShowDatePicker}
+                        setTimePickerVisible={setShowTimePicker}
+                        dateValue={date}
+                        timeValue={time}
+                    />
+                </View>
+            </RBSheet>
+        </View>
     );
 
 }
@@ -181,12 +232,21 @@ const styles = StyleSheet.create({
     button: {
         margin: 0
     },
-    rowFront: {
-        marginTop: 2,
-        backgroundColor: '#EEF7FA',
-        justifyContent: 'center',
-        borderRadius: 12
+    container: {
+        marginVertical: 5,
+        marginHorizontal: 3,
+        paddingVertical: 10,
+        paddingHorizontal: 5,
+        borderRadius: 5,
+        flex: 1,
+        // backgroundColor: '#EEF7FA'
     },
+    // rowFront: {
+    //     marginTop: 2,
+    //     backgroundColor: '#EEF7FA',
+    //     // justifyContent: 'center',
+    //     borderRadius: 12
+    // },
     leftAction: {
         alignItems: 'center',
         flex: 1,
@@ -196,9 +256,14 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         backgroundColor: 'transparent',
-        padding: 10,
+        fontWeight: 'bold'
+        // padding: 10,
     },
-    rightAction: {
+    btnAction: {
+        marginVertical: 5,
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+        borderRadius: 5,
         alignItems: 'center',
         flex: 1,
         justifyContent: 'center',
@@ -246,6 +311,17 @@ const styles = StyleSheet.create({
         fontFamily: 'Lato-Regular',
         marginLeft: 15
     },
+    shadowContainer: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+
+        elevation: 3,
+    }
 })
 
 export default TaskItem

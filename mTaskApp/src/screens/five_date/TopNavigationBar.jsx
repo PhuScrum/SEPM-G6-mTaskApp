@@ -3,7 +3,9 @@ import {
   Icon,
   TopNavigation,
   TopNavigationAction,
+  Layout
 } from '@ui-kitten/components';
+import { StyleSheet } from 'react-native'
 import { withNavigation } from 'react-navigation';
 
 const BackIcon = (style) => (
@@ -43,16 +45,42 @@ const TopNavigationBar = ({ navigation, route, withBackControl }) => {
       }}
     />
   ]
-  return withBackControl ? (<TopNavigation
-    title='mTask'
-    rightControls={renderRightControls()}
-    leftControl={renderBackControls()}
-  />) : (
+  return withBackControl ? (
+    <Layout style={{ paddingTop: 21, paddingBottom: 0 }}>
       <TopNavigation
-        title='mTask'
+        // titleStyle = {styles.titleStyle}
+        // title='Five Days List'
         rightControls={renderRightControls()}
+        leftControl={renderBackControls()}
       />
+    </Layout>
+  ) : (
+      <Layout style={{ paddingTop: 21, paddingBottom: 0 }}>
+
+        <TopNavigation
+          // style={styles.topNavigation}
+          // titleStyle = {styles.titleStyle}
+          // title='Five Days List'
+          rightControls={renderRightControls()}
+        />
+      </Layout>
     )
 }
 
 export default withNavigation(TopNavigationBar)
+
+const styles = StyleSheet.create({
+  // topNavigation: { 
+  //   backgroundColor: 'gray',
+  //   // paddingVertical: 20,
+  //   marginVertical: 10,
+  //   height: 100,
+  //   justifyContent: 'center'
+  // },
+  // titleStyle: {
+  //   color: '#EDF1F7',
+  //   fontSize: 36,
+  //   paddingVertical: 20,
+  //   alignSelf: 'center'
+  // }
+})

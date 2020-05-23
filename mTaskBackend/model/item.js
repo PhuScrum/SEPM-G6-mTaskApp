@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema;
 const itemSchema = new Schema({
+  creatorId: {type: Schema.Types.ObjectId, ref: 'user'},
+  // creatorId: {type: String},
   type: {type: String, default: 'task'},
   name: {type: String},
   description: {type: String},
@@ -15,14 +17,12 @@ const itemSchema = new Schema({
   repeat: {type: Object},
   location: {type: String},
   
-  listId: {type: Array},
-  creatorId: {type: String},
+  listId: [{type: Schema.Types.ObjectId, ref: 'list'}],
   taggedUsers: {type: Array},
   dateCreated: { type: Date, default: Date.now },
-
 })
 
-const itemModel = mongoose.model('item', itemSchema)
 
 
-module.exports = itemModel
+
+module.exports = itemModel = mongoose.model('item', itemSchema)

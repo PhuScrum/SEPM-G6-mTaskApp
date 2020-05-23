@@ -3,7 +3,6 @@ import { Text, View, Image, TextInput, KeyboardAvoidingView,TouchableOpacity, As
 
 export default class Profile extends Component {
   
-  
   constructor(props, navigation) {
     super(props, navigation);
     this.state = {
@@ -11,7 +10,6 @@ export default class Profile extends Component {
       isLoadding: true,
       isLoggedIn: 'false',
       userId:''
-
     }
   }
 
@@ -20,40 +18,28 @@ export default class Profile extends Component {
       let user = await AsyncStorage.getItem('user');
       let status = await AsyncStorage.getItem('isLoggedIn');
       let userid = await AsyncStorage.getItem('userId');
-
       // console.log(userid)
       this.setState({userInfo: JSON.parse(user)});
       this.setState({userId: userid});
       this.setState({isLoadding: false});
-      
     }catch(error){
       alert(error);
     }
-
   }
 
   handleLogOut(){
     console.log(this.state.userId)
-
-
     this.props.navigation.navigate('Login');
     AsyncStorage.setItem('isLoggedIn', this.state.isLoggedIn);
-
   }
-
   get button(){
     //AsyncStorage.setItem('isLoggedIn', this.state.isLoggedIn);
     return(
       <TouchableOpacity style={styles.buttonContainer} onPress={() => this.handleLogOut()}>
-        
         <Text>Log out</Text>  
-        
       </TouchableOpacity>
     )
   }
-  
-
-
     render(){
       if(this.state.isLoadding) {
         return(
@@ -62,8 +48,6 @@ export default class Profile extends Component {
           </View>
         )
       }else{
-    
-        
         return (
           
           <View style={styles.container}>
@@ -71,8 +55,6 @@ export default class Profile extends Component {
           <Image style={styles.avatar} source={{uri: this.state.userInfo.picture.data.url}}/>
             <View style={styles.body}>
               <View style={{ alignItems:'center', justifyContent:'center',}}>
-
-              
                  <Text style={{marginTop:30,fontSize:28,color: "#696969",fontWeight: "600"}}>{this.state.userInfo.name}</Text>
                  <Text style={styles.info}>Facebook Account:</Text>
                  <Text style={{alignItems:'center', justifyContent:'center',fontSize:16}}>{this.state.userInfo.email}</Text>

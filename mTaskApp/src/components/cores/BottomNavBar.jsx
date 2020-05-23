@@ -11,6 +11,7 @@ import { Notifications } from 'expo';
 import Constants from 'expo-constants';
 import {  View, Button, Vibration, Platform, SafeAreaView } from 'react-native';
 import * as Permissions from 'expo-permissions';
+import ListScreenStack from '../../screens/categoryList/ListScreenStack';
 const BottomTab = createBottomTabNavigator();
 
 const PersonIcon = (style) => (
@@ -19,8 +20,6 @@ const PersonIcon = (style) => (
 
 const BellIcon = (style) => (
         <Icon {...style} name='bell-outline' />
-      
-    
 );
 
 const HomeIcon = (style) => (
@@ -30,13 +29,6 @@ const HomeIcon = (style) => (
 const ListIcon = (style) => (
     <Icon {...style} name='list-outline' />
 );
-
-const ListScreen = () => (
-    <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text category='h1'>Hi</Text>
-    </Layout>
-);
-
 
 const BottomTabBar = ({ navigation, state }) => {
 
@@ -58,8 +50,8 @@ const BottomTabBar = ({ navigation, state }) => {
 };
 
 const TabNavigator = () => (
-    <BottomTab.Navigator tabBar={props => <BottomTabBar {...props} />}>
-        <BottomTab.Screen name='List' component={ListScreen} />
+    <BottomTab.Navigator initialRouteName='Home' tabBar={props => <BottomTabBar {...props} />}>
+        <BottomTab.Screen name='List' component={ListScreenStack} />
         <BottomTab.Screen name='Home' component={HomeScreen} />
 
         <BottomTab.Screen name='Notifications' component={NotificationListing} />

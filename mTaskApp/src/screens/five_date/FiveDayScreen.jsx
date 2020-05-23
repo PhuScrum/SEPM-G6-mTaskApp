@@ -8,6 +8,7 @@ import {
     Keyboard,
     SafeAreaView,
     RefreshControl,
+    ActivityIndicator,
     TouchableHighlight,
     TouchableOpacity,
     Dimensions,
@@ -30,12 +31,14 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import _ from 'lodash'
 import moment from 'moment-timezone'
 
-import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction, getMyTasksAction, getTaskItemAction } from '../../actions/TaskAction'
+import globalVar from '../../constants/global_variables/global-variables'
+import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction, getMyTasksAction, getTaskItemAction, clearTaskItemAction } from '../../actions/TaskAction'
 import { clearSelectedAction } from '../../actions/tag-members-actions';
 import TestPush from '../../components/push_notification/TestPush'
 import sendPushNotification from '../../components/push_notification/API/send-push-notification'
 import setLocalNotification from '../../components/push_notification/API/set-local-notification'
-import {Notifications} from 'expo'
+import { Notifications } from 'expo'
+
 FAIcon.loadFont();
 MDIcon.loadFont();
 
@@ -78,28 +81,27 @@ const getSections = (tasks) => {
 }
 
 const FiveDayScreen = (props) => {
+    const [isLoading, setLoading] = useState(true);
     const scrollRef = createRef()
     const refBottomSheet = useRef();
-    const tasks = useSelector(state => state.taskReducer.tasks, []);
+    const tasks = useSelector(state => state.taskReducer.tasks, [tasks]);
     const dispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false)
 
-    const onRefresh = useCallback(() => {
+    const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        wait(600)
-        .then(() => {
-            getMyTasks()
-            setRefreshing(false)
-        })
+        await getMyTasks()
+        setRefreshing(false)
+
     }, [refreshing]);
 
-    const deleteHandler = (id) => {
-        dispatch(deleteTaskAction(id))
+    const deleteHandler = async (id) => {
+        await dispatch(deleteTaskAction(id))
         onRefresh()
     }
 
-    const editTaskHandler = (id, data) => {
-        dispatch(editTaskAction(id, data))
+    const editTaskHandler = async (id, data) => {
+        await dispatch(editTaskAction(id, data))
         onRefresh()
     }
     
@@ -116,15 +118,13 @@ const FiveDayScreen = (props) => {
 
     const handlePushNoti = (taskObj)=>{
         var taggedUsers = taskObj.taggedUsers
-        if(taggedUsers.length >=1){
-            for(let i=0; i < taggedUsers.length; i++){
+        if (taggedUsers.length >= 1) {
+            for (let i = 0; i < taggedUsers.length; i++) {
                 var userObj = taggedUsers[i]
                 setUpSendingPush(userObj, taskObj)
             }
-        }       
+        }
     }
-
-   
 
     const addTaskHandler = async (taskObj) => {
         console.log('addTAskHandler: ', taskObj)
@@ -134,8 +134,7 @@ const FiveDayScreen = (props) => {
             let reminderId = await setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
             taskObj.reminderId = reminderId
             console.log('reminderId: ', reminderId)
-            dispatch(addTaskAction(taskObj))
-            dispatch(clearSelectedAction())
+            await dispatch(addTaskAction(taskObj))
             onRefresh()
             refBottomSheet.current.close()
         } else {
@@ -145,27 +144,34 @@ const FiveDayScreen = (props) => {
         }
     }
 
-    const onNavigateDetail = (item) => {
-        dispatch(getTaskItemAction(item._id))
-        .then(()=>props.navigation.navigate('TaskDetail'))
+    const onNavigateDetail = (id) => {
+        dispatch(getTaskItemAction(id))
+            .then(() => props.navigation.navigate('TaskDetail'))
     }
 
     const getMyTasks = async () => {
         let id = await AsyncStorage.getItem('userId')
+        console.log(id)
         dispatch(getMyTasksAction(id))
     }
 
-    useEffect( ()=>{
-        const unsubscribe = props.navigation.addListener('focus', ()=>{
-          getMyTasks()
-        })
-        return unsubscribe
-      },[props.navigation])
+    // useEffect(() => {
+    //     const unsubscribe = props.navigation.addListener('focus', async () => {
+    //         await getMyTasks()
+    //         setLoading(false)
+    //     })
+    //     return unsubscribe
+    // }, [props.navigation])
+    useEffect(() => {
+        getMyTasks()
+            .catch(err => console.log(err))
+            .finally(() => setLoading(false))
+    }, [])
 
     // console.log(userId)
 
     //Define Swipeable Section Elements
-    
+
     // console.log(myTasks)
     const unDoneList = tasks.filter(task => task.completed !== true)
     const sections = getSections(unDoneList)
@@ -176,23 +182,20 @@ const FiveDayScreen = (props) => {
             deleteHandler={deleteHandler}
             editTaskHandler={editTaskHandler}
             onNavigateDetail={onNavigateDetail}
+            isShowTime={true}
         />
     )
-    const renderSectionHeader = ({ section }) => <Text style={styles.SectionHeaderStyle}>{section.title}</Text>
+    const renderSectionHeader = ({ section }) => <Text style={styles.SectionHeaderStyle} >{section.title}</Text>
     return (
-        <TouchableWithoutFeedback
-            onPress={() => {
-                Keyboard.dismiss()
-                onRefresh()
-            }}
-        >
-            <>
-                <TopNavigationBar {...props} />
+        <>  
+            <TopNavigationBar {...props} />
 
-                <Layout style={styles.container} >
-                    <View style={styles.list} >
-                        <Text style={styles.title}>Five Days List</Text>
-                        {/* <TestPush/> */}
+
+            <Layout style={styles.container} >
+                <View style={styles.list} >
+                    <Text style={styles.title} category='h1'>Five Days List</Text>
+                    {/* <TestPush/> */}
+                    {isLoading ? <ActivityIndicator /> : (
                         <SectionList
                             stickySectionHeadersEnabled={false}
                             ref={scrollRef}
@@ -204,29 +207,32 @@ const FiveDayScreen = (props) => {
                                 <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                             }
                         />
+                    )}
+                </View>
+                {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
+                <AddToDoButton toggleBottomSheet={() => {
+                    refBottomSheet.current.open()
+                }
+                } />
+                <RBSheet
+                    ref={refBottomSheet}
+                    closeOnDragDown
+                    height={500}
+                    customStyles={{
+                        container: {
+                            borderTopLeftRadius: 10,
+                            borderTopRightRadius: 10
+                        }
+                    }}
+                >
+                    <View style={styles.bottomSheetContainer}>
+                        <Text style={styles.bottomSheetTitle}>Create a new task</Text>
+                        <AddTask submitHandler={addTaskHandler} />
                     </View>
-                    {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
-                    <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()} />
-                    <RBSheet
-                        ref={refBottomSheet}
-                        closeOnDragDown
-                        height={500}
-                        customStyles={{
-                            container: {
-                                borderTopLeftRadius: 10,
-                                borderTopRightRadius: 10
-                            }
-                        }}
-                    >
-                        <View style={styles.bottomSheetContainer}>
-                            <Text style={styles.bottomSheetTitle}>Create a new task</Text>
-                            <AddTask submitHandler={addTaskHandler} />
-                        </View>
-                    </RBSheet>
-                </Layout>
-            </>
+                </RBSheet>
+            </Layout>
+        </>
 
-        </TouchableWithoutFeedback>
     )
 
 }
@@ -236,27 +242,31 @@ const styles = StyleSheet.create({
         flex: 1,
         // alignItems: "center",
         justifyContent: 'center',
-        backgroundColor: '#EDF1F7',
+        // backgroundColor: '#EDF1F7',
         // marginTop: 20,
         paddingBottom: 0
     },
     title: {
-        fontFamily: 'Lato-Regular',
-        fontSize: 36,
-        paddingTop: 32,
-        color: '#1E262C'
+        // fontFamily: 'Lato-Regular',
+        // fontSize: 36,
+        // paddingTop: 10,
+        paddingBottom: 22,
+        color: '#1E262C',
+        fontWeight: 'bold'
     },
     list: {
         flex: 1,
+        paddingTop: 0,
         padding: 5
     },
     SectionHeaderStyle: {
-        paddingTop: 20,
+        paddingTop: 24,
+        paddingBottom: 8,
         // backgroundColor: '#CDDC89',
-        fontSize: 20,
-        padding: 5,
-        color: 'black',
-        paddingBottom: 2
+        fontSize: 18,
+        paddingHorizontal: 8,
+        color: globalVar.defaultColor,
+        fontWeight: 'bold'
     },
     bottomSheetContainer: {
         flex: 1,
