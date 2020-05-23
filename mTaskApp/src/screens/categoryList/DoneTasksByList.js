@@ -101,6 +101,7 @@ const DoneTasksByList = (props) => {
                         <Text style={{ fontSize: 15 }}><TimeAgo time={item.dateTime} /></Text>
                     </View>
                 </TouchableOpacity>
+                
 
             </View>
 
@@ -109,11 +110,13 @@ const DoneTasksByList = (props) => {
 
 
     return (
-        <View>
+        <View style={{ paddingTop: 20}}>
             <TopNavigationBarList {...props} isDisplayDoneButton={false} withBackControl={true} />
-            <Layout style={{ paddingTop: 16, paddingBottom: 0, paddingHorizontal: 10 }}>
+            <Layout style={{ paddingTop: 10, paddingBottom: 0, paddingHorizontal: 10 }}>
                 <Text style={{textAlign: "center"}} category='h1'>Completed {listItem.name}</Text>
-                <View style={{ paddingBottom: 260, paddingTop: 30 }}>
+
+                
+                <View style={{ paddingBottom: '27%' }}>
                     <SectionList
                         sections={newList}
                         renderSectionHeader={renderHeader}
@@ -124,6 +127,8 @@ const DoneTasksByList = (props) => {
                         }
                     />
                 </View>
+                
+               
             </Layout>
         </View>
     )
