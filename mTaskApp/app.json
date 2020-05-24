@@ -11,7 +11,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/build_icon.png",
+    "icon": "./assets/official_icon.png",
     "facebookScheme": "fb3153512351365949",
     "splash": {
       "image": "./assets/splash_logo2.png",
@@ -35,7 +35,7 @@
       "googleServicesFile": "./google-services.json"
     },
     "notification": {
-      "icon": "./assets/build_icon.png"    }
+      "icon": "./assets/official_icon.png"    }
   }
   
 }
