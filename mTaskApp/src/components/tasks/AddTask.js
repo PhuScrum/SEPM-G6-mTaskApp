@@ -27,6 +27,10 @@ const AddTask = ({ submitHandler }) => {
     const [date, setDate] = useState(new Date(Date.now()))
     const [time, setTime] = useState(new Date(Date.now()))
 
+    const onResetDateTime = () => {
+        setDate(new Date(Date.now()))
+        setTime(new Date(Date.now()))
+    }
 
     const onChangeDate = (selectedDate) => {
         const currentDate = selectedDate
@@ -83,6 +87,7 @@ const AddTask = ({ submitHandler }) => {
                     setTimePickerVisible={setShowTimePicker}
                     dateValue={date}
                     timeValue={time}
+                    onResetDateTime={onResetDateTime}
                 />
             </View>
 

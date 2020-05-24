@@ -14,11 +14,10 @@ app.get('/', (req, res) => {
   res.status(200).send('Hello, world!').end();
 });
 
-const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://admin:123@cluster0-ym27l.mongodb.net/mtask-app?retryWrites=true";
-
-const client = new MongoClient(uri, { useNewUrlParser: true });
-mongoose.connect(uri, { useNewUrlParser: true })
+mongoose.connect(uri, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true, useCreateIndex: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.log(err));
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;

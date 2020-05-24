@@ -36,12 +36,14 @@ const TaskDetail = (props) => {
         dispatch(getMyListsAction(id))
     }
 
-    const onRefresh = useCallback(async () => {
+    const onRefresh = useCallback(() => {
         setRefreshing(true);
         // wait(600)
-        await dispatch(getTaskItemAction(task._id))
-        setRefreshing(false)
-        getMyTasks()
+        dispatch(getTaskItemAction(task._id))
+        .then(()=>{
+            setRefreshing(false)
+            getMyTasks()
+        })
     }, [refreshing]);
 
     const editTaskHandler = async (id, data) => {
@@ -56,12 +58,13 @@ const TaskDetail = (props) => {
     }
 
     // useEffect(() => {
-    //     const unMount = navigation.addListener('blur', () => {
-    //         dispatch(clearSelectedAction())
-    //         // dispatch(clearTaskItemAction())
-    //     })
-    //     return unMount
-    // }, [navigation])
+    //     const reload = onRefresh()
+    //     // const unMount = navigation.addListener('blur', () => {
+    //     //     dispatch(clearSelectedAction())
+    //     //     // dispatch(clearTaskItemAction())
+    //     // })
+    //     return reload
+    // }, [reload])
 
     // console.log(task.listId)
 

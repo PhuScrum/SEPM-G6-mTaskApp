@@ -40,6 +40,11 @@ const TaskDate = ({dateTime, id, saveDateTime, propStyle}) => {
         dateTime: combineDateTime(date, time)
     }
 
+    const onResetDateTime = () => {
+        setDate(new Date(dateTime))
+        setTime(new Date(dateTime))
+    }
+
     return (
         <>
             <View style={[styles.dueStyle, propStyle.borderStyle]}>
@@ -84,6 +89,7 @@ const TaskDate = ({dateTime, id, saveDateTime, propStyle}) => {
                             setTimePickerVisible={setShowTimePicker}
                             dateValue={date}
                             timeValue={time}
+                            onResetDateTime={onResetDateTime}
                         />
                     </View>
                 </RBSheet>  

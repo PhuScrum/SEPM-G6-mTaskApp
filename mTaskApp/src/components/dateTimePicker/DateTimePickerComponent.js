@@ -17,7 +17,8 @@ const DateTimePickerComponent = ({
     setDatePickerVisible,
     setTimePickerVisible,
     dateValue,
-    timeValue }) => {
+    timeValue, 
+    onResetDateTime }) => {
 
     const [onDisplayDate, setOnDisplayDate] = useState(false)
     const [onDisplayTime, setOnDisplayTime] = useState(false)
@@ -30,6 +31,7 @@ const DateTimePickerComponent = ({
     const onHide = () => {
         setOnDisplayDate(false)
         setOnDisplayTime(false)
+        onResetDateTime()
     }
 
     const displayDate = onDisplayDate ? moment(dateValue).format('LL') : ''
