@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, createRef, useRef } from 'react';
+import React, { useState, useEffect, useCallback, createRef, useRef, useLayoutEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import {
     View,
@@ -17,7 +17,7 @@ import {
     AsyncStorage
 } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
-import { Layout, Text, Icon } from '@ui-kitten/components';
+import { Layout, Text, Icon, Button } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
 import TaskItem from '../../components/tasks/TaskItem';
 import AddTask from '../../components/tasks/AddTask';
@@ -31,7 +31,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import _ from 'lodash'
 import moment from 'moment-timezone'
 
-import globalVar from '../../constants/global_variables/global-variables'
+import {defaultBtnHeight,defaultColor} from '../../constants/global_variables/global-variables'
 import { getTasksAction, deleteTaskAction, addTaskAction, editTaskAction, getMyTasksAction, getTaskItemAction, clearTaskItemAction } from '../../actions/TaskAction'
 import { clearSelectedAction } from '../../actions/tag-members-actions';
 import TestPush from '../../components/push_notification/TestPush'
@@ -80,19 +80,22 @@ const getSections = (tasks) => {
     return sections
 }
 
+
+
 const FiveDayScreen = (props) => {
     const [isLoading, setLoading] = useState(true);
     const scrollRef = createRef()
-    const refBottomSheet = useRef();
+    const refBottomSheet = useRef(0);
     const tasks = useSelector(state => state.taskReducer.tasks, [tasks]);
     const dispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false)
+
+    const [btnHeight, setBtnHeight] = useState(defaultBtnHeight)
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
         await getMyTasks()
         setRefreshing(false)
-
     }, [refreshing]);
 
     const deleteHandler = async (id) => {
@@ -167,12 +170,18 @@ const FiveDayScreen = (props) => {
             .catch(err => console.log(err))
             .finally(() => setLoading(false))
     }, [])
+ 
+    const onLayout = (e) => {
+        const width = e.nativeEvent.layout.width
+        const height = e.nativeEvent.layout.height
+        // console.log( width, ' x ', height)
+        // setBtnHeight(height+25)
+        // console.log(refBottomSheet.current)
+    }
 
-    // console.log(userId)
+    const onResizeBtnSheet = (i) => setBtnHeight(btnHeight + i)
 
-    //Define Swipeable Section Elements
-
-    // console.log(myTasks)
+    //define sections
     const unDoneList = tasks.filter(task => task.completed !== true)
     const sections = getSections(unDoneList)
     const renderItem = ({ item, index }) => (
@@ -209,28 +218,25 @@ const FiveDayScreen = (props) => {
                         />
                     )}
                 </View>
-                {/* {!bottomSheetShow && (<AddToDoButton toggleBottomSheet={() => Input.open()} />)} */}
-                <AddToDoButton toggleBottomSheet={() => {
-                    refBottomSheet.current.open()
-                }
-                } />
+                <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()}/>
                 <RBSheet
-
                     ref={refBottomSheet}
-                    animationType='slide'
+                    animationType='fade'
+                    onClose={()=>setBtnHeight(defaultBtnHeight)}
                     closeOnDragDown
-                    height={220}
+                    // height={btnHeight}
                     customStyles={{
                         container: {
                             borderTopLeftRadius: 10,
                             borderTopRightRadius: 10,
-                            
+                            height: btnHeight
                         }
                     }}
                 >
                     <View style={styles.bottomSheetContainer}>
-                        {/* <Text style={styles.bottomSheetTitle}>Create a new task</Text> */}
-                        <AddTask submitHandler={addTaskHandler} />
+                        <AddTask submitHandler={addTaskHandler} onResizeBtnSheet={onResizeBtnSheet}/>
+                        {/* <Button onPress={()=>{setBtnHeight(btnHeight + 20)}} >Add Height</Button>
+                        <Button onPress={()=>{setBtnHeight(btnHeight + -20)}}>Decrease Height</Button> */}
                     </View>
                 </RBSheet>
             </Layout>
@@ -268,12 +274,12 @@ const styles = StyleSheet.create({
         // backgroundColor: '#CDDC89',
         fontSize: 18,
         paddingHorizontal: 8,
-        color: globalVar.defaultColor,
+        color: defaultColor,
         fontWeight: 'bold'
     },
     bottomSheetContainer: {
         flex: 1,
-        padding: 10
+        padding: 5
     },
     bottomSheetTitle: {
         fontFamily: 'Lato-Regular',

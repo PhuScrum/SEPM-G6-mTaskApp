@@ -13,7 +13,7 @@ export default function SingleOption({ unit }) {
     var idArr = selectedItems.map(unit => unit = unit._id)
     const idTagged = task.taggedUsers ? task.taggedUsers.map(unit => unit = unit._id) : []
 
-    console.log(checked)
+    // console.log(checked)
     const sendToSelected = (items) => dispatch(sendToSelectedAction(items))
     const removeFromSelected = (items) => dispatch(removeFromSelectedAction(items))
 

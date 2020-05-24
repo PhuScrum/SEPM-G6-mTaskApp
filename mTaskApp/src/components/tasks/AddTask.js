@@ -3,9 +3,12 @@ import { useSelector, useDispatch } from 'react-redux'
 import { StyleSheet, View, TouchableOpacity, Platform, AsyncStorage } from 'react-native'
 import { Layout, Text, Input, Button, Icon } from '@ui-kitten/components';
 import moment from 'moment-timezone'
-import TagMembers from '../tag_members/TagMembers'
 import DateTimePickerComponent from '../dateTimePicker/DateTimePickerComponent'
 import TagUser from '../taskDetail/TagUser';
+import { MaterialIcons } from '@expo/vector-icons';
+import TaskDesc from '../taskDetail/TaskDesc';
+import Modal from 'react-native-modal';
+import { clearSelectedAction } from '../../actions/tag-members-actions';
 
 const combineDateTime = (date, time) => {
     const datePick = moment(date).format('DD MMM YYYY ')
@@ -14,18 +17,27 @@ const combineDateTime = (date, time) => {
     return finalTime
 }
 
-const AddTask = ({ submitHandler }) => {
+const AddTask = ({ submitHandler, onResizeBtnSheet }) => {
     const os = Platform.OS
     const tag = useSelector(state => state.tagMemberReducer.selectedItems, [])
 
     const [userId, setUserId] = useState('')
     const [name, setName] = useState('')
-    const [desc, setDesc] = useState('')
 
+    const [desc, setDesc] = useState('')
+    const [descInput, setDescInput] = useState(false)
+
+    const [onDisplayDate, setOnDisplayDate] = useState(false)
+    const [onDisplayTime, setOnDisplayTime] = useState(false)
+
+    const taggedUsers = useSelector(state => state.tagMemberReducer.selectedItems, [])
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [showTimePicker, setShowTimePicker] = useState(false)
     const [date, setDate] = useState(new Date(Date.now()))
     const [time, setTime] = useState(new Date(Date.now()))
+
+    const displayDate = onDisplayDate ? moment(date).format('LL') : ''
+    const displayTime = onDisplayTime ? moment(time).format('LT') : ''
 
     const onResetDateTime = () => {
         setDate(new Date(Date.now()))
@@ -36,13 +48,23 @@ const AddTask = ({ submitHandler }) => {
         const currentDate = selectedDate
         setShowDatePicker(false)
         setDate(currentDate);
+        setOnDisplayDate(true)
     };
 
     const onChangeTime = (selectedTime) => {
         const currentTime = selectedTime
         setShowTimePicker(false)
         setTime(currentTime);
+        setOnDisplayTime(true)
     };
+
+    const onHide = () => {
+        setOnDisplayDate(false)
+        setOnDisplayTime(false)
+        onResetDateTime()
+    }
+
+    console.log(desc)
 
     const taskData = {
         name: name,
@@ -61,6 +83,14 @@ const AddTask = ({ submitHandler }) => {
         }
     }
 
+    const openDescInput = () => {
+        setDescInput(!descInput)
+        // if (descInput) onResizeBtnSheet(-60)
+        // else onResizeBtnSheet(60)
+    }
+
+    
+
     useEffect(() => {
         getUserId()
     }, [])
@@ -77,7 +107,7 @@ const AddTask = ({ submitHandler }) => {
             </View>
 
 
-            <View style={styles.inputGroup}>
+            <View style={[styles.inputGroup, { flexDirection: 'row', alignItems: 'center' }]}>
                 <DateTimePickerComponent
                     dateVisible={showDatePicker}
                     timeVisible={showTimePicker}
@@ -89,13 +119,68 @@ const AddTask = ({ submitHandler }) => {
                     timeValue={time}
                     onResetDateTime={onResetDateTime}
                 />
+
+                <View style={{ justifyContent: 'center', marginTop: 5, paddingHorizontal: 5 }}>
+                    <TagUser propStyle={{ headerStyle: headerStyle }} tagType={'icon'} isSaveTag={false} />
+                </View>
+                <View style={{ justifyContent: 'center', marginTop: 5, paddingLeft: 5 }}>
+                    <TaskDesc propStyle={{ headerStyle: headerStyle }} addType={'button'} openInput={openDescInput} />
+                </View>
+
+                <Modal
+                    isVisible={descInput}
+                    backdropColor='black'
+                    backdropOpacity={0.8}
+                    // hasBackdrop={false}
+                    onBackdropPress={() => setDescInput(false)}
+
+                >
+                    <View style={{ marginVertical: 15 }}>
+                        <View style={[styles.modalView, styles.shadowContainer]} >
+                            <Input
+                                value={desc}
+                                onChangeText={setDesc}
+                                multiline={true}
+                                textStyle={{ minHeight: 86 }}
+                                placeholder='Multiline'
+                            // {...multilineInputState}
+                            />
+                        </View>
+                    </View>
+                </Modal>
             </View>
 
-            {/* <View style={{ paddingTop: 8 }}>
-                <TagUser propStyle={{headerStyle: headerStyle}} tagType={'button'} isSaveTag={false} />
-            </View> */}
+            <View style={styles.dividerStyle}>
+                <View style={[styles.inputGroup, { flexDirection: 'row', alignItems: 'center' }]}>
+                    {(onDisplayDate || onDisplayTime) && (
+                        <View style={styles.displayStyle}>
+                            <TouchableOpacity onPress={onHide}>
+                                <MaterialIcons name="cancel" size={18} color="white" />
+                            </TouchableOpacity>
+                            <Text category='c1' style={{ color: 'white', paddingLeft: 5 }}>{`${displayDate} ${displayTime}`}</Text>
+                        </View>
+                    )}
+                    {(taggedUsers && taggedUsers.length !== 0) && (
+                        <TouchableOpacity onPress={()=>console.log('Clear Tag')}>
+                            <View style={styles.displayStyle}>
+                            <View style={{ flexDirection: 'row', alignItems: "center", paddingLeft: 2 }}>
+                                <Icon name='people-outline' width={16} height={18} fill='#ffffff' />
+                                <Text style={{ paddingLeft: 2, color: 'white' }} category="c1">{taggedUsers.length}</Text>
+                            </View>
+                        </View>
+                        </TouchableOpacity>
+                    )}
+                    {(desc !== '') && (
+                        <TouchableOpacity onPress={()=>setDesc('')}>
+                            <View style={styles.displayStyle}>
+                                <MaterialIcons name="text-fields" size={18} color="white" />
+                            </View>
+                        </TouchableOpacity>
+                    )}
+                </View>
+            </View>
 
-            <View style={{ paddingTop: 8}}>
+            <View style={{ paddingTop: 5 }}>
                 <Button style={styles.submitButton} onPress={() => submitHandler(taskData)}>Add</Button>
             </View>
         </View>
@@ -130,10 +215,7 @@ const headerStyle = {
 
 const styles = StyleSheet.create({
     containter: {
-        flex: 1,
-        // justifyContent: "center",
-        // alignItems: "center",
-
+        flex: 1
     },
     input: {
         marginVertical: 3,
@@ -147,11 +229,8 @@ const styles = StyleSheet.create({
         borderStartColor: "transparent"
     },
     inputGroup: {
-        // width: '100%',
-        // paddingBottom: 8,
+
         marginHorizontal: 10
-        // flex: 1
-        // position: 'relative'
     },
     dateTimeText: {
         fontSize: 16,
@@ -174,8 +253,48 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 15,
         // position: "absolute",
-    }
+    },
+    displayStyle: {
+        marginTop: 5,
+        // marginLeft: 8,
+        marginRight: 10,
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+        backgroundColor: 'black',
+        borderRadius: 18,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    shadowContainer: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
 
+        elevation: 3,
+    },
+    modalView: {
+        backgroundColor: 'white',
+        paddingBottom: 5,
+        paddingTop: 10,
+        paddingHorizontal: 15,
+        borderRadius: 8
+    },
+    tinyLogo: {
+        width: 45,
+        height: 45,
+        margin: 2,
+        borderRadius: 5
+    },
+    dividerStyle: {
+        marginTop: 10,
+        paddingTop: 5,
+        borderTopColor: '#D1D5D8',
+        borderTopWidth: 1
+    }
 })
 
 export default AddTask

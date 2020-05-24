@@ -119,7 +119,7 @@ const ListScreen = (props) => {
                     <RBSheet
                         ref={refBtnSheet}
                         closeOnDragDown
-                        height={350}
+                        height={250}
                         customStyles={{
                             container: {
                                 borderTopLeftRadius: 10,

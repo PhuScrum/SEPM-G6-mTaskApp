@@ -12,6 +12,7 @@ import AddToDoButton from '../../components/tasks/AddTaskButton'
 import sendPushNotification from '../../components/push_notification/API/send-push-notification'
 import setLocalNotification from '../../components/push_notification/API/set-local-notification'
 import { clearSelectedAction } from '../../actions/tag-members-actions'
+import {defaultBtnHeight,defaultColor} from '../../constants/global_variables/global-variables'
 
 import RBSheet from "react-native-raw-bottom-sheet";
 import AddTask from '../../components/tasks/AddTask'
@@ -31,6 +32,7 @@ const ListDetail = (props) => {
     const tasks = listItem.items ? listItem.items : []
     const completedTasks = tasks.filter(task => task.completed === false)
     const [refreshing, setRefreshing] = useState(false)
+    const [btnHeight, setBtnHeight] = useState(defaultBtnHeight)
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
@@ -107,6 +109,8 @@ const ListDetail = (props) => {
 
     }
 
+    const onResizeBtnSheet = (i) => setBtnHeight(btnHeight + i)
+
 
 
     return (
@@ -132,20 +136,17 @@ const ListDetail = (props) => {
                 animationType='slide'
                 ref={refBottomSheet}
                 closeOnDragDown
-                height={200}
                 customStyles={{
                     container: {
                         borderTopLeftRadius: 10,
-                        borderTopRightRadius: 10
-                    },
-                    wrapper:{
-                        backgroundColor: 'white'
+                        borderTopRightRadius: 10,
+                        height: btnHeight
                     }
                 }}
             >
                 <View style={styles.bottomSheetContainer}>
                     {/* <Text style={styles.bottomSheetTitle}>Create a new task</Text> */}
-                    <AddTask submitHandler={addTaskHandler} />
+                    <AddTask submitHandler={addTaskHandler} onResizeBtnSheet={onResizeBtnSheet} />
                 </View>
             </RBSheet>
 
@@ -171,7 +172,7 @@ const styles = StyleSheet.create({
     },
     bottomSheetContainer: {
         flex: 1,
-        padding: 15
+        padding: 5
     },
     bottomSheetTitle: {
         fontFamily: 'Lato-Regular',

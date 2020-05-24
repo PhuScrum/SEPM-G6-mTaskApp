@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, TouchableHighlight } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, TextInput, ScrollView, TouchableHighlight } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { Ionicons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import MDIcon from "react-native-vector-icons/MaterialIcons";
 import {
     Input,
+    Text,
     Icon,
     List, ListItem,
     Button
@@ -16,17 +17,17 @@ import { editTaskAction } from '../../actions/TaskAction';
 MDIcon.loadFont();
 
 const TagUser = ({ propStyle, tagType, saveTagUser, id, isSaveTag }) => {
-    const {headerStyle} = propStyle
+    const { headerStyle } = propStyle
     const refRBSheet = useRef();
     const data = useSelector(state => state.tagMemberReducer.selectedItems, [])
 
     const OpenTag = () => {
-        switch(tagType){
+        switch (tagType) {
             case 'input':
                 return (
                     <View style={[styles.tagStyle, propStyle.borderStyle]}>
                         <View style={styles.tagInputStyle}>
-                            <Text>Tagged Users:</Text>
+                            <Text category='s1'>Tagged Users:</Text>
                             <TouchableOpacity
                                 style={{ paddingHorizontal: 5 }}
                                 onPress={() => {
@@ -36,25 +37,36 @@ const TagUser = ({ propStyle, tagType, saveTagUser, id, isSaveTag }) => {
                                 <AntDesign name="adduser" size={propStyle.iconSize} />
                             </TouchableOpacity>
                         </View>
-                </View>
+                    </View>
                 )
             case 'button':
                 return (
-                <TouchableHighlight
-                style={styles.openButton}
-                onPress={()=>refRBSheet.current.open()}
-                >
-                    <Text style={styles.textStyle}>Tag members</Text>
-                </TouchableHighlight>
+                    <TouchableOpacity
+                        style={styles.openButton}
+                        onPress={() => refRBSheet.current.open()}
+                    >
+                        <>
+                            <FontAwesome name="user-circle-o" size={24} color="black" />
+                            <Text category='s1' style={styles.textStyle}>Tag users</Text>
+                        </>
+                    </TouchableOpacity>
                 )
-                
+            case 'icon':
+                return (
+                    <TouchableOpacity
+                        onPress={() => refRBSheet.current.open()}
+                    >
+                        <FontAwesome name="user-circle-o" size={22} color="black" />
+                    </TouchableOpacity>
+                )
+
             default:
         }
     }
 
     return (
         <>
-            <OpenTag/>
+            <OpenTag />
             <RBSheet
                 ref={refRBSheet}
                 closeOnDragDown
@@ -67,24 +79,25 @@ const TagUser = ({ propStyle, tagType, saveTagUser, id, isSaveTag }) => {
                 }}
             >
                 <View style={headerStyle.headerContainer}>
-                        <TouchableOpacity
-                            onPress={() => refRBSheet.current.close()}
-                            style={headerStyle.headerButton}
-                        >
-                            <Text style={headerStyle.headerButtonCancel}>Cancel</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                refRBSheet.current.close()
-                                {isSaveTag && saveTagUser(id, {taggedUsers: data})}
-                            }}
-                            style={[headerStyle.headerButton]}
-                        >
-                            <Text style={headerStyle.headerButtonDone}>Done</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity
+                        onPress={() => refRBSheet.current.close()}
+                        style={headerStyle.headerButton}
+                    >
+                        <Text style={headerStyle.headerButtonCancel}>Cancel</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            refRBSheet.current.close()
+                            { isSaveTag && saveTagUser(id, { taggedUsers: data }) }
+                        }}
+                        style={[headerStyle.headerButton]}
+                    >
 
-                <TagMemberInput/>
+                        <Text style={headerStyle.headerButtonDone}>Done</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <TagMemberInput />
 
             </RBSheet>
 
@@ -156,17 +169,21 @@ const styles = StyleSheet.create({
         borderRadius: 25
     },
     openButton: {
-        backgroundColor: "#F194FF",
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2,
-        width: 150
-      },
-      textStyle: {
-        color: "white",
+        backgroundColor: "#D1D5D8",
+        borderRadius: 5,
+        paddingRight: 25,
+        paddingLeft: 5,
+        paddingVertical: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+        // width: 150
+    },
+    textStyle: {
+        // color: "white",
+        fontSize: 16,
         fontWeight: "bold",
         textAlign: "center"
-      },
+    },
 })
 
 export default TagUser

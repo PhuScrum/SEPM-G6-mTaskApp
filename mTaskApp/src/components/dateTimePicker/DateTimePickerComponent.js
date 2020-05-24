@@ -20,22 +20,9 @@ const DateTimePickerComponent = ({
     timeValue, 
     onResetDateTime }) => {
 
-    const [onDisplayDate, setOnDisplayDate] = useState(false)
-    const [onDisplayTime, setOnDisplayTime] = useState(false)
-
-
     const os = Platform.OS
 
     // console.log(onDisplay)
-
-    const onHide = () => {
-        setOnDisplayDate(false)
-        setOnDisplayTime(false)
-        onResetDateTime()
-    }
-
-    const displayDate = onDisplayDate ? moment(dateValue).format('LL') : ''
-    const displayTime = onDisplayTime ? moment(timeValue).format('LT') : ''
 
     const DateTimePicker = () => {
         return (
@@ -49,7 +36,7 @@ const DateTimePickerComponent = ({
                         display="calendar"
                         onConfirm={(date)=> {
                             onChangeDate(date)
-                            setOnDisplayDate(true)
+                            // setOnDisplayDate(true)
                         }}
                         onCancel={() => setDatePickerVisible(false)}
                     />
@@ -63,7 +50,7 @@ const DateTimePickerComponent = ({
                         display={os === 'ios' ? "default" : "spinner"}
                         onConfirm={(time)=>{
                             onChangeTime(time)
-                            setOnDisplayTime(true)
+                            // setOnDisplayTime(true)
                         }}
                         onCancel={() => setTimePickerVisible(false)}
                     />
@@ -74,9 +61,9 @@ const DateTimePickerComponent = ({
 
     return (
         <>
-            <View style={{ flexDirection: "row", paddingTop: 5, alignItems: 'center' }}>
+            <View style={{ flexDirection: "row", marginTop: 5, alignItems: 'center' }}>
                 <TouchableOpacity
-                    style={{ paddingRight: 10 }}
+                    style={{ paddingRight: 5 }}
                     onPress={() => {
                         setDatePickerVisible(true)
                         setTimePickerVisible(false)
@@ -91,17 +78,8 @@ const DateTimePickerComponent = ({
                         setDatePickerVisible(false)
                     }}
                 >
-                    <Feather name="clock" size={24} color="black" />
+                    <Feather name="clock" size={22} color="black" />
                 </TouchableOpacity>
-                
-                {(onDisplayDate || onDisplayTime) && (
-                    <View style={styles.displayStyle}>
-                        <TouchableOpacity onPress={onHide}>
-                        <MaterialIcons name="cancel" size={18} color="white" />
-                        </TouchableOpacity>
-                        <Text category='c1' style={{color: 'white', paddingLeft: 5}}>{`${displayDate} ${displayTime}`}</Text>
-                    </View>
-                )}
 
             </View>
             <DateTimePicker />
@@ -126,6 +104,7 @@ const styles = StyleSheet.create({
     },
     displayStyle:{
         marginLeft: 8,
+        marginRight: 10,
         paddingLeft: 5,
         paddingRight: 10,
         paddingVertical: 2,
