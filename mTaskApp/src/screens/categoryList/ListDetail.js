@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: '#EDF1F7',
+        // backgroundColor: '#EDF1F7',
     },
     list: {
         flex: 1,

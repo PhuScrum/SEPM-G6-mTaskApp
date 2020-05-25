@@ -36,15 +36,16 @@ const TaskDetail = (props) => {
         dispatch(getMyListsAction(id))
     }
 
-    const onRefresh = useCallback(() => {
-        setRefreshing(true);
-        // wait(600)
-        dispatch(getTaskItemAction(task._id))
-        .then(()=>{
-            setRefreshing(false)
-            getMyTasks()
-        })
-    }, [refreshing]);
+    // const onRefresh = useCallback(() => {
+    //     setRefreshing(true);
+    //     // wait(600)
+    //     dispatch(getTaskItemAction(task._id))
+    //     .then(()=>{
+    //         setRefreshing(false)
+    //         getMyTasks()
+    //     })
+    // }, [refreshing]);
+    const onRefresh = () => setRefreshing(!refreshing)
 
     const editTaskHandler = async (id, data) => {
         await dispatch(editTaskAction(id, data))
@@ -56,6 +57,13 @@ const TaskDetail = (props) => {
             // .then(onRefresh)
         onRefresh()
     }
+
+    useEffect(()=>{
+        dispatch(getTaskItemAction(task._id))
+        .then(()=>{
+            getMyTasks()
+        })
+    },[refreshing])
 
     // useEffect(() => {
     //     const reload = onRefresh()

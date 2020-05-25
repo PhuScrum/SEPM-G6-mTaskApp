@@ -100,12 +100,14 @@ const FiveDayScreen = (props) => {
 
     const deleteHandler = async (id) => {
         await dispatch(deleteTaskAction(id))
-        onRefresh()
+        setLoading(!isLoading)
+        // onRefresh()
     }
 
     const editTaskHandler = async (id, data) => {
         await dispatch(editTaskAction(id, data))
-        onRefresh()
+        setLoading(!isLoading)
+        // onRefresh()
     }
     
     const setUpSendingPush = async (userObj, taskObj)=>{
@@ -137,9 +139,11 @@ const FiveDayScreen = (props) => {
             let reminderId = await setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
             taskObj.reminderId = reminderId
             console.log('reminderId: ', reminderId)
-            await dispatch(addTaskAction(taskObj))
-            onRefresh()
             refBottomSheet.current.close()
+            await dispatch(addTaskAction(taskObj))
+            // onRefresh()
+            setLoading(!isLoading)
+            
         } else {
             Alert.alert('Warning!!!', 'Todos must be over 3 characters long', [
                 { text: 'Understood' }
@@ -169,7 +173,7 @@ const FiveDayScreen = (props) => {
         getMyTasks()
             .catch(err => console.log(err))
             .finally(() => setLoading(false))
-    }, [])
+    }, [isLoading])
  
     const onLayout = (e) => {
         const width = e.nativeEvent.layout.width
@@ -204,8 +208,7 @@ const FiveDayScreen = (props) => {
                 <View style={styles.list} >
                     <Text style={styles.title} category='h1'>Five Days List</Text>
                     {/* <TestPush/> */}
-                    {isLoading ? <ActivityIndicator /> : (
-                        <SectionList
+                    <SectionList
                             stickySectionHeadersEnabled={false}
                             ref={scrollRef}
                             sections={sections}
@@ -216,7 +219,6 @@ const FiveDayScreen = (props) => {
                                 <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                             }
                         />
-                    )}
                 </View>
                 <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()}/>
                 <RBSheet
