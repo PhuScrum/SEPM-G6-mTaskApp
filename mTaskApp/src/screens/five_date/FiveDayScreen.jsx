@@ -82,8 +82,6 @@ const getSections = (tasks) => {
     return sections
 }
 
-
-
 const FiveDayScreen = (props) => {
     const [isLoading, setLoading] = useState(true);
     const scrollRef = createRef()
@@ -110,8 +108,6 @@ const FiveDayScreen = (props) => {
             setDeleteToastVisible(false)
         }, 3000)
 
-
-        
         await dispatch(deleteTaskAction(item._id))
         setLoading(!isLoading)
         // onRefresh()
@@ -165,8 +161,9 @@ const FiveDayScreen = (props) => {
             let reminderId = await setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
             taskObj.reminderId = reminderId
             console.log('reminderId: ', reminderId)
-            refBottomSheet.current.close()
+            // refBottomSheet.current.close()
             await dispatch(addTaskAction(taskObj))
+            
             // onRefresh()
             setLoading(!isLoading)
             

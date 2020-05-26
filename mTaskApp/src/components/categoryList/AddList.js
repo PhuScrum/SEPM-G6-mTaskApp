@@ -30,6 +30,7 @@ const AddList = ({submitHandler}) => {
         <View style={styles.containter}>
             <View style={styles.inputGroup}>
                 <Input
+                    autoFocus={true}
                     style={styles.input}
                     value={name}
                     onChangeText={setName}
