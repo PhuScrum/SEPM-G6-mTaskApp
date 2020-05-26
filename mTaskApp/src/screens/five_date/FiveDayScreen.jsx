@@ -103,15 +103,15 @@ const FiveDayScreen = (props) => {
         setRefreshing(false)
     }, [refreshing]);
 
-    const deleteHandler = async (id, item) => {
+    const deleteHandler = async (item) => {
         setTaskNameInToast(item.name)
         setDeleteToastVisible(true)
         setTimeout(()=>{
             setDeleteToastVisible(false)
         }, 3000)
-        await dispatch(deleteTaskAction(id))
-        setLoading(!isLoading)
-        // onRefresh()
+        await dispatch(deleteTaskAction(item._id))
+        // setLoading(!isLoading)
+        onRefresh()
     }
 
     const editTaskHandler = async (id, data, actionType, item) => {
@@ -129,8 +129,8 @@ const FiveDayScreen = (props) => {
             }, 3000)
         }
         await dispatch(editTaskAction(id, data))
-        setLoading(!isLoading)
-        // onRefresh()
+        // setLoading(!isLoading)
+        onRefresh()
     }
     
     const setUpSendingPush = async (userObj, taskObj)=>{
@@ -162,12 +162,6 @@ const FiveDayScreen = (props) => {
             let reminderId = await setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
             taskObj.reminderId = reminderId
             console.log('reminderId: ', reminderId)
-<<<<<<< HEAD
-=======
-            await dispatch(addTaskAction(taskObj))
-            
-            onRefresh()
->>>>>>> test-build
             refBottomSheet.current.close()
             await dispatch(addTaskAction(taskObj))
             // onRefresh()
@@ -227,9 +221,6 @@ const FiveDayScreen = (props) => {
                 <View style={styles.list} >
                     <Text style={styles.title} category='h1'>Five Days List</Text>
                     {/* <TestPush/> */}
-<<<<<<< HEAD
-                    <SectionList
-=======
                     <Toast
             visible={successToastVisible}
             position={350}
@@ -252,7 +243,6 @@ const FiveDayScreen = (props) => {
         </Toast>
                     {isLoading ? <ActivityIndicator /> : (
                         <SectionList
->>>>>>> test-build
                             stickySectionHeadersEnabled={false}
                             ref={scrollRef}
                             sections={sections}
@@ -263,11 +253,8 @@ const FiveDayScreen = (props) => {
                                 <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                             }
                         />
-<<<<<<< HEAD
-=======
                     )}
                     
->>>>>>> test-build
                 </View>
                 <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()}/>
                 <RBSheet
@@ -285,13 +272,7 @@ const FiveDayScreen = (props) => {
                     }}
                 >
                     <View style={styles.bottomSheetContainer}>
-<<<<<<< HEAD
                         <AddTask submitHandler={addTaskHandler} onResizeBtnSheet={onResizeBtnSheet}/>
-=======
-                        <Text style={styles.bottomSheetTitle}>Create a new task</Text>
-                        <AddTask submitHandler={addTaskHandler} />
-                        
->>>>>>> test-build
                     </View>
                 </RBSheet>
                 

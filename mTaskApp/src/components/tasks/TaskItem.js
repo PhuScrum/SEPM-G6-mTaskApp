@@ -93,7 +93,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
                 outputRange: [x, 0],
             });
             const pressHandler = () => {
-                deleteHandler(item._id, item)
+                deleteHandler(item)
                 refRBSheet.current.close()
             }
             return (
