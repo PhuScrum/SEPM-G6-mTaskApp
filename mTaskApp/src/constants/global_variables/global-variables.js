@@ -3,7 +3,7 @@ const cloudURL = 'https://bigquery-project-medium.df.r.appspot.com/'
 const tuIP = 'http://192.168.0.106:19003/'
 
 const globalVar = {
-    urlDomain: cloudURL,
+    urlDomain: justinLocalhost,
     defaultColor: "#659dea",
     defaultBtnHeight: 250
 }
