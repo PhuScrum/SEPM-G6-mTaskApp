@@ -15,7 +15,7 @@ import {
   Layout
 } from '@ui-kitten/components';
 import {useSelector, useDispatch} from 'react-redux'
-import {View, StyleSheet, AsyncStorage} from 'react-native'
+import {View, StyleSheet, AsyncStorage, Image} from 'react-native'
 import {editTaskAction, getMyTasksAction} from '../../../actions/TaskAction'
 
 import { Ionicons } from '@expo/vector-icons'; 
@@ -102,12 +102,12 @@ export default function ListCompositeItemShowcase (){
         <React.Fragment>
           <View style={style.container}>
           {/* <Text>Nothing to show</Text> */}
-          {/* <Image
+          <Image
             style={style.image}
             source={{
               uri: 'https://img.freepik.com/free-vector/womens-freelance-girl-with-laptop-lies-hammock-palm-trees-with-cocktail-concept-illustration-working-outdoors-studying-communication-healthy-lifestyle-flat-style_189033-12.jpg?size=626&ext=jpg',
             }}
-          /> */}
+          />
           </View>
          
         </React.Fragment>
