@@ -93,7 +93,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
                 outputRange: [x, 0],
             });
             const pressHandler = () => {
-                deleteHandler(item._id)
+                deleteHandler(item)
                 refRBSheet.current.close()
             }
             return (
@@ -162,7 +162,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
             outputRange: [x, 0],
         });
         const pressHandler = () => {
-            editTaskHandler(item._id, { completed: !item.completed })
+            editTaskHandler(item, { completed: !item.completed }, 'complete')
         };
         return (
             <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
@@ -259,7 +259,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
                     <TouchableOpacity
                         onPress={() => {
                             refRBSheet.current.close()
-                            editTaskHandler(item._id, taskDateTime)
+                            editTaskHandler(item, taskDateTime)
                         }}
                         style={[styles.dateHeaderButton]}
                     >

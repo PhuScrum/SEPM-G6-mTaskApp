@@ -6,7 +6,7 @@
  * https://akveo.github.io/react-native-ui-kitten/docs/guides/icon-packages
  */
 
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Button,
   Icon,
@@ -14,27 +14,65 @@ import {
   ListItem,
   Layout
 } from '@ui-kitten/components';
-import {useSelector} from 'react-redux'
-import {View, StyleSheet} from 'react-native'
+import {useSelector, useDispatch} from 'react-redux'
+import {View, StyleSheet, AsyncStorage, Image} from 'react-native'
+import {editTaskAction, getMyTasksAction} from '../../../actions/TaskAction'
 
+import { Ionicons } from '@expo/vector-icons'; 
 
+const completedIcon = (style) => (
 
-const renderItemAccessory = (style) => (
-  <Button style={style}>COMPLETE</Button>
+      <Ionicons name="ios-checkmark" size={24} color="black" />
+
 );
 
-const renderItemIcon = (style) => (
+const multiUserIcon = (style) => (
   <Icon {...style} name='people-outline'/>
+);
+
+const singleUserIcon = (style) => (
+  <Icon {...style} name='award-outline'/>
 );
 export default function ListCompositeItemShowcase (){
 
-  const tasks = useSelector(state=> state)
-  console.log('redux tasks  use selector: ', tasks.calendarOverViewReducer.tasksOnSpecificDate)
+  const tasksOSPD = useSelector(state=> state.calendarOverViewReducer.tasksOnSpecificDate, [])
+  const state = useSelector(state=> state, [])
+  console.log('redux state  use selector: ', state)
   //calendarOverViewReducer, tasksOnSpecificDate
-  var tasksData = tasks.calendarOverViewReducer.tasksOnSpecificDate
-  const data = tasksData
+  const data = tasksOSPD
+  const dispatch = useDispatch()
+
+  const [refreshing, setRefreshing] = useState(false)
+  
+  const getMyTasks = async () => {
+    let id = await AsyncStorage.getItem('userId')
+    console.log(id)
+    dispatch(getMyTasksAction(id))
+}
+  const onRefresh = useCallback(async () => {
+      setRefreshing(true);
+      await getMyTasks()
+      setRefreshing(false)
+
+  }, [refreshing]);
+
+
+  const completeAction = async (item)=>{
+    let taskId = item._id
+    item.completed = true
+    let userId = await AsyncStorage.getItem('userId')
+    
+
+    await dispatch(editTaskAction(taskId, {completed: true}))
+    //  onRefresh()
+    dispatch(getMyTasksAction(userId))
+  }
 
   const renderItem = ({ item, index }) => {
+    const completeButton = (style) => (
+      <Button style={style} onPress={()=>{completeAction(item)}}>COMPLETE</Button>
+    );
+    
     var convertedDateTime = new Date(item.dateTime)
     var hr = convertedDateTime.getHours()
     var min = convertedDateTime.getMinutes()
@@ -47,8 +85,8 @@ export default function ListCompositeItemShowcase (){
       <ListItem
         title={`${item.name}`}
         description={`${item.description ? item.description : ``} ${item.description ? `\n${hr}.${min} ${ampm}` : `${hr}.${min} ${ampm}`} `}
-        icon={renderItemIcon}
-        accessory={renderItemAccessory}
+        icon={item.taggedUsers.length > 0 ? multiUserIcon: singleUserIcon}
+        accessory={item.completed ? completedIcon: completeButton}
       />
     );
   }
@@ -64,12 +102,12 @@ export default function ListCompositeItemShowcase (){
         <React.Fragment>
           <View style={style.container}>
           {/* <Text>Nothing to show</Text> */}
-          {/* <Image
+          <Image
             style={style.image}
             source={{
               uri: 'https://img.freepik.com/free-vector/womens-freelance-girl-with-laptop-lies-hammock-palm-trees-with-cocktail-concept-illustration-working-outdoors-studying-communication-healthy-lifestyle-flat-style_189033-12.jpg?size=626&ext=jpg',
             }}
-          /> */}
+          />
           </View>
          
         </React.Fragment>

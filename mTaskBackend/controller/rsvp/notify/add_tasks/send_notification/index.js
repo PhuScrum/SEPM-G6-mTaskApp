@@ -1,12 +1,15 @@
 const rsvpModel = require('../../../../../model/rsvp')
 const findTaskById = require('../../../../../helper/find-task-by-id')
 const findUserById = require('../../../../../helper/find-user-by-id')
+const moment = require('moment')
 const sendNotification = async (receiverId, senderId, taskId)=>{
-    var task = await findTaskById(taskId)
-    var sender = await findUserById(senderId)
-    var taskName = task.name
-    var senderName = sender.fName + ' ' +  sender.lName
-    var text = senderName + ' tag you in ' + taskName
+    let task = await findTaskById(taskId)
+    let sender = await findUserById(senderId)
+    let taskName = task.name
+    let taskTime = task.dateTime
+    let timeDisplay = moment(taskTime).format('dddd Do MMMM YYYY, h:mm:ss a')
+    let senderName = sender.fName + ' ' +  sender.lName
+    let text = senderName + ' tag you in ' + taskName + '.'
     console.log('testing sendNotification: ')
     console.log(text)
     
