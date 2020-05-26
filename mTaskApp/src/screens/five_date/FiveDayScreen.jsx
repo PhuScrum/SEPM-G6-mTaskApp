@@ -109,9 +109,12 @@ const FiveDayScreen = (props) => {
         setTimeout(()=>{
             setDeleteToastVisible(false)
         }, 3000)
+
+
+        
         await dispatch(deleteTaskAction(item._id))
-        // setLoading(!isLoading)
-        onRefresh()
+        setLoading(!isLoading)
+        // onRefresh()
     }
 
     const editTaskHandler = async (item, data, actionType) => {
@@ -129,8 +132,8 @@ const FiveDayScreen = (props) => {
             }, 3000)
         }
         await dispatch(editTaskAction(item._id, data))
-        // setLoading(!isLoading)
-        onRefresh()
+        setLoading(!isLoading)
+        // onRefresh()
     }
     
     const setUpSendingPush = async (userObj, taskObj)=>{
@@ -241,8 +244,7 @@ const FiveDayScreen = (props) => {
             opacity={1}
         >You have deleted {taskNameInToast}!
         </Toast>
-                    {isLoading ? <ActivityIndicator /> : (
-                        <SectionList
+        <SectionList
                             stickySectionHeadersEnabled={false}
                             ref={scrollRef}
                             sections={sections}
@@ -253,7 +255,6 @@ const FiveDayScreen = (props) => {
                                 <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                             }
                         />
-                    )}
                     
                 </View>
                 <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()}/>
