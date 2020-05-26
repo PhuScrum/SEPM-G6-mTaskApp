@@ -29,7 +29,7 @@ const TagUser = ({ propStyle, tagType, saveTagUser, id, isSaveTag }) => {
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                 >
-                    {data.map(item => <View style={styles.displayStyle}><Text category='p1' style={{ color: 'white' }}>{`${item.fName} ${item.lName}`}</Text></View>)}
+                    {data.map(item => <View key={item._id} style={styles.displayStyle}><Text category='p1' style={{ color: 'white' }}>{`${item.fName} ${item.lName}`}</Text></View>)}
                 </ScrollView>
             )
         }
