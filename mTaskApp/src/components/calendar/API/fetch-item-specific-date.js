@@ -5,8 +5,8 @@ const fetchItemSpecificDate = (selectedDate, hashMap, dispatch, setItemOnSpecifi
  */
 // nếu chọn ngày
 if(selectedDate){
-    selectedYear = selectedDate.getFullYear()
-    selectedMonth = selectedDate.getMonth()
+    let selectedYear = selectedDate.getFullYear()
+    let selectedMonth = selectedDate.getMonth()
     selectedDate = selectedDate.getDate()
     // console.log(selectedYear, selectedMonth, selectedDate)
     if( //check null for every undefined number in the hashmap. Nếu là ngày không null, khi user chọn mỗi ngày để xem tasks
@@ -33,8 +33,8 @@ if(selectedDate){
     var monthToday = new Date().getMonth()
     var yearToday = new Date().getFullYear()
     if( hashMap[yearToday] &&
-        hashMap[yearToday] && hashMap[monthToday] &&
-        hashMap[yearToday] && hashMap[monthToday] && hashMap[dateToday])
+        hashMap[yearToday] && hashMap[yearToday][monthToday] &&
+        hashMap[yearToday] && hashMap[yearToday][monthToday] && hashMap[yearToday][monthToday][dateToday])
       {
         setItemOnSpecificDate(hashMap[yearToday][monthToday][dateToday])
         var tasksOnSpecificDate = hashMap[yearToday][monthToday][dateToday]
@@ -43,7 +43,9 @@ if(selectedDate){
           type: GET_TASKS_ON_SPECIFIC_DATE,
           tasksOnSpecificDate
         })
+        console.log('there is tasks when switching page')
     }else{
+      console.log('no task when switching page')
       dispatch({
         type: GET_TASKS_ON_SPECIFIC_DATE,
         tasksOnSpecificDate: []

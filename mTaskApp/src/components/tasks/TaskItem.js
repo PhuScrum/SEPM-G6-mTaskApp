@@ -93,7 +93,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
                 outputRange: [x, 0],
             });
             const pressHandler = () => {
-                deleteHandler(item._id)
+                deleteHandler(item._id, item)
                 refRBSheet.current.close()
             }
             return (
@@ -162,7 +162,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
             outputRange: [x, 0],
         });
         const pressHandler = () => {
-            editTaskHandler(item._id, { completed: !item.completed })
+            editTaskHandler(item._id, { completed: !item.completed }, 'complete', item)
         };
         return (
             <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>

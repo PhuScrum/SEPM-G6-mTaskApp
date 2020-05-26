@@ -8,10 +8,11 @@ const initiateState ={
 export default function calendarOverview(state = initiateState, action){
     switch(action.type){
         case GET_TASKS_ON_SPECIFIC_DATE:
-            return {tasksOnSpecificDate: action.tasksOnSpecificDate}
+            console.log('action in overview calendar reducer: ', action)
+            return {...state, tasksOnSpecificDate: action.tasksOnSpecificDate}
         case STORE_DATEHASHMAP:
-            return {dateHashMap: action.dateHashMap}
+            return {...state, dateHashMap: action.dateHashMap}
         default: 
-            return []
+            return state
     }
 }

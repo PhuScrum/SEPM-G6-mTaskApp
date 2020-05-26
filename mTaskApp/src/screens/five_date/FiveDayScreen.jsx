@@ -38,6 +38,8 @@ import TestPush from '../../components/push_notification/TestPush'
 import sendPushNotification from '../../components/push_notification/API/send-push-notification'
 import setLocalNotification from '../../components/push_notification/API/set-local-notification'
 import { Notifications } from 'expo'
+import Toast from 'react-native-root-toast';
+
 
 FAIcon.loadFont();
 MDIcon.loadFont();
@@ -89,22 +91,43 @@ const FiveDayScreen = (props) => {
     const tasks = useSelector(state => state.taskReducer.tasks, [tasks]);
     const dispatch = useDispatch();
     const [refreshing, setRefreshing] = useState(false)
+    const [successToastVisible, setSuccessToastVisible] = useState(false)
+    const [deleteToastVisible, setDeleteToastVisible] = useState(false)
 
     const [btnHeight, setBtnHeight] = useState(defaultBtnHeight)
 
+    const [taskNameInToast, setTaskNameInToast] = useState('')
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
         await getMyTasks()
         setRefreshing(false)
     }, [refreshing]);
 
-    const deleteHandler = async (id) => {
+    const deleteHandler = async (id, item) => {
+        setTaskNameInToast(item.name)
+        setDeleteToastVisible(true)
+        setTimeout(()=>{
+            setDeleteToastVisible(false)
+        }, 3000)
         await dispatch(deleteTaskAction(id))
         setLoading(!isLoading)
         // onRefresh()
     }
 
-    const editTaskHandler = async (id, data) => {
+    const editTaskHandler = async (id, data, actionType, item) => {
+        /**
+         *  data: edit data
+         *  actionType: could be edit task, or complete task
+         *  item: task data // to set up toast message content
+         */
+        console.log('editTaskHandler: ', data)
+        if(actionType ==='complete'){
+            setTaskNameInToast(item.name)
+            setSuccessToastVisible(true)
+            setTimeout(()=>{
+                setSuccessToastVisible(false)
+            }, 3000)
+        }
         await dispatch(editTaskAction(id, data))
         setLoading(!isLoading)
         // onRefresh()
@@ -139,6 +162,12 @@ const FiveDayScreen = (props) => {
             let reminderId = await setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
             taskObj.reminderId = reminderId
             console.log('reminderId: ', reminderId)
+<<<<<<< HEAD
+=======
+            await dispatch(addTaskAction(taskObj))
+            
+            onRefresh()
+>>>>>>> test-build
             refBottomSheet.current.close()
             await dispatch(addTaskAction(taskObj))
             // onRefresh()
@@ -193,12 +222,37 @@ const FiveDayScreen = (props) => {
         <>  
             <TopNavigationBar {...props} />
 
-
+          
             <Layout style={styles.container} >
                 <View style={styles.list} >
                     <Text style={styles.title} category='h1'>Five Days List</Text>
                     {/* <TestPush/> */}
+<<<<<<< HEAD
                     <SectionList
+=======
+                    <Toast
+            visible={successToastVisible}
+            position={350}
+            shadow={false}
+            animation={true}
+            hideOnPress={true}
+            backgroundColor={'#4CBB87'}
+            opacity={1}
+        >Congratulation you have successfully completed a task {taskNameInToast}!</Toast>
+
+        <Toast
+            visible={deleteToastVisible}
+            position={350}
+            shadow={false}
+            animation={true}
+            hideOnPress={true}
+            backgroundColor={'#EE001D'}
+            opacity={1}
+        >You have deleted {taskNameInToast}!
+        </Toast>
+                    {isLoading ? <ActivityIndicator /> : (
+                        <SectionList
+>>>>>>> test-build
                             stickySectionHeadersEnabled={false}
                             ref={scrollRef}
                             sections={sections}
@@ -209,6 +263,11 @@ const FiveDayScreen = (props) => {
                                 <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
                             }
                         />
+<<<<<<< HEAD
+=======
+                    )}
+                    
+>>>>>>> test-build
                 </View>
                 <AddToDoButton toggleBottomSheet={() => refBottomSheet.current.open()}/>
                 <RBSheet
@@ -226,10 +285,18 @@ const FiveDayScreen = (props) => {
                     }}
                 >
                     <View style={styles.bottomSheetContainer}>
+<<<<<<< HEAD
                         <AddTask submitHandler={addTaskHandler} onResizeBtnSheet={onResizeBtnSheet}/>
+=======
+                        <Text style={styles.bottomSheetTitle}>Create a new task</Text>
+                        <AddTask submitHandler={addTaskHandler} />
+                        
+>>>>>>> test-build
                     </View>
                 </RBSheet>
+                
             </Layout>
+            
         </>
 
     )

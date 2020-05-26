@@ -57,15 +57,11 @@ export const addTaskAction = (data) => async dispatch => {
 
 //edit Task
 export const editTaskAction = (id, data) => async dispatch => {
-    axios.put(url.tasks + '/' + id, data)
-        .then(res => {
+    var res = await axios.put(url.tasks + '/' + id, data) 
             dispatch({
                 type: EDIT_TASK,
                 payload: res.data
             })
-        })
-        // .then(res => dispatch(getTasksAction))
-        .catch(err => console.log(err))
 }
 
 //delete list from task

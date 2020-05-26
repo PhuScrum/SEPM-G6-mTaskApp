@@ -16,6 +16,7 @@ import axios from 'axios'
 import * as url from '../../constants/url/url'
 import NumberDetails from './NumberDetails'
 import sendPushNotification from '../../components/push_notification/API/send-push-notification'
+const moment = require('moment')
 export default function CardWithHeaderAndFooterShowcase (props){
     const [user, setUser] = useState({fName: ''},[])
     const [task, setTask] = useState({taggedUsers: []}, [])
@@ -90,6 +91,7 @@ export default function CardWithHeaderAndFooterShowcase (props){
   }
 
   const Footer = () => (
+    
     <View style={styles.footerContainer}>
       {isAccepted ? <Text>You have accepted.</Text> : null}
       {isDeclined ? <Text>You have declined.</Text> : null}
@@ -120,6 +122,7 @@ export default function CardWithHeaderAndFooterShowcase (props){
         </React.Fragment>
       }
     </View>
+  
   );
 
   const Header = () => (
@@ -132,16 +135,23 @@ export default function CardWithHeaderAndFooterShowcase (props){
     <Card style={styles.card} header={Header} footer={Footer}
       status={props.item.rsvpType.includes('system') && props.item.text.includes('success') ? 'success' : null}
     >
-
+      {/* <Text>
+        {moment(props.item.dateCreated).startOf('day').fromNow()}
+      </Text> */}
       <Text onPress={() => alert('pressed')}>
         {props.item.text}
       </Text>
-
+      {task && task.taggedUsers &&
+          task.taggedUsers.length >= 1 &&
+          props.item.rsvpType &&
+          props.item.rsvpType.includes('system') === false  ?
+        <Text>at {moment(task.dateTime).format('h:mm a, dddd Do MMMM YYYY')}.</Text>
+          : null}
       <View style={styles.extra}>
         {task && task.taggedUsers &&
-          task.taggedUsers.length &&
+          task.taggedUsers.length >= 1 &&
           props.item.rsvpType &&
-          props.item.rsvpType.includes('system') === false > 1 ?
+          props.item.rsvpType.includes('system') === false  ?
           <NumberDetails task={task} numberOfAccept={numberOfAccept} numberOfDecline={numberOfDecline} setNumberOfAccept={setNumberOfAccept} setNumberOfDecline={setNumberOfDecline} />
           : null}
       </View>
@@ -156,6 +166,10 @@ const styles = StyleSheet.create({
   footerContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+  },
+  footerDateDisplay:{
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
   },
   footerControl: {
     marginHorizontal: 4,
