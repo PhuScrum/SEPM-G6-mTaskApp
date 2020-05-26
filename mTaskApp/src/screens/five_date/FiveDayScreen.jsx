@@ -162,13 +162,6 @@ const FiveDayScreen = (props) => {
         dispatch(getMyTasksAction(id))
     }
 
-    // useEffect(() => {
-    //     const unsubscribe = props.navigation.addListener('focus', async () => {
-    //         await getMyTasks()
-    //         setLoading(false)
-    //     })
-    //     return unsubscribe
-    // }, [props.navigation])
     useEffect(() => {
         getMyTasks()
             .catch(err => console.log(err))
@@ -178,9 +171,6 @@ const FiveDayScreen = (props) => {
     const onLayout = (e) => {
         const width = e.nativeEvent.layout.width
         const height = e.nativeEvent.layout.height
-        // console.log( width, ' x ', height)
-        // setBtnHeight(height+25)
-        // console.log(refBottomSheet.current)
     }
 
     const onResizeBtnSheet = (i) => setBtnHeight(btnHeight + i)
@@ -237,8 +227,6 @@ const FiveDayScreen = (props) => {
                 >
                     <View style={styles.bottomSheetContainer}>
                         <AddTask submitHandler={addTaskHandler} onResizeBtnSheet={onResizeBtnSheet}/>
-                        {/* <Button onPress={()=>{setBtnHeight(btnHeight + 20)}} >Add Height</Button>
-                        <Button onPress={()=>{setBtnHeight(btnHeight + -20)}}>Decrease Height</Button> */}
                     </View>
                 </RBSheet>
             </Layout>
