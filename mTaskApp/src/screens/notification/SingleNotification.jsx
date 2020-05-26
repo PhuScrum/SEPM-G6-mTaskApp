@@ -93,6 +93,12 @@ export default function CardWithHeaderAndFooterShowcase (props){
   const Footer = () => (
     
     <View style={styles.footerContainer}>
+      <View>
+      <Text>
+        {moment(props.item.dateCreated).startOf('day').fromNow()}
+      </Text>
+      </View>
+      <View style={{flexDirection:'row'}}>
       {isAccepted ? <Text>You have accepted.</Text> : null}
       {isDeclined ? <Text>You have declined.</Text> : null}
 
@@ -121,6 +127,7 @@ export default function CardWithHeaderAndFooterShowcase (props){
           </Button>
         </React.Fragment>
       }
+      </View>
     </View>
   
   );
@@ -135,9 +142,7 @@ export default function CardWithHeaderAndFooterShowcase (props){
     <Card style={styles.card} header={Header} footer={Footer}
       status={props.item.rsvpType.includes('system') && props.item.text.includes('success') ? 'success' : null}
     >
-      {/* <Text>
-        {moment(props.item.dateCreated).startOf('day').fromNow()}
-      </Text> */}
+      
       <Text onPress={() => alert('pressed')}>
         {props.item.text}
       </Text>
@@ -165,7 +170,8 @@ export default function CardWithHeaderAndFooterShowcase (props){
 const styles = StyleSheet.create({
   footerContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    alignItems:'center'
   },
   footerDateDisplay:{
     flexDirection: 'row',
@@ -175,7 +181,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   card: {
-    marginVertical: 8,
+    marginVertical: 4,
   },
   extra: {
     marginTop: 15

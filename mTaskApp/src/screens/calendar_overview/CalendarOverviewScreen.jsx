@@ -22,6 +22,7 @@ export default class CalendarOverviewScreen extends Component {
 const styles = StyleSheet.create({
     screen: {
       paddingTop: 16, 
+      // paddingBottom: 20,
       flex: 1
     },
   });

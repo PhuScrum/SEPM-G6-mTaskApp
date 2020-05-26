@@ -37,7 +37,16 @@ const AddTask = ({ submitHandler, onResizeBtnSheet }) => {
     const [date, setDate] = useState(now)
     const [time, setTime] = useState(now)
 
-    const displayDate = onDisplayDate ? moment(date).format('LL') : ''
+    // console.log(moment(now).add(1,'days').format('LL'))
+    const displayDate = ()=> {
+        const dateString = moment(date).format('LL')
+        if(onDisplayDate) {
+            if (dateString === moment(now).format('LL')) return `Today ${dateString}`
+            if (dateString === moment(now).add(1,'days').format('LL')) return `Tomorrow ${dateString}`
+            else return dateString 
+        } else return ''
+    }
+    // const displayDate = onDisplayDate? moment(date).calendar() :''
     const displayTime = onDisplayTime ? moment(time).format('LT') : ''
 
     const onResetDateTime = () => {
@@ -170,7 +179,7 @@ const AddTask = ({ submitHandler, onResizeBtnSheet }) => {
                             <TouchableOpacity onPress={onHide}>
                                 <MaterialIcons name="cancel" size={18} color="white" />
                             </TouchableOpacity>
-                            <Text category='c1' style={{ color: 'white', paddingLeft: 5 }}>{`${displayDate} ${displayTime}`}</Text>
+                            <Text category='c1' style={{ color: 'white', paddingLeft: 5 }}>{`${displayTime} ${displayDate()}`}</Text>
                         </View>
                     )}
                     {(taggedUsers && taggedUsers.length !== 0) && (

@@ -43,6 +43,7 @@ const DateTimePickerComponent = ({
                 </View>
                 <View>
                     <DateTimePickerModal
+                        headerTextIOS='Pick a time'
                         // onHide={onHide}
                         isVisible={timeVisible}
                         date={timeValue}

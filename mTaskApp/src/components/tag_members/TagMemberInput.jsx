@@ -37,6 +37,7 @@ export default function TagMemberInput() {
       {/* <SelectedMembers/> */}
       <View style={styles.inputContainer}>
         <Input
+          autoFocus={true}
           value={value}
           placeholder='search members'
           style={styles.input}
