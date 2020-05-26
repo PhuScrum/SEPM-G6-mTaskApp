@@ -139,8 +139,9 @@ const FiveDayScreen = (props) => {
             let reminderId = await setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
             taskObj.reminderId = reminderId
             console.log('reminderId: ', reminderId)
-            refBottomSheet.current.close()
+            // refBottomSheet.current.close()
             await dispatch(addTaskAction(taskObj))
+            
             // onRefresh()
             setLoading(!isLoading)
             

@@ -20,6 +20,7 @@ const combineDateTime = (date, time) => {
 const AddTask = ({ submitHandler, onResizeBtnSheet }) => {
     const os = Platform.OS
     const tag = useSelector(state => state.tagMemberReducer.selectedItems, [])
+    const now = new Date(Date.now())
 
     const [userId, setUserId] = useState('')
     const [name, setName] = useState('')
@@ -33,15 +34,15 @@ const AddTask = ({ submitHandler, onResizeBtnSheet }) => {
     const taggedUsers = useSelector(state => state.tagMemberReducer.selectedItems, [])
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [showTimePicker, setShowTimePicker] = useState(false)
-    const [date, setDate] = useState(new Date(Date.now()))
-    const [time, setTime] = useState(new Date(Date.now()))
+    const [date, setDate] = useState(now)
+    const [time, setTime] = useState(now)
 
     const displayDate = onDisplayDate ? moment(date).format('LL') : ''
     const displayTime = onDisplayTime ? moment(time).format('LT') : ''
 
     const onResetDateTime = () => {
-        setDate(new Date(Date.now()))
-        setTime(new Date(Date.now()))
+        setDate(now)
+        setTime(now)
     }
 
     const onChangeDate = (selectedDate) => {
@@ -89,8 +90,6 @@ const AddTask = ({ submitHandler, onResizeBtnSheet }) => {
         // else onResizeBtnSheet(60)
     }
 
-    
-
     useEffect(() => {
         getUserId()
     }, [])
@@ -99,10 +98,23 @@ const AddTask = ({ submitHandler, onResizeBtnSheet }) => {
         <View style={styles.containter}>
             <View style={styles.inputGroup}>
                 <Input
+                    // multiline={true}
+                    keyboardType='default'
+                    returnKeyType='done'
+                    // onKeyPress={handleKeyDown}
+                    onSubmitEditing={()=>{
+                        submitHandler(taskData)
+                        setName('')
+                        setOnDisplayTime(false)
+                        setTime(now)
+                        setDesc('')
+
+                    }}
                     style={styles.input}
                     value={name}
                     onChangeText={setName}
                     placeholder='New Task ...'
+                    autoFocus={true}
                 />
             </View>
 
@@ -124,10 +136,10 @@ const AddTask = ({ submitHandler, onResizeBtnSheet }) => {
                     <TagUser propStyle={{ headerStyle: headerStyle }} tagType={'icon'} isSaveTag={false} />
                 </View>
                 <View style={{ justifyContent: 'center', marginTop: 5, paddingLeft: 5 }}>
-                    <TaskDesc propStyle={{ headerStyle: headerStyle }} addType={'button'} openInput={openDescInput} />
+                    <TaskDesc addType={'button'} desc={desc} setDesc={setDesc} isSaveDesc={false} />
                 </View>
 
-                <Modal
+                {/* <Modal
                     isVisible={descInput}
                     backdropColor='black'
                     backdropOpacity={0.8}
@@ -147,7 +159,7 @@ const AddTask = ({ submitHandler, onResizeBtnSheet }) => {
                             />
                         </View>
                     </View>
-                </Modal>
+                </Modal> */}
             </View>
 
             {((onDisplayDate || onDisplayTime) || (taggedUsers && taggedUsers.length !== 0) || (desc !== '')) && (
@@ -179,7 +191,7 @@ const AddTask = ({ submitHandler, onResizeBtnSheet }) => {
                         </TouchableOpacity>
                     )}
                 </View>
-            </View>
+                </View>
             )}
 
             

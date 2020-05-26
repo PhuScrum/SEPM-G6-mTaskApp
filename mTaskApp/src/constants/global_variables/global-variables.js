@@ -5,7 +5,7 @@ const tuIP = 'http://192.168.0.106:19003/'
 const globalVar = {
     urlDomain: cloudURL,
     defaultColor: "#659dea",
-    defaultBtnHeight: 250
+    defaultBtnHeight: 230
 }
 
 module.exports = globalVar

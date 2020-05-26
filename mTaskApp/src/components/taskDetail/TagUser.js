@@ -75,7 +75,6 @@ const TagUser = ({ propStyle, tagType, saveTagUser, id, isSaveTag }) => {
                         <FontAwesome name="user-circle-o" size={22} color="black" />
                     </TouchableOpacity>
                 )
-
             default:
         }
     }

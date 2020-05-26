@@ -16,6 +16,7 @@ import { clearTaskItemAction, deleteListFromItemAction } from '../../actions/Tas
 import { editTaskAction, getTaskItemAction, getMyTasksAction } from '../../actions/TaskAction';
 import TaskLists from '../../components/taskDetail/TaskLists';
 import { getMyListsAction, clearListItemAction } from '../../actions/ListActions';
+import TaskDesc from '../../components/taskDetail/TaskDesc';
 // import { ScrollView } from 'react-native-gesture-handler';
 
 function wait(timeout) {
@@ -140,11 +141,13 @@ const TaskDetail = (props) => {
                 <TagUser isSaveTag={true} propStyle={propStyle} tagType={'input'} id={task._id} saveTagUser={editTaskHandler} />
 
                 <View style={[styles.descStyle, styles.borderStyle]}>
-                    <View style={styles.descInputStyle}>
-                        <TouchableOpacity onPress={() => console.log('Desc')}>
-                            <Text>Add Description</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <TaskDesc 
+                        desc={desc} 
+                        setDesc={setDesc} 
+                        addType={'input'} 
+                        isSaveDesc={true} 
+                        saveDesc={()=>editTaskHandler(task._id, {description: desc})}
+                    />
                 </View>
                 </ScrollView>
 
