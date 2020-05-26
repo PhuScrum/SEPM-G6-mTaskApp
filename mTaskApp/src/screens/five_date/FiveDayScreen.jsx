@@ -114,7 +114,7 @@ const FiveDayScreen = (props) => {
         onRefresh()
     }
 
-    const editTaskHandler = async (id, data, actionType, item) => {
+    const editTaskHandler = async (item, data, actionType) => {
         /**
          *  data: edit data
          *  actionType: could be edit task, or complete task
@@ -128,7 +128,7 @@ const FiveDayScreen = (props) => {
                 setSuccessToastVisible(false)
             }, 3000)
         }
-        await dispatch(editTaskAction(id, data))
+        await dispatch(editTaskAction(item._id, data))
         // setLoading(!isLoading)
         onRefresh()
     }
