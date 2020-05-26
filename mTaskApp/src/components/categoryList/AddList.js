@@ -28,7 +28,7 @@ const AddList = ({submitHandler}) => {
 
     return (
         <View style={styles.containter}>
-            <View style={styles.inputGroup, {flex: 1}}>
+            <View style={styles.inputGroup}>
                 <Input
                     style={styles.input}
                     value={name}
@@ -36,7 +36,7 @@ const AddList = ({submitHandler}) => {
                     placeholder='New List ...'
                 />
             </View>
-            <View style={styles.inputGroup, {flex: 2}}>
+            <View style={styles.inputGroup}>
                 <Input
                     style={[styles.input]}
                     value={desc}
@@ -44,7 +44,7 @@ const AddList = ({submitHandler}) => {
                     placeholder='Description'
                 />
             </View>
-            <View style={{ paddingTop: 8 , flex: 2}}>
+            <View style={{ paddingTop: 8 }}>
                 <Button style={styles.submitButton} onPress={() => submitHandler(ListData)}>Add</Button>
             </View>
         </View>
@@ -56,12 +56,12 @@ export default AddList
 const styles = StyleSheet.create({
     containter: {
         marginTop: 10,
-        flex:1
+        // flex:1
     },
     input: {
-        marginVertical: 3,
+        // marginVertical: 3,
         marginHorizontal: 10,
-        flex: 1
+        // flex: 1
     },
     submitButton: {
         justifyContent: 'center',
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
         borderStartColor: "transparent"
     },
     inputGroup: {
-        width: '100%',
+        // width: '100%',
         paddingBottom: 8,
         // position: 'relative'
     },

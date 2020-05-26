@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { View, StyleSheet, TouchableHighlight, TouchableOpacity, AsyncStorage } from 'react-native'
+import { View, StyleSheet, TouchableHighlight, TouchableOpacity, AsyncStorage, ScrollView } from 'react-native'
 import { Layout, Text, Icon, TopNavigation, TopNavigationAction } from '@ui-kitten/components';
 import TopNavigationBar from './TopNavigationBar'
 import { useSelector, useDispatch } from 'react-redux'
@@ -15,7 +15,8 @@ import { clearSelectedAction } from '../../actions/tag-members-actions'
 import { clearTaskItemAction, deleteListFromItemAction } from '../../actions/TaskAction'
 import { editTaskAction, getTaskItemAction, getMyTasksAction } from '../../actions/TaskAction';
 import TaskLists from '../../components/taskDetail/TaskLists';
-import { getMyListsAction } from '../../actions/ListActions';
+import { getMyListsAction, clearListItemAction } from '../../actions/ListActions';
+// import { ScrollView } from 'react-native-gesture-handler';
 
 function wait(timeout) {
     return new Promise(resolve => {
@@ -24,6 +25,7 @@ function wait(timeout) {
 }
 
 const TaskDetail = (props) => {
+
     const { navigation } = props
     const dispatch = useDispatch()
     const task = useSelector(state => state.taskReducer.taskItem, []);
@@ -62,6 +64,8 @@ const TaskDetail = (props) => {
         dispatch(getTaskItemAction(task._id))
         .then(()=>{
             getMyTasks()
+            // dispatch(clearSelectedAction())
+            setRefreshing(false)
         })
     },[refreshing])
 
@@ -81,7 +85,15 @@ const TaskDetail = (props) => {
         <>
             <TopNavigationBar {...props} withBackControl={true} />
             <Layout style={styles.container} >
-                <View style={{ marginBottom: 60 }}>
+                <ScrollView
+                    disableScrollViewPanResponder={true}
+                    // bounces={false}
+                    automaticallyAdjustContentInsets={true}
+                    // centerContent={true}
+                    scrollsToTop={false}
+                    contentContainerStyle
+                >
+                <View style={{ marginBottom: 20 }}>
                     <View style={styles.headerStyle}>
                         <TouchableOpacity
                             style={styles.doneStyle}
@@ -134,6 +146,7 @@ const TaskDetail = (props) => {
                         </TouchableOpacity>
                     </View>
                 </View>
+                </ScrollView>
 
             </Layout>
         </>

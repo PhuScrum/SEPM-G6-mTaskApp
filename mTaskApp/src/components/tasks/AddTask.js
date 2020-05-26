@@ -150,7 +150,8 @@ const AddTask = ({ submitHandler, onResizeBtnSheet }) => {
                 </Modal>
             </View>
 
-            <View style={styles.dividerStyle}>
+            {((onDisplayDate || onDisplayTime) || (taggedUsers && taggedUsers.length !== 0) || (desc !== '')) && (
+                <View style={styles.dividerStyle}>
                 <View style={[styles.inputGroup, { flexDirection: 'row', alignItems: 'center' }]}>
                     {(onDisplayDate || onDisplayTime) && (
                         <View style={styles.displayStyle}>
@@ -179,6 +180,9 @@ const AddTask = ({ submitHandler, onResizeBtnSheet }) => {
                     )}
                 </View>
             </View>
+            )}
+
+            
 
             <View style={{ paddingTop: 5 }}>
                 <Button style={styles.submitButton} onPress={() => submitHandler(taskData)}>Add</Button>
@@ -229,7 +233,6 @@ const styles = StyleSheet.create({
         borderStartColor: "transparent"
     },
     inputGroup: {
-
         marginHorizontal: 10
     },
     dateTimeText: {

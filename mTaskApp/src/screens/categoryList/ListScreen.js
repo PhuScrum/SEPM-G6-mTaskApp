@@ -22,7 +22,7 @@ function wait(timeout) {
 }
 
 const ListScreen = (props) => {
-    const [isLoading, setLoading] = useState(true);
+    const [isLoading, setLoading] = useState(false);
     const scrollRef = createRef()
     const dispatch = useDispatch()
     const refBtnSheet = useRef()
@@ -41,10 +41,11 @@ const ListScreen = (props) => {
     }
 
     const addListHandler = async (listData) => {
-        await dispatch(addListAction(listData))
-        dispatch(clearListItemAction())
-        onRefresh()
         refBtnSheet.current.close()
+        await dispatch(addListAction(listData))
+        setLoading(!isLoading)
+        dispatch(clearListItemAction())
+        // onRefresh()
     }
 
     const editListHandler = (id, data) => {
@@ -61,7 +62,8 @@ const ListScreen = (props) => {
 
     const onDeleteHandler = async (id) => {
         await dispatch(deleteListAction(id))
-        onRefresh()
+        setLoading(!isLoading)
+        // onRefresh()
     }
 
     // useEffect(() => {
@@ -75,7 +77,7 @@ const ListScreen = (props) => {
         getMyLists()
         .catch(err=>console.log(err))
         .finally(()=>setLoading(false))
-    }, [])
+    }, [isLoading])
 
     //Define List Elems
     const renderItem = ({ item }) => (
@@ -128,7 +130,7 @@ const ListScreen = (props) => {
                         }}
                     >
                         <View style={styles.bottomSheetContainer}>
-                            <Text style={styles.bottomSheetTitle}>Create a new List</Text>
+                            {/* <Text style={styles.bottomSheetTitle}>Create a new List</Text> */}
                             <AddList submitHandler={addListHandler} />
                         </View>
                     </RBSheet>

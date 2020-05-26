@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { StyleSheet, View, RefreshControl, AsyncStorage, ActivityIndicator } from 'react-native'
 import TopNavigationBar from '../five_date/TopNavigationBar'
@@ -25,7 +25,7 @@ function wait(timeout) {
 }
 
 const ListDetail = (props) => {
-    const [isLoading, setLoading] = useState(true);
+    const [isLoading, setLoading] = useState(false);
     const refBottomSheet = useRef();
     const dispatch = useDispatch()
     const listItem = useSelector(state => state.listReducer.listItem, [])
@@ -52,12 +52,14 @@ const ListDetail = (props) => {
             taskId: id
         }
         await dispatch(deleteTaskFromListAction(listID, removeTaskData))
-        onRefresh()
+        setLoading(!isLoading)
+        // onRefresh()
     }
 
     const editTaskHandler = async (id, data) => {
         await dispatch(editTaskAction(id, data))
-        onRefresh()
+        setLoading(!isLoading)
+        // onRefresh()
     }
 
     const onNavigateDetail = (id) => {
@@ -82,10 +84,12 @@ const ListDetail = (props) => {
         handlePushNoti(taskObj)
         setLocalNotification(taskObj.name, 'Click here to view more', taskObj.dateTime)
         if (taskObj.name.length > 3) {
-            await dispatch(addTaskAction(data))
-            dispatch(clearSelectedAction())
-            onRefresh()
             refBottomSheet.current.close()
+            await dispatch(addTaskAction(data))
+            setLoading(!isLoading)
+            dispatch(clearSelectedAction())
+            // onRefresh()
+            
         } else {
             Alert.alert('Warning!!!', 'Todos must be over 3 characters long', [
                 { text: 'Understood' }
@@ -95,6 +99,7 @@ const ListDetail = (props) => {
 
     const renderItem = ({ item, index }) => (
         <TaskItem
+            isShowDate={true}
             item={item}
             index={index}
             deleteHandler={deleteHandler}
@@ -111,7 +116,12 @@ const ListDetail = (props) => {
 
     const onResizeBtnSheet = (i) => setBtnHeight(btnHeight + i)
 
-
+    useEffect(()=>{
+        // getMyLists()
+        dispatch(getListItemAction(listItem._id))
+        .catch(err=>console.log(err))
+        .finally(()=>setLoading(false))
+    }, [isLoading])
 
     return (
         <>

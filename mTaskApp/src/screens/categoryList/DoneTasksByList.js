@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { StyleSheet, View, SectionList, Modal, TouchableOpacity, RefreshControl } from 'react-native'
 import TopNavigationBarList from './TopNavigationBarList'
 import { useSelector, useDispatch } from 'react-redux'
@@ -17,22 +17,27 @@ function wait(timeout) {
 }
 
 const DoneTasksByList = (props) => {
+    const [isLoading, setLoading] = useState(false);
     const dispatch = useDispatch()
     const listItem = useSelector(state => state.listReducer.listItem, [])
     const tasks = listItem.items ? listItem.items : []
     const [show, setShow] = useState(false)
     const [refreshing, setRefreshing] = useState(false)
 
+    useEffect(()=>{
+        // getMyLists()
+        dispatch(getListItemAction(listItem._id))
+        .catch(err=>console.log(err))
+        .finally(()=>setLoading(false))
+    }, [isLoading])
+
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        wait(600)
-            .then(() => {
-                dispatch(getListItemAction(listItem._id))
-                    .then(setRefreshing(false))
-            })
+        dispatch(getListItemAction(listItem._id))
+            .then(setRefreshing(false))
     }, [refreshing])
 
-    const completedTask = tasks.filter(d => d.completed === true) 
+    const completedTask = tasks.filter(d => d.completed === true)
     const sortbyDate = completedTask.sort((first, second) => {
         return new Date(second.dateTime).getTime() - new Date(first.dateTime).getTime();
     });
@@ -101,7 +106,7 @@ const DoneTasksByList = (props) => {
                         <Text style={{ fontSize: 15 }}><TimeAgo time={item.dateTime} /></Text>
                     </View>
                 </TouchableOpacity>
-                
+
 
             </View>
 
@@ -110,12 +115,12 @@ const DoneTasksByList = (props) => {
 
 
     return (
-        <View style={{ paddingTop: 20}}>
+        <View style={{ paddingTop: 20 }}>
             <TopNavigationBarList {...props} isDisplayDoneButton={false} withBackControl={true} />
             <Layout style={{ paddingTop: 10, paddingBottom: 0, paddingHorizontal: 10 }}>
-                <Text style={{textAlign: "center"}} category='h1'>Completed {listItem.name}</Text>
+                <Text style={{ textAlign: "center" }} category='h1'>Completed {listItem.name}</Text>
 
-                
+
                 <View style={{ paddingBottom: '27%' }}>
                     <SectionList
                         sections={newList}
@@ -127,8 +132,8 @@ const DoneTasksByList = (props) => {
                         }
                     />
                 </View>
-                
-               
+
+
             </Layout>
         </View>
     )

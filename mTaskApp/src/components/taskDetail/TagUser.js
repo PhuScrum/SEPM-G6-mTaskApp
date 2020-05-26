@@ -20,8 +20,19 @@ const TagUser = ({ propStyle, tagType, saveTagUser, id, isSaveTag }) => {
     const { headerStyle } = propStyle
     const refRBSheet = useRef();
     const data = useSelector(state => state.tagMemberReducer.selectedItems, [])
+    const task = useSelector(state => state.taskReducer.taskItem, []);
 
     const OpenTag = () => {
+        const TaggedUsersList = ({ data }) => {
+            return (
+                <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                >
+                    {data.map(item => <View style={styles.displayStyle}><Text category='p1' style={{ color: 'white' }}>{`${item.fName} ${item.lName}`}</Text></View>)}
+                </ScrollView>
+            )
+        }
         switch (tagType) {
             case 'input':
                 return (
@@ -37,6 +48,11 @@ const TagUser = ({ propStyle, tagType, saveTagUser, id, isSaveTag }) => {
                                 <AntDesign name="adduser" size={propStyle.iconSize} />
                             </TouchableOpacity>
                         </View>
+                        {(task.taggedUsers && task.taggedUsers.length !== 0) && (
+                            <View style={{ paddingTop: 5 }}>
+                                <TaggedUsersList data={task.taggedUsers} />
+                            </View>
+                        )}
                     </View>
                 )
             case 'button':
@@ -184,6 +200,17 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center"
     },
+    displayStyle: {
+        marginTop: 5,
+        // marginLeft: 8,
+        marginRight: 10,
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+        backgroundColor: 'black',
+        borderRadius: 18,
+        flexDirection: 'row',
+        alignItems: 'center'
+    }
 })
 
 export default TagUser

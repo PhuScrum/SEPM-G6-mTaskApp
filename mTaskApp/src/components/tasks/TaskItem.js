@@ -19,7 +19,7 @@ const combineDateTime = (date, time) => {
     return finalTime
 }
 
-const RowItem = ({ item, isShowTime, toggleModal }) => {
+const RowItem = ({ item, isShowTime, isShowDate, toggleModal }) => {
     const nUsers = item.taggedUsers.length
 
     return (
@@ -40,6 +40,12 @@ const RowItem = ({ item, isShowTime, toggleModal }) => {
                     </View>
                 </View>
 
+                {isShowDate && (
+                    <View style={{ justifyContent: 'center', paddingHorizontal: 5 }}>
+                        <Text appearance='hint'> {moment(item.dateTime).format('LLL')}</Text>
+                    </View>
+                )}
+
                 {isShowTime && (
                     <View style={{ justifyContent: 'center', paddingHorizontal: 5 }}>
                         <Text appearance='hint'> {moment(item.dateTime).format('LT')}</Text>
@@ -51,7 +57,7 @@ const RowItem = ({ item, isShowTime, toggleModal }) => {
     )
 }
 
-const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isShowTime }) => {
+const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isShowTime, isShowDate }) => {
     const scrollRef = createRef()
     const refRBSheet = useRef();
 
@@ -193,7 +199,7 @@ const TaskItem = ({ item, deleteHandler, editTaskHandler, onNavigateDetail, isSh
                 renderLeftActions={renderLeftActions}
                 renderRightActions={renderRightActions}
             >
-                <RowItem item={item} isShowTime={isShowTime} toggleModal={toggleModal} />
+                <RowItem item={item} isShowTime={isShowTime} isShowDate={isShowDate} toggleModal={toggleModal} />
             </Swipeable>
 
             <Modal
