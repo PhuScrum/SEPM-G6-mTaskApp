@@ -56,10 +56,12 @@ const TaskDesc = ({ addType, isSaveDesc, saveDesc, desc, setDesc }) => {
                             onChangeText={setDesc}
                             multiline={true}
                             textStyle={{ minHeight: 86 }}
-                            placeholder='Multiline'
+                            placeholder='Add Description ...'
                         // {...multilineInputState}
                         />
-                        <Button onPress={() => {
+                        <Button
+                            style={{backgroundColor: '#1E262C'}} 
+                            onPress={() => {
                             setModalVisible(false)
                             if (isSaveDesc && desc !== '') saveDesc()
                         }} >Add Description</Button>

@@ -46,18 +46,18 @@ const ListDetail = (props) => {
         dispatch(getMyListsAction(id))
     }
 
-    const deleteHandler = async (id) => {
+    const deleteHandler = async (item) => {
         const listID = listItem._id
         const removeTaskData = {
-            taskId: id
+            taskId: item._id
         }
         await dispatch(deleteTaskFromListAction(listID, removeTaskData))
         setLoading(!isLoading)
         // onRefresh()
     }
 
-    const editTaskHandler = async (id, data) => {
-        await dispatch(editTaskAction(id, data))
+    const editTaskHandler = async (item, data) => {
+        await dispatch(editTaskAction(item._id, data))
         setLoading(!isLoading)
         // onRefresh()
     }

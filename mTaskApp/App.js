@@ -13,7 +13,7 @@ import { AppLoading } from 'expo';
 import { useFonts } from '@use-expo/font';
 import fonts from './fonts'
 import { default as appTheme } from './assets/custom-theme.json'; // <-- Import app theme
-const theme = { ...darkTheme, ...appTheme };
+const theme = { ...lightTheme, ...appTheme };
 
 // initialState
 const initialState = {}
